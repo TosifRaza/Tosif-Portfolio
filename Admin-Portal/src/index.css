@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+
+* { -webkit-tap-highlight-color: transparent; }
+
+html, body, #root { height: 100%; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: #0a0a0a;
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(168,85,247,0.08), transparent 40%),
+    radial-gradient(circle at 100% 100%, rgba(0,212,255,0.06), transparent 45%);
+  background-attachment: fixed;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #a855f7, #00d4ff); border-radius: 4px; }
+
+@layer components {
+  .glass { @apply bg-white/[0.03] backdrop-blur-xl border border-white/[0.07] rounded-2xl; }
+  .glass-strong { @apply bg-white/[0.05] backdrop-blur-2xl border border-white/[0.1] rounded-2xl; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .text-gradient {
+    background: linear-gradient(135deg, #00d4ff 0%, #a855f7 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .input {
+    @apply w-full bg-white/[0.03] border border-white/10 rounded-lg px-3.5 py-2 text-sm placeholder:text-muted focus:border-neon-purple/50 focus:outline-none transition-colors;
+  }
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-neon-purple/15 border border-neon-purple/40 text-neon-purple hover:bg-neon-purple/25 transition-colors text-sm font-medium;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 text-white/70 hover:bg-white/5 hover:text-white transition-colors text-xs;
+  }
+  .btn-danger {
+    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-neon-red/30 text-neon-red hover:bg-neon-red/10 transition-colors text-xs;
+  }
+  .badge {
+    @apply mono text-[10px] uppercase tracking-widest px-2 py-0.5 rounded border;
+  }
+}

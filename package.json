@@ -1,0 +1,22 @@
+{
+  "name": "founder-os-mern",
+  "version": "4.0.0",
+  "private": true,
+  "description": "Founder OS v4.0 — Pure MERN stack portfolio (MongoDB + Express + React + Node + JavaScript)",
+  "type": "module",
+  "scripts": {
+    "install:all": "npm --prefix Backend install && npm --prefix Frontend install --legacy-peer-deps && npm --prefix Admin-Portal install",
+    "dev:backend": "npm --prefix Backend run dev",
+    "dev:frontend": "npm --prefix Frontend run dev",
+    "dev:admin": "npm --prefix Admin-Portal run dev",
+    "dev": "concurrently -n backend,frontend,admin -c magenta,cyan,yellow \"npm:dev:backend\" \"npm:dev:frontend\" \"npm:dev:admin\"",
+    "build:frontend": "npm --prefix Frontend run build",
+    "build:admin": "npm --prefix Admin-Portal run build",
+    "build": "npm run build:frontend && npm run build:admin",
+    "seed": "npm --prefix Backend run seed",
+    "start": "npm --prefix Backend start"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
