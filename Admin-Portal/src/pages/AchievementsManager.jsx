@@ -8,6 +8,9 @@ const FIELDS = [
   { name: 'icon', label: 'Icon (emoji)', type: 'text', default: '🏆' },
   { name: 'color', label: 'Color (hex)', type: 'text', default: '#00d4ff' },
   { name: 'description', label: 'Description', type: 'textarea', full: true },
+  { name: 'category', label: 'Category', type: 'select', options: ['professional', 'personal'], default: 'professional' },
+  { name: 'featured', label: 'Featured', type: 'checkbox', default: false },
+  { name: 'visible', label: 'Visible on public site', type: 'checkbox', default: true },
   { name: 'order', label: 'Order', type: 'number', default: 0 },
 ];
 

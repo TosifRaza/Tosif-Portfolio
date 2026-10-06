@@ -13,6 +13,8 @@ async function request(path, opts = {}) {
   return res.json();
 }
 
+export { request };
+
 export const api = {
   login: (email, password) =>
     request('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) }),
@@ -53,12 +55,15 @@ export const api = {
   // Stats for dashboard
   async stats(token) {
     const headers = { Authorization: `Bearer ${token}` };
-    const [projects, skills, timeline, achievements, messages] = await Promise.all([
-      request('/projects', { headers }).catch(() => []),
-      request('/skills', { headers }).catch(() => []),
-      request('/timeline', { headers }).catch(() => []),
-      request('/achievements', { headers }).catch(() => []),
+    const [projects, skills, timeline, achievements, messages, products, experience, goals] = await Promise.all([
+      request('/projects?all=1', { headers }).catch(() => []),
+      request('/skills?all=1', { headers }).catch(() => []),
+      request('/timeline?all=1', { headers }).catch(() => []),
+      request('/achievements?all=1', { headers }).catch(() => []),
       request('/contact', { headers }).catch(() => []),
+      request('/products?all=1', { headers }).catch(() => []),
+      request('/experience?all=1', { headers }).catch(() => []),
+      request('/goals', { headers }).catch(() => []),
     ]);
     return {
       projects: projects.length,
@@ -67,6 +72,9 @@ export const api = {
       achievements: achievements.length,
       messages: messages.length,
       unread: messages.filter((m) => !m.read).length,
+      products: products.length,
+      experience: experience.length,
+      goals: goals.filter((g) => g.status === 'active').length,
     };
   },
 };

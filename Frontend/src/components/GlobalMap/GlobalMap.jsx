@@ -1,127 +1,111 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { mapLayers, locations } from "@/data/mapData";
+import { motion } from "framer-motion";
+import { useApi } from "@/hooks/useApi";
+import { api } from "@/utils/api";
 import { staggerContainer, staggerItem, slideUp } from "@/utils/animations";
-import { MapPin, X } from "lucide-react";
+import { Globe2, MapPin } from "lucide-react";
 
-export default function GlobalMap() {
-  const [activeLayer, setActiveLayer] = useState("journey");
-  const [selectedLocation, setSelectedLocation] = useState(null);
+// Coordinates for common regions so the map pins are real when the admin
+// publishes a known region. Unknown regions render in the list only.
+const REGION_COORDS = {
+  kolkata: [22.57, 88.36], calcutta: [22.57, 88.36],
+  mumbai: [19.08, 72.88], delhi: [28.61, 77.21], "new delhi": [28.61, 77.21],
+  bangalore: [12.97, 77.59], bengaluru: [12.97, 77.59], chennai: [13.08, 80.27],
+  hyderabad: [17.39, 78.49], pune: [18.52, 73.86], india: [21.0, 78.0],
+  dubai: [25.2, 55.27], uae: [24.0, 54.0], singapore: [1.35, 103.82],
+  london: [51.5, -0.13], "united kingdom": [54.0, -2.0], uk: [54.0, -2.0],
+  "new york": [40.71, -74.01], usa: [39.0, -98.0], "united states": [39.0, -98.0],
+  berlin: [52.52, 13.4], germany: [51.2, 10.4], amsterdam: [52.37, 4.9],
+  netherlands: [52.2, 5.6], toronto: [43.65, -79.38], canada: [56.1, -106.3],
+  sydney: [-33.87, 151.21], australia: [-25.3, 133.8], remote: null,
+};
 
-  const filteredLocations = locations.filter((loc) => loc.layer === activeLayer);
-  const selected = selectedLocation ? locations.find((l) => l.name === selectedLocation) : null;
+/**
+ * GLOBAL REACH — demoted from primary navigation.
+ * Only genuine regions published by the admin appear here. Nothing fabricated.
+ */
+export default function GlobalMap({ site }) {
+  const { data: siteData } = useApi(() => api.getSite());
+  const regions = site?.globalReach || siteData?.globalReach || [];
 
-  const layerColors = {
-    journey: "#7C6AFF",
-    reach: "#00D4FF",
-    expansion: "#FFB800",
-  };
+  const points = regions
+    .map((r) => {
+      const key = Object.keys(REGION_COORDS).find((k) => r.region?.toLowerCase().includes(k));
+      const coords = key ? REGION_COORDS[key] : null;
+      return { ...r, coords };
+    })
+    .filter((r) => r.coords);
 
   return (
-    <div className="min-h-full p-6">
+    <div className="min-h-screen p-6 pt-16" id="globalreach">
       <motion.div variants={staggerContainer} initial="hidden" animate="visible">
         {/* Header */}
         <motion.div variants={slideUp} className="mb-6">
-          <h2 className="text-2xl font-heading font-bold text-text-primary mb-1">Global Impact Map</h2>
-          <p className="text-sm text-text-secondary">Explore the journey, reach, and expansion of the mission</p>
+          <div className="mono text-xs text-[#00D4FF] tracking-[0.3em] mb-1">// GLOBAL_REACH</div>
+          <h2 className="text-2xl font-heading font-bold text-text-primary mb-1">Global Reach</h2>
+          <p className="text-sm text-text-secondary">Regions connected to real professional activity — as published by me</p>
         </motion.div>
 
-        {/* Layer Toggle */}
-        <motion.div variants={staggerItem} className="flex gap-2 mb-6">
-          {mapLayers.map((layer) => (
-            <button
-              key={layer.id}
-              onClick={() => { setActiveLayer(layer.id); setSelectedLocation(null); }}
-              className={`text-xs px-4 py-2 rounded-full border transition-colors ${
-                activeLayer === layer.id ? "border-opacity-60" : "bg-white/[0.03] text-text-secondary border-white/[0.06] hover:border-white/[0.12]"
-              }`}
-              style={activeLayer === layer.id ? {
-                background: `${layer.color}20`,
-                color: layer.color,
-                borderColor: `${layer.color}60`,
-              } : {}}
-            >
-              {layer.label}
-            </button>
-          ))}
-        </motion.div>
+        {regions.length === 0 ? (
+          <motion.div variants={staggerItem} className="glass rounded-xl p-12 text-center max-w-lg mx-auto">
+            <Globe2 size={36} className="mx-auto mb-4 text-[#4A4A5E]" />
+            <h3 className="text-base font-bold text-text-primary mb-2">Nothing published yet</h3>
+            <p className="text-sm text-text-secondary leading-relaxed">
+              I keep this section honest — it will only ever show regions tied to real professional
+              activity (clients, collaborations, users). Regions can be published from the Admin
+              Control Center when that happens.
+            </p>
+          </motion.div>
+        ) : (
+          <div className="grid lg:grid-cols-2 gap-6">
+            {/* Map dots */}
+            <motion.div variants={staggerItem} className="glass rounded-xl p-6 relative overflow-hidden">
+              <div
+                className="absolute inset-0 opacity-[0.06]"
+                style={{
+                  backgroundImage: "radial-gradient(circle at 25% 40%, #7C6AFF 1px, transparent 1.5px), radial-gradient(circle at 70% 30%, #00D4FF 1px, transparent 1.5px), radial-gradient(circle at 50% 70%, #00FF88 1px, transparent 1.5px)",
+                  backgroundSize: "48px 48px",
+                }}
+              />
+              <div className="relative w-full" style={{ minHeight: 320 }}>
+                {points.map((p, i) => (
+                  <motion.div
+                    key={p.region + i}
+                    className="absolute"
+                    style={{
+                      left: `${((p.coords[1] + 180) / 360) * 100}%`,
+                      top: `${((90 - p.coords[0]) / 180) * 100}%`,
+                    }}
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.3 + i * 0.15 }}
+                  >
+                    <motion.div
+                      className="w-3.5 h-3.5 rounded-full bg-[#00D4FF] border-2 border-white/40"
+                      animate={{ boxShadow: ["0 0 0 0 rgba(0,212,255,0.5)", "0 0 0 12px rgba(0,212,255,0)"] }}
+                      transition={{ duration: 1.8, repeat: Infinity, delay: i * 0.3 }}
+                    />
+                  </motion.div>
+                ))}
+                {points.length === 0 && (
+                  <div className="text-xs text-text-muted mono">Published regions don't map to coordinates — shown as list only.</div>
+                )}
+              </div>
+            </motion.div>
 
-        {/* Map area */}
-        <motion.div variants={staggerItem} className="glass rounded-xl p-6 min-h-[400px] relative">
-          {/* Simple SVG India map outline */}
-          <svg viewBox="0 0 400 450" className="w-full max-w-md mx-auto opacity-20">
-            {/* Simplified India outline */}
-            <path
-              d="M200 30 L240 60 L260 100 L280 120 L270 160 L250 180 L260 220 L240 260 L220 300 L200 340 L180 360 L160 340 L140 300 L120 260 L130 220 L140 180 L130 140 L150 100 L170 60 Z"
-              fill="rgba(124, 106, 255, 0.1)"
-              stroke="rgba(124, 106, 255, 0.3)"
-              strokeWidth="1"
-            />
-          </svg>
-
-          {/* Location dots */}
-          {locations.map((loc) => {
-            const isActive = filteredLocations.some((fl) => fl.name === loc.name);
-            if (!isActive && loc.layer !== activeLayer) return null;
-
-            // Convert lat/lng to approximate SVG positions
-            const x = ((loc.lng - 68) / (97 - 68)) * 350 + 25;
-            const y = ((loc.lat - 8) / (37 - 8)) * 400 + 25;
-
-            return (
-              <motion.button
-                key={loc.name}
-                className="absolute group"
-                style={{ left: `${(x / 400) * 100}%`, top: `${(y / 450) * 100}%`, transform: "translate(-50%, -50%)" }}
-                onClick={() => setSelectedLocation(loc.name === selectedLocation ? null : loc.name)}
-                whileHover={{ scale: 1.3 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <motion.div
-                  className="w-3 h-3 rounded-full"
-                  style={{
-                    background: layerColors[loc.layer ] || "#7C6AFF",
-                    boxShadow: `0 0 10px ${layerColors[loc.layer ] || "#7C6AFF"}60`,
-                  }}
-                  animate={selectedLocation === loc.name ? { scale: [1, 1.5, 1] } : {}}
-                  transition={{ duration: 1, repeat: Infinity }}
-                />
-                <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1 text-[10px] text-text-secondary whitespace-nowrap font-mono">
-                  {loc.name}
-                </div>
-              </motion.button>
-            );
-          })}
-
-          {/* Location story card */}
-          <AnimatePresence>
-            {selected && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                className="absolute top-4 right-4 w-64 glass-strong rounded-xl p-4"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <MapPin size={14} style={{ color: layerColors[selected.layer ] }} />
-                    <span className="text-sm font-medium text-text-primary">{selected.name}</span>
+            {/* Region list */}
+            <motion.div variants={staggerItem} className="space-y-3">
+              {regions.map((r, i) => (
+                <div key={i} className="glass glass-hover rounded-xl p-4 flex items-start gap-3">
+                  <MapPin size={15} className="text-[#00D4FF] mt-0.5 flex-shrink-0" />
+                  <div>
+                    <div className="text-sm font-semibold text-[#E8E8F0]">{r.region}</div>
+                    {r.note && <div className="text-xs text-[#8B8B9F] leading-relaxed mt-0.5">{r.note}</div>}
                   </div>
-                  <button onClick={() => setSelectedLocation(null)} className="text-text-muted hover:text-text-secondary">
-                    <X size={14} />
-                  </button>
                 </div>
-                <p className="text-xs text-text-secondary leading-relaxed mb-2">{selected.story}</p>
-                {selected.year && (
-                  <div className="text-[10px] text-text-muted">Year: {selected.year}</div>
-                )}
-                {selected.population && (
-                  <div className="text-[10px] text-text-muted">Users: {selected.population}+</div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        )}
       </motion.div>
     </div>
   );

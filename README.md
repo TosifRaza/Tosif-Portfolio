@@ -1,192 +1,158 @@
-# Founder OS v4.0 — Pure MERN Stack Edition
+# TOSIF OS v5.0 — Personal Operating System + Professional Portfolio
 
-> **"Most developers build websites. I build products, businesses, and systems."** — Tosif Raza
+> **"A professional portfolio on the outside and a personal operating system on the inside."**
 
-A unique, recruiter-memorable, futuristic **operating-system-themed** portfolio built **strictly** with the MERN stack (MongoDB · Express.js · React.js · Node.js · JavaScript).
+TOSIF OS is a fully dynamic, database-driven MERN application with two modes:
 
-**This is the converted version of Founder OS v3.0.** The original was built with Next.js + TypeScript + Prisma — this version keeps every feature, animation, and section, but uses pure MERN (no TypeScript, no Next.js, no Prisma).
+- **PUBLIC MODE** — an instantly-understandable professional portfolio for recruiters:
+  Home · About · Experience · Projects · Products · Skills · Achievements · Journey · Resume · Contact,
+  plus a **Recruiter View (HIRE ME)** and an **ENTER TOSIF OS** gateway.
+- **PRIVATE MODE** (`/os`, JWT-protected) — a personal operating system:
+  Dashboard intelligence · Goals → Milestones → Tasks · Daily Log · Time tracking with a live timer ·
+  Learning sessions & topics · Skills with current/target levels · Analytics (daily/weekly/monthly/yearly)
+  · Plan vs Actual · Estimated goal trajectories · Founder Lab · Achievements · Personal AI · Settings.
+- **ADMIN CONTROL CENTER** (`Admin-Portal`, JWT + admin-role protected) — manages the **entire public
+  website and the personal OS without touching React code**: Profile, Hero, section visibility & order,
+  Navigation, About, Experience, Skills, Projects (draft/publish), Products, Achievements, Timeline,
+  Resume, Messages, Goals, Tasks, Activities, Time, Learning, Analytics, AI configuration, Settings.
 
-![Stack](https://img.shields.io/badge/stack-pure%20MERN-00D4FF) ![No TS](https://img.shields.io/badge/TypeScript-none-success) ![No Next](https://img.shields.io/badge/Next.js-none-success) ![Version](https://img.shields.io/badge/version-4.0.0-7C6AFF)
-
----
-
-## 📦 Project Architecture
-
-The project is split into **three independent applications**, exactly as required:
-
-```
-Founder-OS-MERN/
-├── Backend/              # Express API + MongoDB + Mongoose + JWT auth
-│   ├── config/           # DB connection (real MongoDB OR in-memory fallback)
-│   ├── controllers/      # Business logic for each resource
-│   ├── middleware/       # protect (JWT), errorHandler, asyncHandler
-│   ├── models/           # User, Project, Skill, Timeline, Achievement, Contact, Resume
-│   ├── routes/           # /auth /projects /skills /timeline /achievements /contact /resume /github /ai-recruiter
-│   ├── services/         # GitHub API service
-│   ├── utils/            # seed.js (re-seed) + seedData.js (auto-bootstrap data)
-│   ├── uploads/          # Multer destination for resume files
-│   └── server.js         # Express entry point
-│
-├── Frontend/             # Public React portfolio (Vite + Tailwind + Framer Motion + GSAP + Three.js)
-│   └── src/
-│       ├── components/BootSequence/   # 4-phase cinematic boot animation
-│       ├── components/HomePage/       # Hero + system metrics + 8-module sidebar
-│       ├── components/MissionHub/     # Sprint dashboard, OKRs, today's priorities
-│       ├── components/SkillConstellation/  # 11 skills, proficiency rings, learning paths
-│       ├── components/MissionDeck/    # Project deep-dives with ADRs & challenges
-│       ├── components/LaunchControl/  # Startup dashboard with metrics & roadmap
-│       ├── components/ChronoScroll/   # GSAP horizontal-scroll timeline
-│       ├── components/RecruiterMode/  # Skill match engine
-│       ├── components/FounderAI/      # AI assistant chat overlay
-│       ├── components/TrophyRoom/     # Achievements with rarity system
-│       ├── components/ContactPortal/  # 3-step launch form
-│       ├── components/GlobalMap/      # SVG map with interactive markers
-│       ├── components/Terminal/       # Ctrl+` Easter egg terminal
-│       ├── components/Layout/         # Shared Sidebar (fixed nav bug from v3.0)
-│       ├── components/ui/             # 48 shadcn/ui components (converted to JSX)
-│       ├── context/                   # AppContext (useReducer) + ThemeContext
-│       ├── data/                      # 10 data files (kept for static fallback)
-│       ├── hooks/                     # useTypewriter, useCountUp, useKonamiCode, etc.
-│       ├── lib/                       # cn() utility
-│       └── utils/                     # constants, helpers, animations
-│
-├── Admin-Portal/         # Separate React app for CMS (Vite + Tailwind + JWT)
-│   └── src/
-│       ├── components/                # Layout, ProtectedRoute, ResourceManager
-│       ├── context/AuthContext        # JWT token storage + auto-refresh
-│       ├── pages/                     # Login, Dashboard, ProjectsManager, …
-│       └── utils/api.js               # Admin API client
-│
-└── Documentation/        # Extra notes
-```
+Stack: **MongoDB · Express · React (Vite) · Node.js** — pure JavaScript, Tailwind CSS, Framer Motion,
+GSAP, Recharts. No TypeScript, no Next.js.
 
 ---
 
-## 🚀 Quick Start
+## Quick start
 
-### One-command dev (all three apps at once)
+Prerequisites: Node.js 18+ (Node 20/22/24 recommended). A local MongoDB is **optional**.
 
 ```bash
-cd Founder-OS-MERN
-npm install                       # installs concurrently at root
-npm run install:all               # installs deps for all three sub-apps
-npm run dev                       # starts Backend(:5000), Frontend(:3000), Admin(:5174)
+# 1 — Backend (port 5000)
+cd Backend
+npm install
+cp .env.example .env        # then set JWT_SECRET (and MONGO_URI if you have MongoDB)
+npm run dev                 # leaves MONGO_URI empty → auto-starts an in-memory MongoDB
+
+# 2 — Public portfolio (port 3000)
+cd ../Frontend
+npm install
+npm run dev
+
+# 3 — Admin Control Center (port 5174)
+cd ../Admin-Portal
+npm install
+npm run dev
 ```
 
-Then visit:
-- 🌐 **Public portfolio** → http://localhost:3000
-- 🔐 **Admin portal** → http://localhost:5174 (login: `admin@founderos.dev` / `admin123`)
-- ⚙️ **API** → http://localhost:5000/api/projects
+Open http://localhost:3000 (portfolio) and http://localhost:5174 (Control Center).
 
-### MongoDB? No setup required.
+**Default admin login** (created on first boot — change it immediately in Settings):
+`ADMIN_EMAIL` / `ADMIN_PASSWORD` from `Backend/.env` (default `admin@tosifos.local` / `ChangeMe!2026`).
 
-The backend uses [`mongodb-memory-server`](https://github.com/nodkz/mongodb-memory-server) when no `MONGO_URI` is set — so it boots instantly with no external dependencies. Data is wiped on restart, but seed data is auto-inserted on every boot.
+The same account unlocks the private OS at http://localhost:3000/os.
 
-To use a real MongoDB instead, copy `Backend/.env.example` to `Backend/.env` and set:
-```env
-MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/founder-os
+### Production builds
+
+```bash
+cd Frontend && npm run build      # → Frontend/dist
+cd Admin-Portal && npm run build  # → Admin-Portal/dist
 ```
 
----
-
-## 🛠️ Tech Stack
-
-**Strictly MERN — exactly as requested:**
-
-| Layer       | Tech                                                            |
-|-------------|-----------------------------------------------------------------|
-| Database    | MongoDB (via Mongoose)                                          |
-| API server  | Express.js 4                                                    |
-| Auth        | JWT (jsonwebtoken + bcryptjs)                                   |
-| Frontend    | React 18 (Vite) + Tailwind CSS 3 + Framer Motion 12 + GSAP + Three.js |
-| Admin       | React 18 (Vite) + Tailwind CSS 3 + React Router 6              |
-| Language    | **JavaScript only** — no TypeScript anywhere                    |
-
-**Not used:** TypeScript, Next.js, Nuxt.js, Angular, Vue, PHP, Python, Laravel, Django, Firebase, Supabase, Prisma.
+Serve `dist/` behind any static host and point `/api` + `/uploads` at the backend
+(same Vite proxy paths, or set `VITE_API_URL` before building).
 
 ---
 
-## 📚 API Reference
+## Architecture
 
-Base URL: `http://localhost:5000/api`
+```
+tosif-os/
+├── Backend/          Express API (port 5000)
+│   ├── models/       23 Mongoose models:
+│   │                 public CMS: Project, Skill, Timeline, Achievement, Experience, Product,
+│   │                 Profile, AboutContent, SiteConfig, Resume, Contact
+│   │                 personal OS: Goal, Milestone, Task, DailyActivity, TimeEntry,
+│   │                 LearningSession, LearningTopic, PlanSetting, GoalSnapshot, Habit, JournalEntry
+│   │                 auth: User
+│   ├── services/     progressService (task→milestone→goal rollup + snapshots),
+│   │                 analyticsService (time/learning aggregates, plan-vs-actual, consistency),
+│   │                 trajectoryService (estimated goal ETA from real history),
+│   │                 dashboardService (dashboard intelligence), insightService (Personal AI)
+│   ├── routes/       public: /api/site /api/profile /api/about /api/stats /api/projects
+│   │                 /api/skills /api/timeline /api/achievements /api/experience /api/products
+│   │                 /api/resume /api/contact /api/github /api/ai-recruiter
+│   │                 private (JWT): /api/goals /api/milestones /api/tasks /api/activities
+│   │                 /api/time /api/learning /api/analytics /api/predictions /api/dashboard
+│   │                 /api/insights /api/habits /api/journal  + /api/upload (admin)
+│   └── middleware/   protect (JWT), adminOnly (role), validate.js, errorHandler, rate limiting
+│
+├── Frontend/         Public portfolio + Private OS (port 3000)
+│   ├── components/   OS-styled public sections (CMS-driven), TopBar, BootSequence (skip,
+│   │                 once per session), Terminal easter egg, RecruiterMode, FounderAI
+│   └── src/os/       Private OS: lazy-loaded /os route tree with its own layout, auth guard,
+│                     dashboard, goals, tasks, daily log, time, learning, skills, analytics,
+│                     timeline, founder lab, achievements, personal AI, settings
+│
+└── Admin-Portal/     TOSIF OS CONTROL CENTER (port 5174)
+    └── pages/        Grouped CMS: Public Website / Personal OS / Analytics / AI / Settings,
+                      generic ResourceManager with draft→publish and ordering support
+```
 
-| Method | Endpoint                    | Auth  | Description                              |
-|--------|-----------------------------|-------|------------------------------------------|
-| POST   | `/auth/login`               | —     | Login, returns JWT                       |
-| GET    | `/auth/me`                  | JWT   | Current user                             |
-| GET    | `/projects`                 | —     | List all projects (missions)             |
-| POST/PUT/DELETE | `/projects[/:id]`    | JWT   | CRUD                                     |
-| GET    | `/skills`                   | —     | List skills (grouped by category)        |
-| POST/PUT/DELETE | `/skills[/:id]`      | JWT   | CRUD                                     |
-| GET    | `/timeline`                 | —     | List timeline entries                    |
-| POST/PUT/DELETE | `/timeline[/:id]`     | JWT   | CRUD                                     |
-| GET    | `/achievements`             | —     | List achievements                        |
-| POST/PUT/DELETE | `/achievements[/:id]` | JWT   | CRUD                                     |
-| POST   | `/contact`                  | —     | Public contact form submission           |
-| GET    | `/contact`                  | JWT   | List all messages                        |
-| PATCH  | `/contact/:id/read`         | JWT   | Mark message as read                     |
-| DELETE | `/contact/:id`              | JWT   | Delete message                           |
-| GET    | `/resume`                   | —     | Get active resume                        |
-| GET    | `/resume/download`          | —     | Download active resume PDF               |
-| POST   | `/resume`                   | JWT   | Upload new resume (multipart)            |
-| GET    | `/github`                   | —     | GitHub stats (real API or mock fallback) |
-| POST   | `/ai-recruiter/ask`         | —     | Ask the AI recruiter assistant           |
+### Key behaviours
 
----
+- **Single source of truth** — the database. The public frontend and the private OS are API
+  consumers; the Admin Portal is the content controller. No business content is hardcoded.
+- **Section visibility & order** — `SiteConfig.sections` controls which public sections render and
+  in what order (rendering-level, not CSS-hiding). Navigation labels/order come from `SiteConfig.nav`.
+- **Draft → Published → Archived** — Projects, Products and Experience. The public API only ever
+  returns published documents; admins see everything.
+- **Honest numbers** — stats are calculated from real collection counts (`/api/stats`), analytics are
+  aggregated from real logs, and when there is not enough data the UI says "Not enough data yet."
+  Product metrics are empty by default; admins enter real numbers.
+- **Goal trajectory** — computed from the goal's daily progress snapshots (pace per week over the
+  observation window) and scenario ETAs from the observed progress-per-hour ratio. Always labelled
+  as an estimate; returns "insufficient data" below two recorded days.
+- **Personal AI** — rule-based insight engine answering from the owner's records (what did I learn
+  today, which goal is behind, where is my time going, what to focus on next, …). Optionally, setting
+  `AI_BASE_URL` + `AI_API_KEY` + `AI_MODEL` in `Backend/.env` lets any OpenAI-compatible model rephrase
+  the computed answer — the numbers still come from the database.
 
-## 🎨 Frontend Sections (11 total)
+### Security
 
-1. **Boot Sequence** — 4-phase cinematic boot: Void → Pulse → Scan → Text → Dashboard
-2. **HomePage** — Hero with orbital rings, system metrics, 6 feature cards, 8-module sidebar
-3. **Mission Hub** — Sprint dashboard, Q3 OKRs, Today's Priorities, Vision 2030, Recent Activity
-4. **Skill Constellation** — 11 skills across 4 categories with proficiency rings + learning paths
-5. **Mission Deck** — Project cards with ADRs, challenges, architecture diagrams, live metrics
-6. **Launch Control** — Startup dashboard with revenue chart, roadmap, business model canvas
-7. **Chrono Scroll** — GSAP horizontal-scroll timeline
-8. **Recruiter Mode** — Skill match engine that calculates job-fit %
-9. **Trophy Room** — Achievements with rarity system (Common/Rare/Epic/Legendary)
-10. **Contact Portal** — 3-step launch form: Hire Me / Join Team / Share Idea
-11. **Global Map** — SVG India outline with interactive location markers
-
-**Plus overlays:** Terminal Easter egg (Ctrl+`), Founder AI assistant, Konami code Easter egg.
-
----
-
-## 🔐 Admin Portal Features
-
-The Admin Portal is a **completely separate** React app with its own routing, auth context, and JWT-protected routes:
-
-- **JWT login** with token persistence (localStorage) and auto-validation on mount
-- **Dashboard** with live metrics pulled from every collection
-- **Projects** — full CRUD with tags, difficulty, status, featured flag
-- **Skills** — full CRUD with category, level, order
-- **Timeline** — full CRUD with phase, year, icon
-- **Achievements** — full CRUD with custom colors and emoji icons
-- **Resume** — drag-and-drop upload, replaces active version, multi-version history
-- **Messages** — view, mark as read, delete contact submissions
-
----
-
-## 🔧 What Was Converted (v3.0 Next.js → v4.0 MERN)
-
-| Original (v3.0)                     | Converted (v4.0)                          |
-|-------------------------------------|-------------------------------------------|
-| Next.js 16 app router               | Vite + React 18 (plain React, no Next.js) |
-| TypeScript (67 TSX + 20 TS files)   | JavaScript (67 JSX + 20 JS files)         |
-| Prisma + SQLite                     | Mongoose + MongoDB (in-memory for dev)    |
-| `next/image`                        | Plain `<img>`                             |
-| `next/navigation`                   | React Router (Admin) / Vite routing       |
-| Next.js API routes (`/api/contact`) | Express route `/api/contact`              |
-| Tailwind v4 `@theme` syntax         | Tailwind v3 standard `theme.extend`       |
-| `"use client"` directives           | Removed (Vite doesn't need them)          |
-| Sidebar only on HomePage/MissionHub | Sidebar on ALL sections (fixed bug)       |
-
-**Conversion approach:** Used [Sucrase](https://github.com/alangpierce/sucrase) with `transforms: ['typescript', 'jsx']` and `jsxRuntime: 'preserve'` to strip TypeScript types while keeping JSX syntax intact. All 87 source files converted with 0 failures.
+- JWT auth (fail-fast if `JWT_SECRET` is missing), `adminOnly` role guard on all CMS writes,
+  backend authorization on every private route (the React guard is convenience, not security).
+- Rate limiting (global + strict on auth/contact), CORS whitelist (env-driven), mass-assignment
+  protection (field whitelists), input validation on all mutations, private data never exposed
+  through public endpoints.
+- No credentials are shipped: `.env` files are sanitized, the login screens have no prefills and the
+  README/seed no longer publish admin passwords. **Rotate any credentials you had in the old archive.**
 
 ---
 
-## 📜 License
+## Testing
 
-MIT © 2026 Tosif Raza
+The backend ships with a full API test suite covering the six user flows (goal→milestone→task rollups,
+learning analytics, time tracking, plan vs actual, trajectory, public/private isolation) plus the
+CMS acceptance tests (create → publish → update → disable → ordering):
 
-Built with ☕, ⚡, and a relentless obsession with shipping.
+```bash
+cd Backend
+node ../../scripts/test_backend.js   # or copy the script anywhere; needs the API running
+```
+
+Frontend and Admin production builds must both succeed (`npm run build` in each).
+
+---
+
+## Changelog v4.0 → v5.0
+
+- Public/Private architecture with JWT-protected `/os` mode and professional recruiter-first site.
+- 16 new models, 20+ new API route groups, progress rollup engine, analytics aggregations,
+  plan-vs-actual, goal trajectory estimator, dashboard intelligence, personal AI insight engine.
+- Full CMS control of the public site (sections, navigation, hero, about, profile, experience,
+  products, publish states, ordering, stats mode, global reach, AI toggles).
+- Boot sequence: shortened, skippable, once per session. Terminal kept as an easter egg.
+- Fixed from the security audit: leaked Atlas credentials removed, JWT secret enforced, adminOnly
+  enforced, CORS whitelist repaired, rate limiting added, dead VIEW RESUME button wired, Vision Board
+  nav mismatch removed, login prefills removed.
+- Unused heavy dependencies (three/@react-three, @mdxeditor, zustand, etc.) left declared but
+  unimported in the bundle — the private OS is lazy-loaded so public visitors never download it.

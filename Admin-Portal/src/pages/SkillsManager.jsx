@@ -6,7 +6,10 @@ const CATEGORIES = ['Frontend', 'Backend', 'Database', 'Tools', 'DevOps', 'Soft'
 const FIELDS = [
   { name: 'name', label: 'Skill Name', type: 'text' },
   { name: 'category', label: 'Category', type: 'select', options: CATEGORIES },
-  { name: 'level', label: 'Level (0–100)', type: 'number', default: 80 },
+  { name: 'level', label: 'Current level (0-100)', type: 'number', default: 80 },
+  { name: 'targetLevel', label: 'Target level (0-100)', type: 'number', default: 90 },
+  { name: 'description', label: 'Description (public note)', type: 'text', full: true },
+  { name: 'visible', label: 'Visible on public site', type: 'checkbox', default: true },
   { name: 'icon', label: 'Icon (emoji or URL)', type: 'text', default: '⚙️' },
   { name: 'order', label: 'Order', type: 'number', default: 0 },
 ];

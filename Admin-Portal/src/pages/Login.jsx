@@ -7,8 +7,8 @@ import { useAuth } from '../context/AuthContext.jsx';
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('admin@founderos.dev');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -108,7 +108,7 @@ export default function Login() {
 
           <div className="mt-6 pt-6 border-t border-white/10 mono text-[10px] text-muted text-center">
             <div className="mb-1">Default credentials (for first run):</div>
-            <div className="text-white/80">admin@founderos.dev · admin123</div>
+            <div className="text-white/80">Credentials are configured in Backend/.env</div>
           </div>
         </div>
       </motion.div>

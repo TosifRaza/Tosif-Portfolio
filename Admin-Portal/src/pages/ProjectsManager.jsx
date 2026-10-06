@@ -14,7 +14,13 @@ const FIELDS = [
   { name: 'difficulty', label: 'Difficulty', type: 'select', options: DIFFICULTY },
   { name: 'githubUrl', label: 'GitHub URL', type: 'text', full: true },
   { name: 'liveUrl', label: 'Live URL', type: 'text', full: true },
-  { name: 'featured', label: 'Featured (true/false)', type: 'text', default: 'false' },
+  { name: 'problem', label: 'Problem', type: 'textarea', full: true },
+  { name: 'solution', label: 'Solution', type: 'textarea', full: true },
+  { name: 'role', label: 'My Role', type: 'text' },
+  { name: 'caseStudy', label: 'Case Study', type: 'textarea', full: true },
+  { name: 'category', label: 'Category', type: 'select', options: ['professional', 'personal', 'learning', 'open-source'] },
+  { name: 'featured', label: 'Featured', type: 'checkbox', default: false },
+  { name: 'publishStatus', label: 'Publish Status', type: 'select', options: ['published', 'draft', 'archived'], default: 'published' },
   { name: 'order', label: 'Order', type: 'number', default: 0 },
 ];
 
@@ -31,6 +37,15 @@ const COLUMNS = [
     ),
   },
   { key: 'difficulty', label: 'Difficulty', mono: true },
+  {
+    key: 'publishStatus',
+    label: 'Publish',
+    render: (i) => (
+      <span className={`badge ${i.publishStatus === 'published' ? 'text-neon-green' : 'text-muted'}`}>
+        {i.publishStatus || 'published'}
+      </span>
+    ),
+  },
   {
     key: 'featured',
     label: 'Featured',

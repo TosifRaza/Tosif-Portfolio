@@ -34,6 +34,23 @@ export const me = asyncHandler(async (req, res) => {
   });
 });
 
+// PATCH /api/auth/change-password  (protected)
+export const changePassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  if (!currentPassword || !newPassword)
+    return res.status(400).json({ message: 'Current and new password are required' });
+  if (String(newPassword).length < 8)
+    return res.status(400).json({ message: 'New password must be at least 8 characters' });
+
+  const user = await User.findById(req.user._id).select('+password');
+  const ok = await user.matchPassword(currentPassword);
+  if (!ok) return res.status(401).json({ message: 'Current password is incorrect' });
+
+  user.password = newPassword; // hashed by the pre-save hook
+  await user.save();
+  res.json({ message: 'Password updated' });
+});
+
 // POST /api/auth/register  (open only if no users exist yet — bootstrap)
 export const register = asyncHandler(async (req, res) => {
   const count = await User.countDocuments();

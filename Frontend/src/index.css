@@ -179,3 +179,20 @@ body {
 /* ─── Responsive Hide/Show ─── */
 @media (max-width: 640px) { .hide-mobile { display: none !important; } }
 @media (min-width: 641px) { .show-mobile-only { display: none !important; } }
+
+/* ── TOSIF OS additions ─────────────────────────────── */
+.mono {
+  font-family: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+}
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

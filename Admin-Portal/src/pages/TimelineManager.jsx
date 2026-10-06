@@ -9,6 +9,9 @@ const FIELDS = [
   { name: 'phase', label: 'Phase', type: 'select', options: PHASES },
   { name: 'icon', label: 'Icon (emoji)', type: 'text', default: '🚀' },
   { name: 'description', label: 'Description', type: 'textarea', full: true },
+  { name: 'category', label: 'Category', type: 'select', options: ['career', 'learning', 'product', 'achievement', 'project', 'personal'], default: 'career' },
+  { name: 'image', label: 'Image URL', type: 'text', full: true },
+  { name: 'visible', label: 'Visible on public site', type: 'checkbox', default: true },
   { name: 'order', label: 'Order', type: 'number', default: 0 },
 ];
 

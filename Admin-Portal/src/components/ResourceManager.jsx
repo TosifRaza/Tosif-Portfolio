@@ -16,7 +16,7 @@ import { FaPlus, FaEdit, FaTrash, FaTimes, FaSave, FaSearch } from 'react-icons/
  *      { key, label, render?: (item) => ReactNode, mono?: bool }
  *  - searchKeys: array of keys to match against the search box
  */
-export default function ResourceManager({ title, resource, token, fields, columns, searchKeys = [] }) {
+export default function ResourceManager({ title, resource, token, fields, columns, searchKeys = [], transformOut, transformIn }) {
   const crud = crudFor(resource, token);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,15 +51,26 @@ export default function ResourceManager({ title, resource, token, fields, column
   }
 
   function openEdit(item) {
-    setEditing({ ...item });
+    const editable = { ...item };
+    if (transformIn) {
+      try {
+        Object.assign(editable, transformIn(editable));
+      } catch (e) { console.warn('transformIn failed', e); }
+    }
+    setEditing(editable);
   }
 
   async function handleSave() {
     setSaving(true);
     try {
-      const payload = { ...editing };
+      let payload = { ...editing };
       // Strip read-only fields
       delete payload._id; delete payload.__v; delete payload.createdAt; delete payload.updatedAt;
+      if (transformOut) {
+        try {
+          payload = { ...payload, ...transformOut(payload) };
+        } catch (e) { console.warn('transformOut failed', e); }
+      }
       if (editing._id) {
         await crud.update(editing._id, payload);
       } else {
@@ -254,6 +265,23 @@ export default function ResourceManager({ title, resource, token, fields, column
                         placeholder="comma, separated, values"
                         className="input"
                       />
+                    ) : f.type === 'date' ? (
+                      <input
+                        type="date"
+                        value={editing[f.name] ? String(editing[f.name]).slice(0, 10) : ''}
+                        onChange={(e) => setEditing({ ...editing, [f.name]: e.target.value })}
+                        className="input"
+                      />
+                    ) : f.type === 'checkbox' ? (
+                      <label className="flex items-center gap-2 mt-1 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={!!editing[f.name]}
+                          onChange={(e) => setEditing({ ...editing, [f.name]: e.target.checked })}
+                          className="w-4 h-4 accent-cyan-400"
+                        />
+                        <span className="text-xs text-white/70">{f.checkboxLabel || 'Enabled'}</span>
+                      </label>
                     ) : f.type === 'number' ? (
                       <input
                         type="number"

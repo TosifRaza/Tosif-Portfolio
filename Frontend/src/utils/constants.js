@@ -15,7 +15,7 @@ export const SECTION_IDS = [
 ] ;
 
 export const BOOT_LINES = [
-  "INITIALIZING FOUNDER OS v3.0",
+  "INITIALIZING TOSIF OS v5.0",
   "Loading Neural Skill Map.................. OK",
   "Calibrating Project Engine................ OK",
   "Syncing Startup Telemetry................ OK",

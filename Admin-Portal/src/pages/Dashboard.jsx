@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaRocket, FaTerminal, FaStream, FaTrophy, FaEnvelope, FaCircle } from 'react-icons/fa';
+import {
+  FaRocket, FaTerminal, FaStream, FaTrophy, FaEnvelope,
+  FaCubes, FaBriefcase, FaBullseye, FaCircle,
+} from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext.jsx';
 import { api } from '../utils/api.js';
 
@@ -25,6 +28,9 @@ export default function Dashboard() {
 
   const cards = [
     { label: 'Projects', value: stats?.projects ?? '—', to: '/projects', icon: FaRocket, color: 'neon-purple' },
+    { label: 'Products', value: stats?.products ?? '—', to: '/products', icon: FaCubes, color: 'neon-teal' },
+    { label: 'Experience', value: stats?.experience ?? '—', to: '/experience', icon: FaBriefcase, color: 'neon-orange' },
+    { label: 'Active Goals', value: stats?.goals ?? '—', to: '/goals', icon: FaBullseye, color: 'neon-green' },
     { label: 'Skills', value: stats?.skills ?? '—', to: '/skills', icon: FaTerminal, color: 'neon-green' },
     { label: 'Timeline', value: stats?.timeline ?? '—', to: '/timeline', icon: FaStream, color: 'neon-orange' },
     { label: 'Achievements', value: stats?.achievements ?? '—', to: '/achievements', icon: FaTrophy, color: 'neon-teal' },

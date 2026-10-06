@@ -7,7 +7,7 @@ import { BOOT_LINES } from "@/utils/constants";
 // ─── Phase 1: Void (black screen + dot) ───
 function VoidPhase({ onComplete }) {
   useEffect(() => {
-    const timer = setTimeout(onComplete, 2000);
+    const timer = setTimeout(onComplete, 700);
     return () => clearTimeout(timer);
   }, [onComplete]);
 
@@ -33,7 +33,7 @@ function VoidPhase({ onComplete }) {
 // ─── Phase 2: Pulse (heartbeat glow) ───
 function PulsePhase({ onComplete }) {
   useEffect(() => {
-    const timer = setTimeout(onComplete, 2000);
+    const timer = setTimeout(onComplete, 700);
     return () => clearTimeout(timer);
   }, [onComplete]);
 
@@ -82,7 +82,7 @@ function PulsePhase({ onComplete }) {
 // ─── Phase 3: Scan + data fragments ───
 function ScanPhase({ onComplete }) {
   useEffect(() => {
-    const timer = setTimeout(onComplete, 2000);
+    const timer = setTimeout(onComplete, 700);
     return () => clearTimeout(timer);
   }, [onComplete]);
 
@@ -128,7 +128,7 @@ function TextPhase({ onComplete }) {
 
   useEffect(() => {
     if (currentLine >= BOOT_LINES.length) {
-      const timer = setTimeout(onComplete, 1000);
+      const timer = setTimeout(onComplete, 500);
       return () => clearTimeout(timer);
     }
 
@@ -182,22 +182,55 @@ function TextPhase({ onComplete }) {
 }
 
 // ─── Main Boot Sequence ───
+// OS aesthetic kept, but respectful of the visitor's time:
+//  - plays once per browser session (sessionStorage)
+//  - a SKIP button is always available
 export default function BootSequence() {
   const { state, bootComplete } = useApp();
-  const [phase, setPhase] = useState(0);
+  const [phase, setPhase] = useState(() => {
+    try {
+      if (sessionStorage.getItem('tosif_os_booted') === '1') return 4;
+    } catch (e) { /* storage unavailable */ }
+    return 0;
+  });
 
-  const nextPhase = () => setPhase((prev) => prev + 1);
+  // Already booted this session → release the app immediately (no animation).
+  useEffect(() => {
+    if (phase >= 4 && !state.bootComplete) bootComplete();
+  }, [phase, state.bootComplete, bootComplete]);
+
+  const finish = () => {
+    try { sessionStorage.setItem('tosif_os_booted', '1'); } catch (e) { /* ignore */ }
+    bootComplete();
+  };
+
+  const nextPhase = () => {
+    setPhase((prev) => {
+      const next = prev + 1;
+      if (next >= 4) {
+        finish();
+        return prev;
+      }
+      return next;
+    });
+  };
+
+  if (state.bootComplete || phase >= 4) return null;
 
   return (
     <AnimatePresence mode="wait">
-      {!state.bootComplete && (
-        <motion.div className="fixed inset-0 z-[100] bg-[#06060C]">
-          {phase === 0 && <VoidPhase onComplete={nextPhase} />}
-          {phase === 1 && <PulsePhase onComplete={nextPhase} />}
-          {phase === 2 && <ScanPhase onComplete={nextPhase} />}
-          {phase === 3 && <TextPhase onComplete={bootComplete} />}
-        </motion.div>
-      )}
+      <motion.div className="fixed inset-0 z-[100] bg-[#06060C]">
+        <button
+          onClick={finish}
+          className="absolute top-5 right-5 z-10 px-4 py-1.5 rounded-lg border border-white/15 text-[#9B9BAF] hover:text-white hover:border-white/40 text-xs font-mono tracking-widest transition-colors"
+        >
+          SKIP →
+        </button>
+        {phase === 0 && <VoidPhase onComplete={nextPhase} />}
+        {phase === 1 && <PulsePhase onComplete={nextPhase} />}
+        {phase === 2 && <ScanPhase onComplete={nextPhase} />}
+        {phase === 3 && <TextPhase onComplete={nextPhase} />}
+      </motion.div>
     </AnimatePresence>
   );
 }

@@ -1,8 +1,22 @@
 import Achievement from '../models/Achievement.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
+import { requireFields, oneOf } from '../middleware/validate.js';
 
-export const list = asyncHandler(async (_req, res) => {
-  const items = await Achievement.find().sort({ order: 1, createdAt: 1 });
+const ALLOWED = [
+  'title', 'description', 'issuer', 'date', 'icon', 'color', 'image',
+  'category', 'featured', 'relatedProjectId', 'relatedGoalId', 'visible', 'order',
+];
+
+function validate(body) {
+  requireFields(body, ['title']);
+  oneOf(body.category, ['professional', 'personal'], 'category');
+}
+
+// GET /api/achievements        → visible (public)
+// GET /api/achievements?all=1  → all (admin)
+export const list = asyncHandler(async (req, res) => {
+  const filter = req.user && req.query.all === '1' ? {} : { visible: true };
+  const items = await Achievement.find(filter).sort({ order: 1, createdAt: 1 });
   res.json(items);
 });
 
@@ -13,12 +27,18 @@ export const get = asyncHandler(async (req, res) => {
 });
 
 export const create = asyncHandler(async (req, res) => {
-  const item = await Achievement.create(req.body);
+  validate(req.body);
+  const payload = {};
+  for (const k of ALLOWED) if (req.body[k] !== undefined) payload[k] = req.body[k];
+  const item = await Achievement.create(payload);
   res.status(201).json(item);
 });
 
 export const update = asyncHandler(async (req, res) => {
-  const item = await Achievement.findByIdAndUpdate(req.params.id, req.body, {
+  validate(req.body);
+  const payload = {};
+  for (const k of ALLOWED) if (req.body[k] !== undefined) payload[k] = req.body[k];
+  const item = await Achievement.findByIdAndUpdate(req.params.id, payload, {
     new: true,
     runValidators: true,
   });

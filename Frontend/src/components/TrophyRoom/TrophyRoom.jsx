@@ -126,51 +126,30 @@ export default function TrophyRoom() {
   // Fetch live achievements from MongoDB via backend
   const { data: rawAchievements, loading, error, refetch } = useApi(() => api.getAchievements());
 
-  // Group achievements by issuer (or put them all in one "Achievements" category)
+  // Group achievements by Professional / Personal (admin-controlled category)
   const achievementCategories = (() => {
     if (!rawAchievements || rawAchievements.length === 0) return [];
 
-    // Group by issuer if there are multiple issuers, otherwise single category
-    const issuers = [...new Set(rawAchievements.map((a) => a.issuer).filter(Boolean))];
+    const normalize = (a) => ({
+      id: a._id,
+      title: a.title,
+      description: a.description || "",
+      icon: a.icon || "🏆",
+      stars: 3,
+      rarity: a.featured ? "epic" : "common",
+      unlocked: true,
+      issuer: a.issuer,
+      date: a.date,
+    });
 
-    if (issuers.length > 1) {
-      return issuers.map((issuer) => ({
-        name: issuer,
-        icon: "trophy",
-        items: rawAchievements
-          .filter((a) => a.issuer === issuer)
-          .map((a) => ({
-            id: a._id,
-            title: a.title,
-            description: a.description || "",
-            icon: a.icon || "🏆",
-            stars: a.stars || 3,
-            rarity: a.rarity || "common",
-            unlocked: a.unlocked !== false, // default to unlocked
-            progress: a.progress,
-            issuer: a.issuer,
-            date: a.date,
-          })),
-      }));
-    }
+    const professional = rawAchievements.filter((a) => (a.category || "professional") === "professional");
+    const personal = rawAchievements.filter((a) => a.category === "personal");
 
-    // Single category
-    return [{
-      name: "Achievements",
-      icon: "trophy",
-      items: rawAchievements.map((a) => ({
-        id: a._id,
-        title: a.title,
-        description: a.description || "",
-        icon: a.icon || "🏆",
-        stars: a.stars || 3,
-        rarity: a.rarity || "common",
-        unlocked: a.unlocked !== false,
-        progress: a.progress,
-        issuer: a.issuer,
-        date: a.date,
-      })),
-    }];
+    const groups = [];
+    if (professional.length) groups.push({ name: "Professional — jobs, certifications, launches", icon: "trophy", items: professional.map(normalize) });
+    if (personal.length) groups.push({ name: "Personal — streaks, learning, milestones", icon: "trophy", items: personal.map(normalize) });
+    if (!groups.length) groups.push({ name: "Achievements", icon: "trophy", items: rawAchievements.map(normalize) });
+    return groups;
   })();
 
   const allItems = achievementCategories.flatMap((c) => c.items);
@@ -181,7 +160,8 @@ export default function TrophyRoom() {
     return (
       <div className="min-h-full p-6">
         <div className="mb-6">
-          <h2 className="text-2xl font-heading font-bold text-text-primary mb-1">Trophy Room</h2>
+          <div className="mono text-xs text-[#FFB800] tracking-[0.3em] mb-1">// ACHIEVEMENTS_DB</div>
+          <h2 className="text-2xl font-heading font-bold text-text-primary mb-1">Achievements & Milestones</h2>
           <p className="text-sm text-text-secondary">Loading achievements from database…</p>
         </div>
         <TrophySkeleton />
@@ -229,7 +209,8 @@ export default function TrophyRoom() {
       <motion.div variants={staggerContainer} initial="hidden" animate="visible">
         {/* Header */}
         <motion.div variants={slideUp} className="mb-6">
-          <h2 className="text-2xl font-heading font-bold text-text-primary mb-1">Trophy Room</h2>
+          <div className="mono text-xs text-[#FFB800] tracking-[0.3em] mb-1">// ACHIEVEMENTS_DB</div>
+          <h2 className="text-2xl font-heading font-bold text-text-primary mb-1">Achievements & Milestones</h2>
           <p className="text-sm text-text-secondary">
             {totalUnlocked} of {totalAchievements} achievements unlocked
           </p>

@@ -1,6 +1,6 @@
-// Founder OS Frontend API client
+// TOSIF OS Frontend API client
 // All requests go through Vite's /api proxy → Backend on :5000
-// Backend reads/writes to MongoDB Atlas (configured via MONGO_URI in Backend/.env)
+// The database is the single source of truth: every section renders API data.
 
 const BASE = '/api';
 
@@ -21,11 +21,17 @@ async function request(path, opts = {}) {
 }
 
 export const api = {
-  // Public read endpoints (no auth needed)
+  // ── Public content (CMS-driven) ──────────────────────────
+  getSite: () => request('/site'),
+  getProfile: () => request('/profile'),
+  getAbout: () => request('/about'),
+  getStats: () => request('/stats'),
   getProjects: () => request('/projects'),
   getSkills: () => request('/skills'),
   getTimeline: () => request('/timeline'),
   getAchievements: () => request('/achievements'),
+  getExperience: () => request('/experience'),
+  getProducts: () => request('/products'),
   getResume: () => request('/resume'),
   getGithub: () => request('/github'),
 

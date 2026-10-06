@@ -1,170 +1,37 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useApp } from "@/context/AppContext";
-import { profile } from "@/data/profile";
+import { useApi } from "@/hooks/useApi";
+import { api } from "@/utils/api";
+import { profile as fallbackProfile } from "@/data/profile";
 import {
-  Home, Crosshair, Code2, Clock, GitBranch, Bot, Eye, Mail,
-  Rocket, FileDown, ChevronDown, Terminal, Volume2, Activity,
-  FolderGit2, Cpu, Code, Coffee, Quote, ArrowRight, Zap,
+  Code2, GitBranch, Bot, FileDown, ChevronDown, FolderGit2,
+  Rocket, ArrowRight, Zap, Trophy, Clock, Package, Activity, Quote,
 } from "lucide-react";
 
-// ─── Sidebar Navigation Items ───
-const sidebarNavItems = [
-  { id: "home", icon: Home, label: "Home", shortcut: "⌘1" },
-  { id: "mission", icon: Crosshair, label: "Mission Control", shortcut: "⌘2" },
-  { id: "skills", icon: Code2, label: "Skills Terminal", shortcut: "⌘3" },
-  { id: "timeline", icon: Clock, label: "Life Timeline", shortcut: "⌘4" },
-  { id: "projects", icon: GitBranch, label: "GitHub Pulse", shortcut: "⌘5" },
-  { id: "recruiter", icon: Bot, label: "AI Recruiter", shortcut: "⌘6" },
-  { id: "vision", icon: Eye, label: "Vision Board", shortcut: "⌘7" },
-  { id: "contact", icon: Mail, label: "Contact Dock", shortcut: "⌘8" },
-];
-
-// ─── Feature Cards Data ───
+// ─── Feature Cards Data (nav targets = new public sections) ───
 const featureCards = [
-  { icon: Crosshair, title: "MISSION CONTROL", desc: "Explore my projects and products", color: "#00D4FF" },
-  { icon: Code2, title: "SKILLS TERMINAL", desc: "Technologies I use to build the future", color: "#7C6AFF" },
-  { icon: Clock, title: "LIFE TIMELINE", desc: "My journey from learner to builder", color: "#FFB800" },
-  { icon: GitBranch, title: "GITHUB PULSE", desc: "Real-time stats directly from GitHub", color: "#00FF88" },
-  { icon: Bot, title: "AI RECRUITER", desc: "Ask anything about me. AI will answer.", color: "#FF6B9D" },
-  { icon: Eye, title: "VISION BOARD", desc: "The future I'm building step by step", color: "#a78bfa" },
+  { icon: GitBranch, title: "PROJECTS", desc: "What I've engineered, end to end", color: "#00D4FF", target: "projects" },
+  { icon: Package, title: "PRODUCTS", desc: "Startups and products I'm building", color: "#FF6B9D", target: "products" },
+  { icon: Code2, title: "SKILLS", desc: "The stack I use to ship", color: "#7C6AFF", target: "skills" },
+  { icon: Clock, title: "JOURNEY", desc: "From learner to founder", color: "#FFB800", target: "journey" },
+  { icon: Trophy, title: "ACHIEVEMENTS", desc: "Milestones worth surfacing", color: "#00FF88", target: "achievements" },
+  { icon: FileDown, title: "RESUME", desc: "Download the latest CV", color: "#a78bfa", target: "resume" },
 ];
 
-// ─── System Status Metrics ───
-const systemMetrics = [
-  { icon: FolderGit2, label: "Projects Launched", value: "12+", color: "#00D4FF" },
-  { icon: GitBranch, label: "GitHub Contributions", value: "1,250+", color: "#7C6AFF" },
-  { icon: Cpu, label: "Technologies Mastered", value: "15+", color: "#00FF88" },
-  { icon: Code, label: "Lines of Code", value: "100K+", color: "#FFB800" },
-  { icon: Coffee, label: "Cups of Coffee", value: "∞", color: "#FF6B9D" },
-];
+// ─── Right Sidebar: live system stats (calculated from the database) ───
+const statIcons = [FolderGit2, Package, Code2, Activity, Trophy];
+const statColors = ["#00D4FF", "#FF6B9D", "#00FF88", "#7C6AFF", "#FFB800"];
 
-// ─── Header Component ───
-function Header({ onToggleTerminal }) {
-  const [initText, setInitText] = useState("INITIALIZING FOUNDER OS...");
-  const [dots, setDots] = useState(0);
+function RightSidebar({ stats }) {
+  const rows = (stats || []).slice(0, 5).map((s, i) => ({
+    icon: statIcons[i % statIcons.length],
+    color: statColors[i % statColors.length],
+    label: s.label,
+    value: `${s.value}`,
+  }));
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setDots((prev) => (prev + 1) % 4);
-    }, 500);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setInitText("SYSTEM ONLINE — ALL MODULES LOADED"), 4000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return (
-    <motion.header
-      className="fixed top-0 left-0 right-0 h-14 bg-[#0a0e17]/90 backdrop-blur-xl border-b border-white/[0.06] flex items-center justify-between px-6 z-50"
-      initial={{ y: -56 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-    >
-      {/* Left: Logo */}
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#7C6AFF] to-[#00D4FF] flex items-center justify-center">
-          <Zap size={16} className="text-white" />
-        </div>
-        <span className="font-bold text-sm tracking-wider" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
-          FOUNDER OS
-        </span>
-      </div>
-
-      {/* Center: Status */}
-      <div className="hidden md:flex items-center gap-2">
-        <motion.div
-          className="w-2 h-2 rounded-full bg-[#00FF88]"
-          animate={{ opacity: [1, 0.3, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
-        <span className="text-xs font-mono text-[#6B6B80]">
-          {initText}{".".repeat(dots)}
-        </span>
-      </div>
-
-      {/* Right: Now Playing + Terminal */}
-      <div className="flex items-center gap-4">
-        <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.06]">
-          <Volume2 size={14} className="text-[#7C6AFF]" />
-          <span className="text-xs text-[#6B6B80]">Now Playing:</span>
-          <span className="text-xs text-[#E8E8F0]">Focus Mode</span>
-          <div className="flex items-end gap-[2px] h-3">
-            {[1, 2, 3, 4].map((i) => (
-              <motion.div
-                key={i}
-                className="w-[2px] bg-[#7C6AFF] rounded-full"
-                animate={{ height: ["4px", `${8 + i * 2}px`, "4px"] }}
-                transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.15 }}
-              />
-            ))}
-          </div>
-        </div>
-        <motion.button
-          onClick={onToggleTerminal}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#7C6AFF]/10 border border-[#7C6AFF]/30 text-[#7C6AFF] text-xs font-mono hover:bg-[#7C6AFF]/20 transition-colors"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Terminal size={14} />
-          <span className="hidden sm:inline">Launch Terminal</span>
-        </motion.button>
-      </div>
-    </motion.header>
-  );
-}
-
-// ─── Sidebar Component ───
-function Sidebar({ activeSection, onNavigate }) {
-  return (
-    <motion.aside
-      className="fixed left-0 top-14 bottom-0 w-[200px] bg-[#0a0e17] border-r border-white/[0.06] flex flex-col py-4 z-40 overflow-hidden"
-      initial={{ x: -200 }}
-      animate={{ x: 0 }}
-      transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-    >
-      <nav className="flex-1 px-3 space-y-1">
-        {sidebarNavItems.map((item, i) => {
-          const isActive = activeSection === item.id;
-          const IconComp = item.icon;
-          return (
-            <motion.button
-              key={item.id}
-              onClick={() => onNavigate(item.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all group ${isActive
-                ? "bg-[#7C6AFF]/15 text-[#7C6AFF] border border-[#7C6AFF]/20"
-                : "text-[#6B6B80] hover:bg-white/[0.03] hover:text-[#E8E8F0] border border-transparent"
-                }`}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5 + i * 0.05 }}
-              whileHover={{ x: 4 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <IconComp size={18} className={isActive ? "text-[#7C6AFF]" : "text-[#4A4A5E] group-hover:text-[#E8E8F0]"} />
-              <span className="font-medium">{item.label}</span>
-              <span className="ml-auto text-[10px] text-[#4A4A5E] opacity-0 group-hover:opacity-100 transition-opacity">
-                {item.shortcut}
-              </span>
-            </motion.button>
-          );
-        })}
-      </nav>
-
-      <div className="px-4 pt-4 border-t border-white/[0.06]">
-        <div className="flex items-center gap-2">
-          <Activity size={14} className="text-[#00FF88]" />
-          <span className="text-[10px] font-mono text-[#4A4A5E]">v3.0 — BUILD 2025</span>
-        </div>
-      </div>
-    </motion.aside>
-  );
-}
-
-// ─── Right Sidebar Component ───
-function RightSidebar() {
   return (
     <motion.aside
       className="hidden xl:flex fixed right-0 top-14 bottom-0 w-[240px] bg-[#0a0e17] border-l border-white/[0.06] flex-col p-5 z-40 overflow-y-auto"
@@ -175,10 +42,10 @@ function RightSidebar() {
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-4">
           <Activity size={16} className="text-[#00D4FF]" />
-          <h3 className="text-xs font-bold tracking-wider text-[#6B6B80]">SYSTEM STATUS</h3>
+          <h3 className="text-xs font-bold tracking-wider text-[#6B6B80]">LIVE DATABASE STATS</h3>
         </div>
         <div className="space-y-3">
-          {systemMetrics.map((metric, i) => {
+          {rows.map((metric, i) => {
             const IconComp = metric.icon;
             return (
               <motion.div
@@ -221,7 +88,7 @@ function RightSidebar() {
 }
 
 // ─── Central Visual Element ───
-function CentralVisual() {
+function CentralVisual({ mission }) {
   return (
     <div className="relative w-48 h-48 md:w-56 md:h-56 mx-auto">
       <motion.div
@@ -239,12 +106,12 @@ function CentralVisual() {
           animate={{ scale: [1, 1.1, 1] }}
           transition={{ duration: 3, repeat: Infinity }}
         />
-        <span className="text-[10px] tracking-[0.3em] text-[#6B6B80] font-mono mb-1">MISSION</span>
+        <span className="text-[10px] tracking-[0.3em] text-[#6B6B80] font-mono mb-1">CURRENT MISSION</span>
         <span
           className="text-sm font-bold text-center px-4 leading-tight"
           style={{ fontFamily: "'Space Grotesk', system-ui" }}
         >
-          BUILD PRODUCTS<br />THAT IMPACT<br />MILLIONS
+          {mission?.title || "BUILDING WHAT MATTERS"}
         </span>
         <div className="flex items-center gap-1.5 mt-2">
           <motion.div
@@ -252,7 +119,7 @@ function CentralVisual() {
             animate={{ opacity: [1, 0.3, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           />
-          <span className="text-[9px] font-mono text-[#00FF88]">STATUS: ONGOING</span>
+          <span className="text-[9px] font-mono text-[#00FF88]">{mission?.progressLabel || "STATUS: ONGOING"}</span>
         </div>
       </div>
     </div>
@@ -261,15 +128,6 @@ function CentralVisual() {
 
 // ─── Feature Cards Component ───
 function FeatureCards({ onNavigate }) {
-  const cardNavMap = {
-    "MISSION CONTROL": "mission",
-    "SKILLS TERMINAL": "skills",
-    "LIFE TIMELINE": "timeline",
-    "GITHUB PULSE": "projects",
-    "AI RECRUITER": "recruiter",
-    "VISION BOARD": "vision",
-  };
-
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
       {featureCards.map((card, i) => {
@@ -282,10 +140,7 @@ function FeatureCards({ onNavigate }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.0 + i * 0.08 }}
             whileHover={{ y: -4, scale: 1.02 }}
-            onClick={() => {
-              const navId = cardNavMap[card.title];
-              if (navId) onNavigate(navId);
-            }}
+            onClick={() => onNavigate(card.target)}
           >
             <div
               className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"
@@ -321,7 +176,7 @@ function FeatureCards({ onNavigate }) {
 }
 
 // ─── Bottom Terminal Component ───
-function BottomTerminal() {
+function BottomTerminal({ profile, site }) {
   const [command, setCommand] = useState("");
   const [output, setOutput] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -333,13 +188,13 @@ function BottomTerminal() {
     if (cmd === "help") {
       response = "Available commands: help, about, skills, projects, contact, clear";
     } else if (cmd === "about") {
-      response = `${profile.name} — ${profile.roles.join(", ")}`;
+      response = `${profile.name} — ${profile.roles?.join(", ") || profile.title}`;
     } else if (cmd === "skills") {
-      response = `Tech Stack: ${profile.techRadar.adopt.join(", ")} | Learning: ${profile.techRadar.trial.join(", ")}`;
+      response = `MERN + Tailwind + Framer Motion. Full list in the SKILLS section.`;
     } else if (cmd === "projects") {
-      response = `Currently working on: ${profile.currentStatus.project} (${profile.currentStatus.phase})`;
+      response = `Currently working on: ${site?.currentMission?.title || "new things"}`;
     } else if (cmd === "contact") {
-      response = `Email: ${profile.socialLinks.email} | GitHub: github.com/tosifraza`;
+      response = `Email: ${profile.email || "via the contact section"} | GitHub: ${profile.socials?.github || "see contact section"}`;
     } else if (cmd === "clear") {
       setOutput([]);
       setCommand("");
@@ -353,7 +208,7 @@ function BottomTerminal() {
 
   return (
     <motion.div
-      className="fixed bottom-0 left-[200px] right-0 xl:right-[240px] z-40"
+      className="fixed bottom-0 left-0 right-0 xl:right-[240px] z-40"
       initial={{ y: 80 }}
       animate={{ y: isExpanded ? 0 : 56 }}
       transition={{ duration: 0.3 }}
@@ -425,42 +280,38 @@ function BottomTerminal() {
 }
 
 // ─── Main HomePage Component ───
-export default function HomePage() {
-  const { state, setActiveSection, toggleTerminal, toggleRecruiterMode } = useApp();
+export default function HomePage({ site }) {
+  const { setActiveSection, toggleRecruiterMode } = useApp();
+  const navigate = useNavigate();
   const [showContent, setShowContent] = useState(false);
+  const { data: profile } = useApi(() => api.getProfile());
+  const { data: stats } = useApi(() => api.getStats());
+  const { data: resume } = useApi(() => api.getResume());
 
   useEffect(() => {
     const timer = setTimeout(() => setShowContent(true), 300);
     return () => clearTimeout(timer);
   }, []);
 
+  const p = profile || fallbackProfile;
+  const hero = site?.hero || {};
   const handleNavigate = (id) => {
-    if (id === "recruiter") {
-      toggleRecruiterMode();
-    } else if (id === "home") {
-      setActiveSection("home");
+    if (id === "/os") {
+      navigate("/os");
     } else {
       setActiveSection(id);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
-  const activeSection = state.recruiterMode
-    ? "recruiter"
-    : state.activeSection === "mission" || state.activeSection === "home"
-      ? "home"
-      : state.activeSection;
-
   return (
     <div className="min-h-screen bg-[#0a0e17]">
-      <Header onToggleTerminal={toggleTerminal} />
-      <Sidebar activeSection={activeSection} onNavigate={handleNavigate} />
-      <RightSidebar />
+      <RightSidebar stats={stats?.stats || []} />
 
-      <main className="md:ml-[200px] xl:mr-[240px] pt-14 pb-16 min-h-screen flex items-center justify-center px-6">
+      <main className="xl:mr-[240px] pt-20 pb-24 min-h-screen flex items-center justify-center px-6">
         <AnimatePresence>
           {showContent && (
             <motion.div
-              // className="px-6 md:px-10 py-8 max-w-5xl"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8 }}
@@ -468,7 +319,7 @@ export default function HomePage() {
               {/* Welcome Section */}
               <div className="text-center mb-10">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.6 }}>
-                  <span className="text-xs tracking-[0.4em] text-[#6B6B80] font-mono">WELCOME TO</span>
+                  <span className="text-xs tracking-[0.4em] text-[#6B6B80] font-mono">{hero.badge || "SYSTEM ONLINE"}</span>
                 </motion.div>
 
                 <motion.h1
@@ -484,7 +335,7 @@ export default function HomePage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7, duration: 0.6 }}
                 >
-                  FOUNDER OS
+                  {hero.heading || p.name}
                 </motion.h1>
 
                 <motion.div
@@ -494,7 +345,7 @@ export default function HomePage() {
                   transition={{ delay: 0.9, duration: 0.6 }}
                 >
                   <span className="text-[#7C6AFF]">&lt; </span>
-                  Building Products. Solving Problems. Creating Impact.
+                  {hero.subtitle || p.title || "Software Engineer & Founder"}
                   <span className="text-[#7C6AFF]"> &gt;</span>
                 </motion.div>
 
@@ -504,7 +355,7 @@ export default function HomePage() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1.0, duration: 0.6 }}
                 >
-                  Hello Recruiter,
+                  Hello, visitor —
                 </motion.p>
                 <motion.p
                   className="text-sm text-[#E8E8F0] max-w-lg mx-auto"
@@ -512,7 +363,7 @@ export default function HomePage() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1.1, duration: 0.6 }}
                 >
-                  I&apos;m <strong className="text-[#00D4FF]">{profile.name}</strong> — {profile.roles.join(", ")}.
+                  I&apos;m <strong className="text-[#00D4FF]">{p.name}</strong> — {(p.roles || [p.title]).slice(0, 3).join(", ")}.
                 </motion.p>
                 <motion.p
                   className="text-sm text-[#6B6B80] max-w-md mx-auto mt-1"
@@ -520,7 +371,7 @@ export default function HomePage() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1.15, duration: 0.6 }}
                 >
-                  This is not just a portfolio, this is my operating system.
+                  {hero.description || "This is not just a portfolio, this is my operating system."}
                 </motion.p>
               </div>
 
@@ -530,7 +381,7 @@ export default function HomePage() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 1.2, duration: 0.8, ease: "easeOut" }}
               >
-                <CentralVisual />
+                <CentralVisual mission={site?.currentMission} />
               </motion.div>
 
               {/* CTA Buttons */}
@@ -541,45 +392,58 @@ export default function HomePage() {
                 transition={{ delay: 1.5, duration: 0.6 }}
               >
                 <motion.button
-                  onClick={() => setActiveSection("mission")}
+                  onClick={() => handleNavigate(hero.primaryCta?.target || "projects")}
                   className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#7C6AFF] to-[#00D4FF] text-white font-semibold text-sm hover:opacity-90 transition-opacity"
                   whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(124, 106, 255, 0.4)" }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <Rocket size={16} />
-                  EXPLORE SYSTEM
+                  {hero.primaryCta?.label || "VIEW PROJECTS"}
                 </motion.button>
                 <motion.button
+                  onClick={() => handleNavigate("resume")}
                   className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/[0.05] border border-white/[0.1] text-[#E8E8F0] font-semibold text-sm hover:bg-white/[0.08] transition-colors"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <FileDown size={16} />
-                  VIEW RESUME
+                  VIEW RESUME {resume ? "" : ""}
                 </motion.button>
-              </motion.div>
-
-              {/* Scroll Indicator */}
-              <motion.div
-                className="flex flex-col items-center mt-8 mb-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 2.0 }}
-              >
-                <span className="text-[10px] text-[#4A4A5E] font-mono mb-2">Scroll to boot system</span>
-                <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
-                  <ChevronDown size={16} className="text-[#4A4A5E]" />
-                </motion.div>
+                <motion.button
+                  onClick={() => handleNavigate("/os")}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#00FF88]/10 border border-[#00FF88]/30 text-[#00FF88] font-semibold text-sm hover:bg-[#00FF88]/20 transition-colors"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Zap size={16} />
+                  ENTER TOSIF OS
+                </motion.button>
               </motion.div>
 
               {/* Feature Cards */}
               <FeatureCards onNavigate={handleNavigate} />
+
+              {/* Recruiter shortcut */}
+              <motion.div
+                className="flex justify-center mt-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.9 }}
+              >
+                <button
+                  onClick={toggleRecruiterMode}
+                  className="flex items-center gap-2 text-xs text-[#6B6B80] hover:text-[#00FF88] transition-colors font-mono"
+                >
+                  <Bot size={13} />
+                  Recruiter? Activate Recruiter View — everything you need in one screen
+                </button>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
       </main>
 
-      <BottomTerminal />
+      <BottomTerminal profile={p} site={site} />
     </div>
   );
 }

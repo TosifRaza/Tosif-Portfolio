@@ -1,25 +1,54 @@
 import { NavLink, useNavigate, Outlet } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import {
-  FaTachometerAlt,
-  FaRocket,
-  FaTerminal,
-  FaStream,
-  FaTrophy,
-  FaFilePdf,
-  FaEnvelope,
-  FaSignOutAlt,
-} from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext.jsx';
+import {
+  FaTachometerAlt, FaRocket, FaTerminal, FaStream, FaTrophy, FaFilePdf, FaEnvelope,
+  FaSignOutAlt, FaUser, FaPalette, FaInfoCircle, FaBriefcase, FaCubes, FaBullseye,
+  FaTasks, FaClipboardList, FaClock, FaGraduationCap, FaChartBar, FaRobot, FaCog,
+  FaGlobe,
+} from 'react-icons/fa';
 
-const NAV = [
-  { to: '/', label: 'Dashboard', icon: FaTachometerAlt, end: true, color: 'neon-cyan' },
-  { to: '/projects', label: 'Projects', icon: FaRocket, color: 'neon-purple' },
-  { to: '/skills', label: 'Skills', icon: FaTerminal, color: 'neon-green' },
-  { to: '/timeline', label: 'Timeline', icon: FaStream, color: 'neon-orange' },
-  { to: '/achievements', label: 'Achievements', icon: FaTrophy, color: 'neon-teal' },
-  { to: '/resume', label: 'Resume', icon: FaFilePdf, color: 'neon-red' },
-  { to: '/messages', label: 'Messages', icon: FaEnvelope, color: 'neon-cyan' },
+const NAV_GROUPS = [
+  {
+    label: 'Overview',
+    items: [{ to: '/', label: 'Dashboard', icon: FaTachometerAlt, end: true }],
+  },
+  {
+    label: 'Public Website',
+    items: [
+      { to: '/profile', label: 'Profile', icon: FaUser },
+      { to: '/site', label: 'Hero & Site Config', icon: FaPalette },
+      { to: '/about', label: 'About', icon: FaInfoCircle },
+      { to: '/experience', label: 'Experience', icon: FaBriefcase },
+      { to: '/skills', label: 'Skills', icon: FaTerminal },
+      { to: '/projects', label: 'Projects', icon: FaRocket },
+      { to: '/products', label: 'Products', icon: FaCubes },
+      { to: '/achievements', label: 'Achievements', icon: FaTrophy },
+      { to: '/timeline', label: 'Timeline', icon: FaStream },
+      { to: '/resume', label: 'Resume', icon: FaFilePdf },
+      { to: '/messages', label: 'Messages', icon: FaEnvelope },
+    ],
+  },
+  {
+    label: 'Personal OS',
+    items: [
+      { to: '/goals', label: 'Goals', icon: FaBullseye },
+      { to: '/tasks', label: 'Tasks', icon: FaTasks },
+      { to: '/activities', label: 'Activities', icon: FaClipboardList },
+      { to: '/time', label: 'Time Entries', icon: FaClock },
+      { to: '/learning', label: 'Learning', icon: FaGraduationCap },
+    ],
+  },
+  {
+    label: 'Analytics',
+    items: [{ to: '/analytics', label: 'Analytics', icon: FaChartBar }],
+  },
+  {
+    label: 'AI & Settings',
+    items: [
+      { to: '/ai', label: 'AI Configuration', icon: FaRobot },
+      { to: '/settings', label: 'Settings', icon: FaCog },
+    ],
+  },
 ];
 
 export default function Layout() {
@@ -34,42 +63,47 @@ export default function Layout() {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 shrink-0 border-r border-white/[0.06] glass-strong p-4">
-        <div className="flex items-center gap-3 mb-8 mt-2">
+      <aside className="hidden md:flex flex-col w-64 shrink-0 border-r border-white/[0.06] glass-strong p-4 sticky top-0 h-screen overflow-y-auto">
+        <div className="flex items-center gap-3 mb-6 mt-2">
           <div className="relative w-10 h-10">
             <div className="absolute inset-0 rounded-full border-2 border-neon-purple/60 animate-spin-slow" />
             <div className="absolute inset-1.5 rounded-full bg-gradient-to-br from-neon-purple to-neon-cyan" />
-            <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold mono">CMS</div>
+            <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold mono">OS</div>
           </div>
           <div>
             <div className="font-bold text-sm leading-none">
-              FOUNDER <span className="text-neon-purple">CMS</span>
+              TOSIF OS <span className="text-neon-purple">CONTROL</span>
             </div>
-            <div className="mono text-[10px] text-muted mt-1">Admin Portal</div>
+            <div className="mono text-[10px] text-muted mt-1">Admin Control Center</div>
           </div>
         </div>
 
-        <nav className="flex flex-col gap-1.5 flex-1">
-          {NAV.map((item) => {
-            const Icon = item.icon;
-            return (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium border transition-all ${
-                    isActive
-                      ? `bg-${item.color}/15 text-${item.color} border-${item.color}/40`
-                      : 'border-transparent text-white/70 hover:bg-white/5'
-                  }`
-                }
-              >
-                <Icon size={14} />
-                {item.label}
-              </NavLink>
-            );
-          })}
+        <nav className="flex flex-col gap-1 flex-1">
+          {NAV_GROUPS.map((group) => (
+            <div key={group.label} className="mb-2">
+              <div className="mono text-[9px] uppercase tracking-widest text-muted px-3 py-1.5">{group.label}</div>
+              {group.items.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    end={item.end}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium border transition-all ${
+                        isActive
+                          ? 'bg-neon-purple/15 text-neon-purple border-neon-purple/40'
+                          : 'border-transparent text-white/70 hover:bg-white/5'
+                      }`
+                    }
+                  >
+                    <Icon size={13} />
+                    {item.label}
+                  </NavLink>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
         <div className="mt-auto pt-4 border-t border-white/[0.06]">
