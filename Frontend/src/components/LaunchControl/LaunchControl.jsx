@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useApi } from "@/hooks/useApi";
-import { api } from "@/utils/api";
+import { api, apiUrl } from "@/utils/api";
 import {
   X, ExternalLink, Github, TrendingUp, Map, CheckCircle2, Circle, Loader, Package,
 } from "lucide-react";
@@ -38,7 +38,7 @@ function ProductModal({ product, onClose }) {
         <div className="flex items-start justify-between gap-4 mb-5">
           <div className="flex items-center gap-3">
             {product.logoUrl ? (
-              <img src={product.logoUrl} alt={product.name} className="w-12 h-12 rounded-xl object-cover" />
+              <img src={apiUrl(product.logoUrl)} alt={product.name} className="w-12 h-12 rounded-xl object-cover" />
             ) : (
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#FF6B9D]/30 to-[#7C6AFF]/30 flex items-center justify-center">
                 <Package size={20} className="text-[#FF6B9D]" />
@@ -205,7 +205,7 @@ export default function LaunchControl() {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     {product.logoUrl ? (
-                      <img src={product.logoUrl} alt={product.name} className="w-11 h-11 rounded-xl object-cover" />
+                      <img src={apiUrl(product.logoUrl)} alt={product.name} className="w-11 h-11 rounded-xl object-cover" />
                     ) : (
                       <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#FF6B9D]/25 to-[#7C6AFF]/25 flex items-center justify-center">
                         <Package size={18} className="text-[#FF6B9D]" />

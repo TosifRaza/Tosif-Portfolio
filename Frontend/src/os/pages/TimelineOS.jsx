@@ -1,4 +1,5 @@
 import { useApi } from '@/hooks/useApi';
+import { apiUrl } from '@/utils/api';
 import { Panel, Spinner, ErrorState, Badge, EmptyState } from '../components/ui.jsx';
 import { History } from 'lucide-react';
 
@@ -10,7 +11,7 @@ const CAT_COLORS = {
 /** TIMELINE (private view) — the life & career timeline from the CMS. */
 export default function TimelineOS() {
   const { data: events, loading, error, refetch } = useApi(() =>
-    fetch('/api/timeline').then((r) => {
+    fetch(apiUrl('/api/timeline')).then((r) => {
       if (!r.ok) throw new Error('Failed to load timeline');
       return r.json();
     })

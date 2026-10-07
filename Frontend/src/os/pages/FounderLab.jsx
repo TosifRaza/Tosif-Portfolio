@@ -1,5 +1,6 @@
 import { useApi } from '@/hooks/useApi';
 import { osApi } from '../osApi.js';
+import { apiUrl } from '@/utils/api';
 import { Panel, Spinner, ErrorState, Badge, EmptyState, ProgressBar } from '../components/ui.jsx';
 import { Rocket, ExternalLink, Github } from 'lucide-react';
 
@@ -11,7 +12,7 @@ const STATUS_STYLES = {
 /** FOUNDER LAB — products, roadmaps and honest milestones from the CMS. */
 export default function FounderLab() {
   const { data: products, loading, error, refetch } = useApi(() =>
-    fetch('/api/products').then((r) => {
+    fetch(apiUrl('/api/products')).then((r) => {
       if (!r.ok) throw new Error('Failed to load products');
       return r.json();
     })

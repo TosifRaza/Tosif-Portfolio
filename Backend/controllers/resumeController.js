@@ -1,19 +1,20 @@
 import path from 'node:path';
 import fs from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import crypto from 'node:crypto';
 import multer from 'multer';
 import Resume from '../models/Resume.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const uploadDir = path.join(__dirname, '..', 'uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+import { uploadDir } from '../config/uploads.js';
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, uploadDir),
   filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname) || '.pdf';
-    cb(null, `resume-${Date.now()}${ext}`);
+    const extensions = {
+      'application/pdf': '.pdf',
+      'application/msword': '.doc',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': '.docx',
+    };
+    cb(null, `resume-${crypto.randomUUID()}${extensions[file.mimetype] || '.bin'}`);
   },
 });
 

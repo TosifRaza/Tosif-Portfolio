@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlus, FaEdit, FaTrash, FaTimes, FaSave, FaSearch } from 'react-icons/fa';
+import { apiUrl } from '../utils/api.js';
 
 /**
  * Generic resource manager — handles list, create, edit, delete for any
@@ -330,7 +331,7 @@ function crudFor(resource, token) {
     Authorization: `Bearer ${token}`,
   };
   const req = async (path, opts = {}) => {
-    const res = await fetch(`${BASE}${path}`, { ...opts, headers: { ...headers, ...(opts.headers || {}) } });
+    const res = await fetch(apiUrl(`${BASE}${path}`), { ...opts, headers: { ...headers, ...(opts.headers || {}) } });
     if (!res.ok) {
       const msg = await res.json().catch(() => ({ message: res.statusText }));
       throw new Error(msg.message || `Request failed: ${res.status}`);

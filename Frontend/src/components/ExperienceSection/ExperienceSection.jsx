@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Briefcase, CheckCircle2, CalendarRange } from 'lucide-react';
 import { useApi } from '@/hooks/useApi';
-import { api } from '@/utils/api';
+import { api, apiUrl } from '@/utils/api';
 import { staggerContainer, staggerItem } from '@/utils/animations';
 
 /**
@@ -32,7 +32,7 @@ export default function ExperienceSection() {
               <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
                 <div className="flex items-center gap-3">
                   {exp.companyLogo ? (
-                    <img src={exp.companyLogo} alt={exp.company} className="w-10 h-10 rounded-lg object-cover" />
+                    <img src={apiUrl(exp.companyLogo)} alt={exp.company} className="w-10 h-10 rounded-lg object-cover" />
                   ) : (
                     <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#7C6AFF]/30 to-[#00D4FF]/30 flex items-center justify-center">
                       <Briefcase size={16} className="text-[#00D4FF]" />

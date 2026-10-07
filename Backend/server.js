@@ -1,14 +1,14 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import path from 'node:path';
-import fs from 'node:fs';
 import crypto from 'node:crypto';
-import { fileURLToPath } from 'node:url';
-import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import rateLimit from 'express-rate-limit';
 
 import { connectDB, closeDB } from './config/db.js';
+import { ensureUploadDir, uploadDir } from './config/uploads.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 // ── Models needed by the bootstrap seeder ───────────────────
@@ -53,41 +53,65 @@ import contentRoutes from './routes/contentRoutes.js';
 import experienceRoutes from './routes/experienceRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 
-dotenv.config();
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 const PORT = process.env.PORT || 5000;
-const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
-const ADMIN_URL = process.env.ADMIN_URL || 'http://localhost:5174';
+const isProduction = process.env.NODE_ENV === 'production';
 
-// JWT secret policy:
-//  - production: JWT_SECRET is REQUIRED (fail fast, no unsafe defaults)
-//  - development: a random secret is generated per boot so the project runs
-//    out of the box; sessions reset on restart until you set one in .env
-if (!process.env.JWT_SECRET) {
-  if (process.env.NODE_ENV === 'production') {
-    console.error('\n[x] JWT_SECRET is not set. Add it to Backend/.env (see .env.example). Refusing to start.\n');
-    process.exit(1);
+function validateProductionEnv() {
+  if (!isProduction) return;
+
+  const required = ['MONGO_URI', 'JWT_SECRET', 'ADMIN_EMAIL', 'ADMIN_PASSWORD', 'CORS_ORIGINS', 'UPLOAD_DIR'];
+  const missing = required.filter((key) => !process.env[key]?.trim());
+  if (missing.length) throw new Error(`Missing required production environment variables: ${missing.join(', ')}`);
+  if (Buffer.byteLength(process.env.JWT_SECRET, 'utf8') < 32) {
+    throw new Error('JWT_SECRET must be at least 32 bytes in production');
   }
+  if (process.env.ADMIN_PASSWORD.length < 12 || ['ChangeMe!2026', 'admin123'].includes(process.env.ADMIN_PASSWORD)) {
+    throw new Error('ADMIN_PASSWORD must be a unique password of at least 12 characters');
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(process.env.ADMIN_EMAIL)) {
+    throw new Error('ADMIN_EMAIL must be a valid email address');
+  }
+  if (!path.isAbsolute(process.env.UPLOAD_DIR)) {
+    throw new Error('UPLOAD_DIR must be an absolute path on persistent storage in production');
+  }
+
+  const origins = process.env.CORS_ORIGINS.split(',').map((origin) => origin.trim()).filter(Boolean);
+  if (!origins.length) throw new Error('CORS_ORIGINS must contain at least one HTTPS origin');
+  for (const origin of origins) {
+    let parsed;
+    try { parsed = new URL(origin); } catch { throw new Error(`Invalid CORS origin: ${origin}`); }
+    if (parsed.protocol !== 'https:' || parsed.origin !== origin) {
+      throw new Error(`CORS origin must be an exact HTTPS origin without a path: ${origin}`);
+    }
+  }
+}
+
+validateProductionEnv();
+
+if (!process.env.JWT_SECRET) {
   process.env.JWT_SECRET = crypto.randomBytes(48).toString('hex');
-  console.warn('[auth] ⚠ JWT_SECRET not set — generated a temporary one for this boot (set it in Backend/.env for persistent sessions)');
+  console.warn('[auth] JWT_SECRET not set; generated a temporary development secret for this boot');
 }
 
 const app = express();
 
 // ── CORS: real whitelist (empty-string safe, wildcard-host support) ──
-const allowedOrigins = [CLIENT_URL, ADMIN_URL, 'http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173', 'http://localhost:5174']
-  .filter(Boolean);
-const allowedPatterns = [/\.space-z\.ai$/, /\.vercel\.app$/];
+const allowedOrigins = (isProduction
+  ? process.env.CORS_ORIGINS.split(',')
+  : [process.env.CLIENT_URL || 'http://localhost:3000', process.env.ADMIN_URL || 'http://localhost:5174',
+      'http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173', 'http://localhost:5174'])
+  .map((origin) => origin.trim()).filter(Boolean);
 
 app.use(
   cors({
     origin(origin, cb) {
       if (!origin) return cb(null, true); // curl / same-origin via proxy
-      if (allowedOrigins.includes(origin) || allowedPatterns.some((re) => re.test(origin))) {
+      if (allowedOrigins.includes(origin)) {
         return cb(null, true);
       }
-      cb(new Error('Not allowed by CORS'));
+      const error = new Error('Origin is not allowed by CORS');
+      error.status = 403;
+      cb(error);
     },
     credentials: true,
   })
@@ -104,12 +128,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'tiny' : 'dev'));
 
 // Static folder for uploaded files (resumes, images)
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+ensureUploadDir();
 app.use('/uploads', express.static(uploadDir));
 
 // ── Health check ────────────────────────────────────────────
-app.get('/health', (_req, res) => res.json({ status: 'ok', ts: Date.now() }));
+app.get('/health', (_req, res) => {
+  const databaseReady = mongoose.connection.readyState === 1;
+  res.status(databaseReady ? 200 : 503).json({ status: databaseReady ? 'ok' : 'not-ready', database: databaseReady ? 'connected' : 'disconnected' });
+});
 
 // ── Routes ──────────────────────────────────────────────────
 // Public website + shared content (absolute-path routers mounted at root)
@@ -148,11 +174,13 @@ app.use(errorHandler);
 // ── Bootstrap: ensure an admin + seed content exist on first boot ──
 async function ensureBootstrapData() {
   const userCount = await User.countDocuments();
-  if (userCount === 0) {
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@tosifos.local';
-    const adminPassword = process.env.ADMIN_PASSWORD || 'ChangeMe!2026';
+  if (userCount === 0 && process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
     await User.create({ name: 'Tosif Raza', email: adminEmail, password: adminPassword, role: 'admin' });
-    console.log(`[bootstrap] ✓ Admin user created: ${adminEmail} — change this password after first login`);
+    console.log(`[bootstrap] Admin user created: ${adminEmail}`);
+  } else if (userCount === 0) {
+    console.log('[bootstrap] No admin configured; create the first development user through /api/auth/register');
   }
 
   const projectCount = await Project.countDocuments();
@@ -166,23 +194,30 @@ async function ensureBootstrapData() {
 }
 
 // ── Start ────────────────────────────────────────────────────
-const server = app.listen(PORT, async () => {
-  console.log(`\n┌────────────────────────────────────────────┐`);
-  console.log(`│  TOSIF OS · Backend v5.0                   │`);
-  console.log(`│  Listening on http://localhost:${PORT}        │`);
-  console.log(`└────────────────────────────────────────────┘\n`);
+let server;
+
+async function start() {
   await connectDB();
   await ensureBootstrapData();
-  console.log(`[server] ✓ Ready. Health: http://localhost:${PORT}/health`);
+  server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`[server] TOSIF OS backend listening on port ${PORT}; uploads: ${uploadDir}`);
+  });
+}
+
+start().catch(async (err) => {
+  console.error('[server] Startup failed:', err.message);
+  await closeDB().catch((closeError) => console.error('[server] Database cleanup failed:', closeError.message));
+  process.exit(1);
 });
 
-// Graceful shutdown
 const shutdown = async (signal) => {
-  console.log(`\n[server] ${signal} received, shutting down…`);
-  server.close(async () => {
+  console.log(`[server] ${signal} received, shutting down`);
+  const finish = async () => {
     await closeDB();
     process.exit(0);
-  });
+  };
+  if (server) server.close(finish);
+  else await finish();
 };
 process.on('SIGINT', () => shutdown('SIGINT'));
 process.on('SIGTERM', () => shutdown('SIGTERM'));

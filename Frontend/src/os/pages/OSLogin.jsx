@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Zap, Lock, Mail } from 'lucide-react';
+import { apiUrl } from '@/utils/api';
 
 /**
  * OS LOGIN — the gate to private mode.
@@ -19,7 +20,7 @@ export default function OSLogin({ onLogin }) {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(apiUrl('/api/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

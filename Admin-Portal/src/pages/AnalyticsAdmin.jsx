@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { request } from '../utils/api.js';
+import { apiUrl, request } from '../utils/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, Legend } from 'recharts';
 
@@ -17,10 +17,10 @@ export default function AnalyticsAdmin() {
   useEffect(() => {
     const headers = { Authorization: `Bearer ${token}` };
     Promise.all([
-      fetch('/api/analytics/weekly', { headers }).then((r) => r.json()),
-      fetch('/api/analytics/monthly', { headers }).then((r) => r.json()),
-      fetch('/api/predictions/trajectory', { headers }).then((r) => r.json()),
-      fetch('/api/analytics/plan-vs-actual', { headers }).then((r) => r.json()),
+      fetch(apiUrl('/api/analytics/weekly'), { headers }).then((r) => r.json()),
+      fetch(apiUrl('/api/analytics/monthly'), { headers }).then((r) => r.json()),
+      fetch(apiUrl('/api/predictions/trajectory'), { headers }).then((r) => r.json()),
+      fetch(apiUrl('/api/analytics/plan-vs-actual'), { headers }).then((r) => r.json()),
     ])
       .then(([w, m, t, p]) => {
         setWeekly(w); setMonthly(m); setTrajectories(Array.isArray(t) ? t : []); setPlan(p);

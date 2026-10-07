@@ -1,11 +1,12 @@
 import { useApi } from '@/hooks/useApi';
+import { apiUrl } from '@/utils/api';
 import { Panel, Spinner, ErrorState, Badge, EmptyState } from '../components/ui.jsx';
 import { Trophy } from 'lucide-react';
 
 /** ACHIEVEMENTS (private view) — professional vs personal, from the CMS. */
 export default function AchievementsOS() {
   const { data: items, loading, error, refetch } = useApi(() =>
-    fetch('/api/achievements').then((r) => {
+    fetch(apiUrl('/api/achievements')).then((r) => {
       if (!r.ok) throw new Error('Failed to load achievements');
       return r.json();
     })

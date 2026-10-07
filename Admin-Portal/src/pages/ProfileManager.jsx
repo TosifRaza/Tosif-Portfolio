@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api } from '../utils/api.js';
+import { api, apiUrl } from '../utils/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { FaSave } from 'react-icons/fa';
 
@@ -12,7 +12,7 @@ export default function ProfileManager() {
   const [msg, setMsg] = useState(null);
 
   useEffect(() => {
-    fetch('/api/profile')
+    fetch(apiUrl('/api/profile'))
       .then((r) => r.json())
       .then((d) => { setDoc(d); setLoading(false); })
       .catch(() => setLoading(false));

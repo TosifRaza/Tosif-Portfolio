@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { request } from '../utils/api.js';
+import { apiUrl, request } from '../utils/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { FaSave, FaArrowUp, FaArrowDown, FaPlus, FaTrash, FaEye, FaEyeSlash } from 'react-icons/fa';
 
@@ -16,7 +16,7 @@ export default function SiteManager() {
   const [msg, setMsg] = useState(null);
 
   useEffect(() => {
-    fetch('/api/site')
+    fetch(apiUrl('/api/site'))
       .then((r) => r.json())
       .then((d) => { setDoc(d); setLoading(false); })
       .catch(() => setLoading(false));

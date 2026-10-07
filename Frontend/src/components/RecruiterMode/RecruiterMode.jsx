@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useApi } from "@/hooks/useApi";
-import { api } from "@/utils/api";
+import { api, apiUrl } from "@/utils/api";
 import { useApp } from "@/context/AppContext";
 import { staggerContainer, staggerItem, slideUp } from "@/utils/animations";
 import { FileDown, X, Bot, ExternalLink } from "lucide-react";
@@ -170,7 +170,7 @@ export default function RecruiterMode() {
         {/* Resume + contact row */}
         <motion.div variants={staggerItem} className="flex flex-wrap gap-3">
           <a
-            href={resume ? "/api/resume/download" : "#"}
+            href={resume ? apiUrl('/api/resume/download') : '#'}
             onClick={(e) => {
               if (!resume) {
                 e.preventDefault();

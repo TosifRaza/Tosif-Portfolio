@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 
 // Pick a MongoDB version that has binaries for modern Debian (>=7.0.3)
 process.env.MONGOMS_VERSION = process.env.MONGOMS_VERSION || '8.0.4';
@@ -19,7 +18,11 @@ export async function connectDB() {
       console.log('[db] Connecting to external MongoDB…');
       await mongoose.connect(uri, { autoIndex: true });
     } else {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error('MONGO_URI is required in production');
+      }
       console.log('[db] No MONGO_URI set — starting in-memory MongoDB…');
+      const { MongoMemoryServer } = await import('mongodb-memory-server');
       memoryServer = await MongoMemoryServer.create();
       const memoryUri = memoryServer.getUri();
       await mongoose.connect(memoryUri);
@@ -34,14 +37,15 @@ export async function connectDB() {
       console.warn('[db] MongoDB disconnected')
     );
   } catch (err) {
-    console.error('[db] Failed to connect:', err);
-    process.exit(1);
+    throw new Error('Database connection failed', { cause: err });
   }
 }
 
 export async function closeDB() {
-  if (memoryServer) {
+  if (mongoose.connection.readyState !== 0) {
     await mongoose.connection.close();
+  }
+  if (memoryServer) {
     await memoryServer.stop();
     console.log('[db] In-memory MongoDB stopped');
   }

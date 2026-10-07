@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { FileDown, FileText, Bot, ExternalLink } from 'lucide-react';
 import { useApi } from '@/hooks/useApi';
-import { api } from '@/utils/api';
+import { api, apiUrl } from '@/utils/api';
 import { useApp } from '@/context/AppContext';
 import { staggerContainer, staggerItem } from '@/utils/animations';
 
@@ -52,7 +52,7 @@ export default function ResumeSection() {
             </div>
             <div className="flex flex-wrap gap-3">
               <a
-                href="/api/resume/download"
+                href={apiUrl('/api/resume/download')}
                 onClick={(e) => {
                   if (!resume) {
                     e.preventDefault();

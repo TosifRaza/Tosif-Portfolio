@@ -1,8 +1,14 @@
 // Admin API client — talks to the same backend as the public Frontend.
+const API_ORIGIN = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 const BASE = '/api';
 
+export function apiUrl(path) {
+  if (/^[a-z][a-z\d+.-]*:/i.test(path) || path.startsWith('//')) return path;
+  return `${API_ORIGIN}${path.startsWith('/') ? path : `/${path}`}`;
+}
+
 async function request(path, opts = {}) {
-  const res = await fetch(`${BASE}${path}`, {
+  const res = await fetch(apiUrl(`${BASE}${path}`), {
     headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) },
     ...opts,
   });
@@ -47,7 +53,7 @@ export const api = {
     return {
       listAll: () => request('/resume/all', { headers }),
       upload: (formData) =>
-        fetch('/api/resume', { method: 'POST', headers, body: formData }).then((r) => r.json()),
+        fetch(apiUrl('/api/resume'), { method: 'POST', headers, body: formData }).then((r) => r.json()),
       remove: (id) => request(`/resume/${id}`, { method: 'DELETE', headers }),
     };
   },

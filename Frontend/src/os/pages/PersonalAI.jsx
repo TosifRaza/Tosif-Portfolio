@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { useApi } from '@/hooks/useApi';
 import { osApi } from '../osApi.js';
+import { apiUrl } from '@/utils/api';
 import { Panel, Spinner, ErrorState, Badge } from '../components/ui.jsx';
 import { Bot, Send, Sparkles } from 'lucide-react';
 
@@ -21,7 +22,7 @@ const SUGGESTIONS = [
  * rephrases the computed answer; the numbers still come from the data.
  */
 export default function PersonalAI() {
-  const { data: siteData } = useApi(() => fetch('/api/site').then((r) => r.json()));
+  const { data: siteData } = useApi(() => fetch(apiUrl('/api/site')).then((r) => r.json()));
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);

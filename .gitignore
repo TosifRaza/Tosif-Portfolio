@@ -1,6 +1,12 @@
 node_modules/
 dist/
 .env
+.env.*
+!.env.example
+!Backend/.env.example
+!Backend/.env.production.example
+!Frontend/.env.production.example
+!Admin-Portal/.env.production.example
 *.log
 .DS_Store
 .next/

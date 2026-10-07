@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaUpload, FaTrash, FaFilePdf, FaCheckCircle, FaStar } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext.jsx';
-import { api } from '../utils/api.js';
+import { api, apiUrl } from '../utils/api.js';
 
 export default function ResumeManager() {
   const { token } = useAuth();
@@ -107,7 +107,7 @@ export default function ResumeManager() {
                 </div>
               </div>
               <a
-                href={`/api/resume/download`}
+                href={apiUrl('/api/resume/download')}
                 target="_blank"
                 rel="noreferrer"
                 className="btn-ghost"

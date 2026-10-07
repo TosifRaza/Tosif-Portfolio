@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { request } from '../utils/api.js';
+import { apiUrl, request } from '../utils/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { FaSave, FaPlus, FaTrash } from 'react-icons/fa';
 
@@ -12,7 +12,7 @@ export default function AboutManager() {
   const [msg, setMsg] = useState(null);
 
   useEffect(() => {
-    fetch('/api/about')
+    fetch(apiUrl('/api/about'))
       .then((r) => r.json())
       .then((d) => { setDoc(d || { paragraphs: [], highlights: [], values: [], visible: true }); setLoading(false); })
       .catch(() => setLoading(false));

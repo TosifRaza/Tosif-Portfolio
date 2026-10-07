@@ -1,5 +1,6 @@
 // TOSIF OS — private mode auth helpers.
 // The JWT lives in localStorage; osFetch adds it and handles 401 globally.
+import { apiUrl } from '../utils/api.js';
 
 const TOKEN_KEY = 'tosif_os_token';
 const USER_KEY = 'tosif_os_user';
@@ -30,7 +31,7 @@ export async function osFetch(path, opts = {}) {
   const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
   const token = getToken();
   if (token) headers.Authorization = `Bearer ${token}`;
-  const res = await fetch(`/api${path}`, { ...opts, headers });
+  const res = await fetch(apiUrl(`/api${path}`), { ...opts, headers });
   if (res.status === 401) {
     clearSession();
     window.location.href = '/os/login';

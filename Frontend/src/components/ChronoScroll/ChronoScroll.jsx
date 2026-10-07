@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useApi } from "@/hooks/useApi";
-import { api } from "@/utils/api";
+import { api, apiUrl } from "@/utils/api";
 import { staggerContainer, staggerItem, slideUp } from "@/utils/animations";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -111,7 +111,7 @@ export default function ChronoScroll() {
                 <p className="text-sm text-text-secondary leading-relaxed mb-4">{event.description}</p>
 
                 {event.image && (
-                  <img src={event.image} alt={event.title} className="w-full rounded-lg mb-3 border border-white/[0.06]" />
+                  <img src={apiUrl(event.image)} alt={event.title} className="w-full rounded-lg mb-3 border border-white/[0.06]" />
                 )}
               </div>
 

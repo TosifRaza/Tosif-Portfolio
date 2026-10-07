@@ -53,6 +53,9 @@ export const changePassword = asyncHandler(async (req, res) => {
 
 // POST /api/auth/register  (open only if no users exist yet — bootstrap)
 export const register = asyncHandler(async (req, res) => {
+  if (process.env.NODE_ENV === 'production')
+    return res.status(403).json({ message: 'Registration is disabled in production' });
+
   const count = await User.countDocuments();
   if (count > 0)
     return res.status(403).json({ message: 'Registration is closed. Use the admin portal.' });

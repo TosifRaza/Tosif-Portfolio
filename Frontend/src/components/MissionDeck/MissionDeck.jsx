@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useApi } from "@/hooks/useApi";
-import { api } from "@/utils/api";
+import { api, apiUrl } from "@/utils/api";
 import {
   X, ExternalLink, Github, Rocket, Target, Lightbulb, User, BookOpen,
 } from "lucide-react";
@@ -58,7 +58,7 @@ function ProjectModal({ project, onClose }) {
         </div>
 
         {project.image && (
-          <img src={project.image} alt={project.title} className="w-full rounded-xl mb-5 border border-white/[0.06]" />
+          <img src={apiUrl(project.image)} alt={project.title} className="w-full rounded-xl mb-5 border border-white/[0.06]" />
         )}
 
         <div className="space-y-4">

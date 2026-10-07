@@ -10,6 +10,18 @@ import Achievement from '../models/Achievement.js';
 dotenv.config();
 
 const seed = async () => {
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('The destructive seed script cannot run in production');
+  }
+  if (process.env.SEED_CONFIRM !== 'WIPE_DATABASE') {
+    throw new Error('This script deletes existing data. Set SEED_CONFIRM=WIPE_DATABASE to continue.');
+  }
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminEmail || !adminPassword || adminPassword.length < 12 || ['ChangeMe!2026', 'admin123'].includes(adminPassword)) {
+    throw new Error('Set ADMIN_EMAIL and a unique ADMIN_PASSWORD of at least 12 characters before seeding');
+  }
+
   await connectDB();
   console.log('[seed] Wiping existing data…');
   await Promise.all([
@@ -21,15 +33,13 @@ const seed = async () => {
   ]);
 
   // Admin user
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@founderos.dev';
-  const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
   await User.create({
     name: 'Tosif Raza',
     email: adminEmail,
     password: adminPassword,
     role: 'admin',
   });
-  console.log(`[seed] ✓ Admin user created: ${adminEmail} / ${adminPassword}`);
+  console.log(`[seed] Admin user created: ${adminEmail}`);
 
   // Projects (missions)
   await Project.insertMany([

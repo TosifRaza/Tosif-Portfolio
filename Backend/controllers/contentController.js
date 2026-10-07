@@ -7,6 +7,7 @@ import Skill from '../models/Skill.js';
 import Experience from '../models/Experience.js';
 import Achievement from '../models/Achievement.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
+import { uploadDir } from '../config/uploads.js';
 
 // ── Profile (singleton) ─────────────────────────────────────────────
 // GET /api/profile — public
@@ -90,19 +91,16 @@ const IMAGE_MAX = 5 * 1024 * 1024;
 export const uploadImage = [
   asyncHandler(async (req, res) => {
     if (!req.headers['content-type']?.startsWith('multipart/form-data')) {
-      throw badRequest('Send multipart/form-data with an "image" file field');
+      const error = new Error('Send multipart/form-data with an "image" file field');
+      error.status = 400;
+      throw error;
     }
     const multer = (await import('multer')).default;
-    const path = await import('node:path');
-    const fs = await import('node:fs');
-    const { fileURLToPath } = await import('node:url');
-    const __dirname = path.dirname(fileURLToPath(import.meta.url));
-    const uploadDir = path.join(__dirname, '..', 'uploads');
-    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
     const storage = multer.diskStorage({
       destination: (_q, _f, cb) => cb(null, uploadDir),
       filename: (_q, file, cb) => {
-        const ext = path.extname(file.originalname) || '.png';
+        const extensions = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/gif': '.gif', 'image/webp': '.webp', 'image/avif': '.avif' };
+        const ext = extensions[file.mimetype] || '.img';
         cb(null, `img-${Date.now()}-${Math.round(Math.random() * 1e6)}${ext}`);
       },
     });
@@ -110,7 +108,8 @@ export const uploadImage = [
       storage,
       limits: { fileSize: IMAGE_MAX },
       fileFilter: (_q, file, cb) => {
-        if (file.mimetype.startsWith('image/')) cb(null, true);
+        const allowedTypes = new Set(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/avif']);
+        if (allowedTypes.has(file.mimetype)) cb(null, true);
         else cb(new Error('Only image files are allowed'));
       },
     }).single('image');

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { request } from '../utils/api.js';
+import { apiUrl, request } from '../utils/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { FaSave } from 'react-icons/fa';
 
@@ -12,7 +12,7 @@ export default function AIConfigManager() {
   const [msg, setMsg] = useState(null);
 
   useEffect(() => {
-    fetch('/api/site')
+    fetch(apiUrl('/api/site'))
       .then((r) => r.json())
       .then((d) => { setDoc(d); setLoading(false); })
       .catch(() => setLoading(false));

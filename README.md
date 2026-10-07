@@ -29,8 +29,8 @@ Prerequisites: Node.js 18+ (Node 20/22/24 recommended). A local MongoDB is **opt
 # 1 — Backend (port 5000)
 cd Backend
 npm install
-cp .env.example .env        # then set JWT_SECRET (and MONGO_URI if you have MongoDB)
-npm run dev                 # leaves MONGO_URI empty → auto-starts an in-memory MongoDB
+cp .env.example .env        # optionally set MONGO_URI; development uses a temporary JWT secret otherwise
+npm run dev                 # an in-memory MongoDB is used only for local development
 
 # 2 — Public portfolio (port 3000)
 cd ../Frontend
@@ -45,8 +45,7 @@ npm run dev
 
 Open http://localhost:3000 (portfolio) and http://localhost:5174 (Control Center).
 
-**Default admin login** (created on first boot — change it immediately in Settings):
-`ADMIN_EMAIL` / `ADMIN_PASSWORD` from `Backend/.env` (default `admin@tosifos.local` / `ChangeMe!2026`).
+On first boot, an admin is created only when both `ADMIN_EMAIL` and `ADMIN_PASSWORD` are set. In development, you can create the first user through the registration page/API. Production registration is disabled.
 
 The same account unlocks the private OS at http://localhost:3000/os.
 
@@ -59,6 +58,32 @@ cd Admin-Portal && npm run build  # → Admin-Portal/dist
 
 Serve `dist/` behind any static host and point `/api` + `/uploads` at the backend
 (same Vite proxy paths, or set `VITE_API_URL` before building).
+
+### Backend deployment
+
+The repository includes a Docker deployment. Copy `Backend/.env.production.example` to `Backend/.env.production`, fill in the values below, then run from the repository root:
+
+```bash
+docker compose -f compose.production.yaml up --build -d
+docker compose -f compose.production.yaml ps
+```
+
+The image uses Node 22, starts with `npm start`, and the Compose file keeps uploads in a named persistent volume. MongoDB must be a persistent external MongoDB service; the container does not launch an unauthenticated database. Docker and Docker Compose must be installed on the deployment host.
+
+For non-Docker Node.js hosting, deploy the `Backend` directory with Node 20 or newer, install with `npm ci`, and use `npm start`. Set the following variables in the hosting provider or `Backend/.env.production` (never commit production secrets):
+
+- `NODE_ENV=production` and the provider supplied `PORT`.
+- `MONGO_URI` for a persistent MongoDB database.
+- `JWT_SECRET` with at least 32 random bytes.
+- `ADMIN_EMAIL` and a unique `ADMIN_PASSWORD` of at least 12 characters. The admin is created at first startup if the database has no users.
+- `CORS_ORIGINS` as comma-separated exact HTTPS origins for the public site and admin portal, with no paths or wildcard domains.
+- `UPLOAD_DIR` as the absolute path of a persistent mounted volume. Mount the volume at that path; image and resume uploads are stored there.
+
+For Docker Compose, set `UPLOAD_DIR` automatically to `/data/uploads`; the named volume persists it across container replacements. Set `HOST_PORT` only if the host should expose the API on a port other than 5000. Keep the environment file private; `.env.production` is Git-ignored.
+
+The service listens on the provider's `PORT`, binds to `0.0.0.0`, and exposes `GET /health`. The health check returns HTTP 503 until MongoDB is connected. Production startup fails when a required variable is missing or invalid. Copy `Backend/.env.example` for the variable names; it contains no production credentials.
+
+For the deployed public frontend, set Vercel's `VITE_API_URL` environment variable to the backend origin (for example, `https://api.your-domain.com`, with no `/api` suffix), then redeploy the frontend. The backend CORS list already includes `https://tosif.site` and the stable `https://tosif-portfolio-frontend.vercel.app` domain. If the Admin Portal is deployed at another domain, add that exact HTTPS origin to `CORS_ORIGINS` and set the same `VITE_API_URL` for its build. Templates are in `Frontend/.env.production.example` and `Admin-Portal/.env.production.example`.
 
 ---
 
