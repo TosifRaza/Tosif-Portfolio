@@ -70,7 +70,7 @@ docker compose -f compose.production.yaml ps
 
 The image uses Node 22, starts with `npm start`, and the Compose file keeps uploads in a named persistent volume. MongoDB must be a persistent external MongoDB service; the container does not launch an unauthenticated database. Docker and Docker Compose must be installed on the deployment host.
 
-For non-Docker Node.js hosting, deploy the `Backend` directory with Node 20 or newer, install with `npm ci`, and use `npm start`. Set the following variables in the hosting provider or `Backend/.env.production` (never commit production secrets):
+For non-Docker Node.js hosting, deploy the `Backend` directory with Node 20 or newer, install production dependencies with `npm ci --omit=dev`, and use `npm start`. Set the following variables in the hosting provider or `Backend/.env.production` (never commit production secrets):
 
 - `NODE_ENV=production` and the provider supplied `PORT`.
 - `MONGO_URI` for a persistent MongoDB database.
