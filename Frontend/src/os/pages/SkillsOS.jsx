@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useApi } from '@/hooks/useApi';
 import { osApi } from '../osApi.js';
-import { Panel, Spinner, ErrorState, ProgressBar, fmtMinutes, btnGhost, inputCls } from '../components/ui.jsx';
+import { Panel, Spinner, ErrorState, ProgressBar, fmtMinutes, btnGhost, btnPrimary, inputCls } from '../components/ui.jsx';
 import { Plus, X, Check } from 'lucide-react';
 
 /**
