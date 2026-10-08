@@ -49,7 +49,6 @@ export default function PersonalAI() {
   return (
     <div className="space-y-6 flex flex-col h-[calc(100vh-120px)]">
       <div>
-        <div className="mono text-[10px] text-[#FF6B9D] tracking-[0.3em]">// PERSONAL_AI</div>
         <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>Personal AI</h1>
         <p className="text-xs text-[#6B6B80] mt-1">
           {siteData?.ai?.privateIntro || 'Ask about your goals, learning, time and progress.'} Every answer is computed from your own records.

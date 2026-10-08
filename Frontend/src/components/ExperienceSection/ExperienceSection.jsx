@@ -15,7 +15,6 @@ export default function ExperienceSection() {
     <section className="min-h-screen px-4 sm:px-8 lg:px-16 py-12 sm:py-16" id="experience">
       <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="max-w-5xl mx-auto">
         <motion.div variants={staggerItem} className="mb-10">
-          <div className="mono text-xs text-[#00D4FF] tracking-[0.3em] mb-2">// EXPERIENCE.LOG</div>
           <h2 className="text-3xl sm:text-4xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
             Where I've Worked
           </h2>

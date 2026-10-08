@@ -158,7 +158,6 @@ export default function SkillConstellation() {
       <motion.div variants={staggerContainer} initial="hidden" animate="visible">
         {/* Header */}
         <motion.div variants={slideUp} className="mb-6">
-          <div className="mono text-xs text-[#7C6AFF] tracking-[0.3em] mb-1">// SKILL_MATRIX</div>
           <h2 className="text-2xl font-heading font-bold text-text-primary mb-1">Engineering Stack</h2>
           <p className="text-sm text-text-secondary">Click any skill to explore proficiency — live from the database</p>
         </motion.div>

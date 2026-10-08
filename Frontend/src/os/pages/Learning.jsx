@@ -59,7 +59,6 @@ export default function Learning() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <div className="mono text-[10px] text-[#7C6AFF] tracking-[0.3em]">// LEARNING_OS</div>
           <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>Learning</h1>
         </div>
         <div className="flex items-center gap-2">

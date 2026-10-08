@@ -55,7 +55,6 @@ export default function ProfileManager() {
   return (
     <div>
       <div className="mb-6">
-        <div className="mono text-xs text-neon-cyan uppercase tracking-widest mb-1">// profile (singleton)</div>
         <h1 className="text-2xl font-extrabold">Profile</h1>
         <p className="text-sm text-muted mt-1">Identity used by the hero, about, resume, recruiter view and the AI assistant.</p>
       </div>

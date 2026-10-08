@@ -49,7 +49,6 @@ export default function AboutManager() {
   return (
     <div>
       <div className="mb-6">
-        <div className="mono text-xs text-neon-cyan uppercase tracking-widest mb-1">// about (singleton)</div>
         <h1 className="text-2xl font-extrabold">About</h1>
       </div>
 

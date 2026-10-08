@@ -51,7 +51,6 @@ export default function MessagesManager() {
 
   return (
     <div>
-      <div className="mono text-xs text-neon-cyan uppercase tracking-widest mb-1">// messages</div>
       <h1 className="text-2xl font-extrabold mb-2">Contact Messages</h1>
       <p className="text-white/60 text-sm mb-6">
         {items.length} total · {unread} unread

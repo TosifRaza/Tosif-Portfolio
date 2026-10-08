@@ -77,7 +77,6 @@ export default function SiteManager() {
   return (
     <div>
       <div className="mb-6">
-        <div className="mono text-xs text-neon-cyan uppercase tracking-widest mb-1">// site config (singleton)</div>
         <h1 className="text-2xl font-extrabold">Hero & Site Config</h1>
         <p className="text-sm text-muted mt-1">Controls the public homepage content, section visibility/order, navigation and more.</p>
       </div>

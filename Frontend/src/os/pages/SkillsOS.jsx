@@ -52,7 +52,6 @@ export default function SkillsOS() {
   return (
     <div className="space-y-6">
       <div>
-        <div className="mono text-[10px] text-[#7C6AFF] tracking-[0.3em]">// SKILLS_LEARNING_OS</div>
         <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>Skills + Learning OS</h1>
         <p className="text-xs text-[#6B6B80] mt-1">
           Current level → target level, learning hours and topics per skill. Levels are shown on the public site too; targets and hours stay private.

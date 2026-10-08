@@ -40,7 +40,6 @@ export default function GlobalMap({ site }) {
       <motion.div variants={staggerContainer} initial="hidden" animate="visible">
         {/* Header */}
         <motion.div variants={slideUp} className="mb-6">
-          <div className="mono text-xs text-[#00D4FF] tracking-[0.3em] mb-1">// GLOBAL_REACH</div>
           <h2 className="text-2xl font-heading font-bold text-text-primary mb-1">Global Reach</h2>
           <p className="text-sm text-text-secondary">Regions connected to real professional activity — as published by me</p>
         </motion.div>

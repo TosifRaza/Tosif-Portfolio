@@ -27,7 +27,6 @@ export default function Tasks() {
   return (
     <div className="space-y-6">
       <div>
-        <div className="mono text-[10px] text-[#00D4FF] tracking-[0.3em]">// TASKS</div>
         <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>All Tasks</h1>
         <p className="text-xs text-[#6B6B80] mt-1">Completing a task automatically updates its milestone and goal progress.</p>
       </div>

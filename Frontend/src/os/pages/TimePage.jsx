@@ -83,7 +83,6 @@ export default function TimePage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <div className="mono text-[10px] text-[#00D4FF] tracking-[0.3em]">// TIME_TRACKING</div>
           <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>Time</h1>
         </div>
         <div className="flex items-center gap-2">

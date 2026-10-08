@@ -68,7 +68,6 @@ export default function ChronoScroll() {
       <div className="p-6 pt-16 pb-0">
         <motion.div variants={staggerContainer} initial="hidden" animate="visible">
           <motion.div variants={slideUp}>
-            <div className="mono text-xs text-[#FFB800] tracking-[0.3em] mb-1">// LIFE_TIMELINE</div>
             <h2 className="text-2xl font-heading font-bold text-text-primary mb-1">Journey</h2>
             <p className="text-sm text-text-secondary">Scroll to travel through time</p>
           </motion.div>

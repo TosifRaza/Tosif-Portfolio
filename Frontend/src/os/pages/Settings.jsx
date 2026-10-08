@@ -54,7 +54,6 @@ export default function Settings() {
   return (
     <div className="space-y-6">
       <div>
-        <div className="mono text-[10px] text-[#9B9BAF] tracking-[0.3em]">// SETTINGS</div>
         <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>Settings</h1>
       </div>
 

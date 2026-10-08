@@ -164,7 +164,6 @@ export default function MissionDeck() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="mono text-xs text-[#00D4FF] tracking-[0.3em] mb-2">// PROJECT_DECK</div>
           <h2 className="text-3xl sm:text-4xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
             Projects
           </h2>

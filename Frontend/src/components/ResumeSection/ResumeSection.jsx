@@ -24,7 +24,6 @@ export default function ResumeSection() {
     <section className="min-h-screen px-4 sm:px-8 lg:px-16 py-12 sm:py-16" id="resume">
       <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="max-w-5xl mx-auto">
         <motion.div variants={staggerItem} className="mb-10">
-          <div className="mono text-xs text-[#00D4FF] tracking-[0.3em] mb-2">// RESUME.PDF</div>
           <h2 className="text-3xl sm:text-4xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
             Resume
           </h2>
@@ -80,7 +79,6 @@ export default function ResumeSection() {
 
           {/* Live skills summary */}
           <motion.div variants={staggerItem} className="glass rounded-2xl p-8">
-            <div className="mono text-[10px] text-[#8B8B9F] tracking-widest mb-4">// LIVE SKILLS SUMMARY (FROM DATABASE)</div>
             <div className="space-y-4 max-h-72 overflow-y-auto pr-1">
               {Object.entries(grouped).map(([cat, names]) => (
                 <div key={cat}>

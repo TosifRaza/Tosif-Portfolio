@@ -55,7 +55,6 @@ export default function Dashboard() {
       {/* Header row */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <div className="mono text-[10px] text-[#00D4FF] tracking-[0.3em]">// PRIVATE_DASHBOARD — {data.date}</div>
           <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
             Good to see you. Here's your system status.
           </h1>

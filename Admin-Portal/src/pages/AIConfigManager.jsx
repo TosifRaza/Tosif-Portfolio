@@ -43,7 +43,6 @@ export default function AIConfigManager() {
   return (
     <div>
       <div className="mb-6">
-        <div className="mono text-xs text-neon-cyan uppercase tracking-widest mb-1">// ai configuration</div>
         <h1 className="text-2xl font-extrabold">AI Configuration</h1>
         <p className="text-sm text-muted mt-1 max-w-2xl">
           The assistants are honest by design: public AI answers from your CMS content; private AI computes answers

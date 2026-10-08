@@ -22,7 +22,6 @@ export default function Analytics() {
   return (
     <div className="space-y-6">
       <div>
-        <div className="mono text-[10px] text-[#00D4FF] tracking-[0.3em]">// ANALYTICS</div>
         <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>Analytics</h1>
         <p className="text-xs text-[#6B6B80] mt-1">Every visualization answers a real question from your logged data. If there isn't enough data, we say so.</p>
       </div>

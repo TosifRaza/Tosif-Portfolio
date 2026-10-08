@@ -51,7 +51,6 @@ export default function RecruiterMode() {
         {/* Header */}
         <motion.div variants={slideUp} className="flex items-start justify-between mb-6">
           <div>
-            <div className="mono text-xs text-[#00FF88] tracking-[0.3em] mb-1">// RECRUITER_VIEW</div>
             <h2 className="text-2xl font-heading font-bold text-text-primary mb-1">Hire Me — Everything in One Screen</h2>
             <p className="text-sm text-text-secondary">All data below is live from my portfolio database.</p>
           </div>

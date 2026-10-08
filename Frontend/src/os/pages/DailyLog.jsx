@@ -73,7 +73,6 @@ export default function DailyLog() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <div className="mono text-[10px] text-[#7C6AFF] tracking-[0.3em]">// DAILY_LOG</div>
           <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>Daily Log</h1>
           <p className="text-xs text-[#6B6B80] mt-1">Track what you plan → track what you actually do. Everything feeds analytics.</p>
         </div>

@@ -35,7 +35,6 @@ export default function AnalyticsAdmin() {
   return (
     <div>
       <div className="mb-6">
-        <div className="mono text-xs text-neon-cyan uppercase tracking-widest mb-1">// analytics</div>
         <h1 className="text-2xl font-extrabold">Analytics</h1>
         <p className="text-sm text-muted mt-1">Everything computed from real recorded data.</p>
       </div>

@@ -21,7 +21,6 @@ export default function AchievementsOS() {
   return (
     <div className="space-y-6">
       <div>
-        <div className="mono text-[10px] text-[#FFB800] tracking-[0.3em]">// ACHIEVEMENTS</div>
         <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>Achievements & Milestones</h1>
         <p className="text-xs text-[#6B6B80] mt-1">Managed in the Admin Control Center. Personal milestones (learning streaks, habit streaks) can be added here as they happen — gamification stays subtle.</p>
       </div>

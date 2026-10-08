@@ -32,7 +32,6 @@ export default function SettingsManager() {
   return (
     <div>
       <div className="mb-6">
-        <div className="mono text-xs text-neon-cyan uppercase tracking-widest mb-1">// settings</div>
         <h1 className="text-2xl font-extrabold">Settings</h1>
       </div>
 

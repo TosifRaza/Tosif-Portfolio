@@ -59,7 +59,6 @@ export default function Goals() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <div className="mono text-[10px] text-[#00D4FF] tracking-[0.3em]">// GOALS</div>
           <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>Goals & Current Mission</h1>
           <p className="text-xs text-[#6B6B80] mt-1">Goal → Milestone → Task. Progress is computed from real completions, never faked.</p>
         </div>

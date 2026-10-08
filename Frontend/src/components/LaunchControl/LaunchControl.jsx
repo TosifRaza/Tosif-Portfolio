@@ -168,7 +168,6 @@ export default function LaunchControl() {
     <section className="min-h-screen px-4 sm:px-8 lg:px-16 py-12 sm:py-16" id="products">
       <div className="max-w-6xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-          <div className="mono text-xs text-[#FF6B9D] tracking-[0.3em] mb-2">// FOUNDER_LAB</div>
           <h2 className="text-3xl sm:text-4xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
             Products & Startups
           </h2>

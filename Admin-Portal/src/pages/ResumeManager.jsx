@@ -57,7 +57,6 @@ export default function ResumeManager() {
 
   return (
     <div>
-      <div className="mono text-xs text-neon-cyan uppercase tracking-widest mb-1">// resume</div>
       <h1 className="text-2xl font-extrabold mb-2">Resume Manager</h1>
       <p className="text-white/60 text-sm mb-6">Upload, replace, or remove resume versions.</p>
 

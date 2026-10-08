@@ -25,7 +25,6 @@ export default function AboutSection({ site }) {
       <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="max-w-6xl mx-auto">
         {/* Heading */}
         <motion.div variants={staggerItem} className="mb-10">
-          <div className="mono text-xs text-[#00D4FF] tracking-[0.3em] mb-2">// ABOUT.ME</div>
           <h2 className="text-3xl sm:text-4xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
             Who I Am
           </h2>

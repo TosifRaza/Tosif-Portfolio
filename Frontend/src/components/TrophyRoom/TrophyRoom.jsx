@@ -160,7 +160,6 @@ export default function TrophyRoom() {
     return (
       <div className="min-h-full p-6">
         <div className="mb-6">
-          <div className="mono text-xs text-[#FFB800] tracking-[0.3em] mb-1">// ACHIEVEMENTS_DB</div>
           <h2 className="text-2xl font-heading font-bold text-text-primary mb-1">Achievements & Milestones</h2>
           <p className="text-sm text-text-secondary">Loading achievements from database…</p>
         </div>
@@ -209,7 +208,6 @@ export default function TrophyRoom() {
       <motion.div variants={staggerContainer} initial="hidden" animate="visible">
         {/* Header */}
         <motion.div variants={slideUp} className="mb-6">
-          <div className="mono text-xs text-[#FFB800] tracking-[0.3em] mb-1">// ACHIEVEMENTS_DB</div>
           <h2 className="text-2xl font-heading font-bold text-text-primary mb-1">Achievements & Milestones</h2>
           <p className="text-sm text-text-secondary">
             {totalUnlocked} of {totalAchievements} achievements unlocked
