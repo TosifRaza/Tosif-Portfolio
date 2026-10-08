@@ -16,7 +16,12 @@ export default function SkillsOS() {
 
   const saveLevels = async () => {
     try {
-      await osApi.skills.update(editLevels.id, { level: Number(editLevels.level), targetLevel: Number(editLevels.targetLevel) });
+      await osApi.skills.update(editLevels.id, {
+        name: editLevels.name,
+        category: editLevels.category,
+        level: Number(editLevels.level),
+        targetLevel: Number(editLevels.targetLevel),
+      });
       setEditLevels(null);
       refetch();
     } catch (err) {
@@ -65,7 +70,13 @@ export default function SkillsOS() {
                   <div className="text-base font-semibold text-[#E8E8F0]">{s.name}</div>
                   <div className="text-[10px] text-[#6B6B80] mono uppercase tracking-wider">{s.category}</div>
                 </button>
-                <button onClick={() => setEditLevels({ id: s._id, level: s.level, targetLevel: s.targetLevel || s.level })} className={btnGhost}>
+                <button onClick={() => setEditLevels({
+                  id: s._id,
+                  name: s.name,
+                  category: s.category,
+                  level: s.level,
+                  targetLevel: s.targetLevel || s.level,
+                })} className={btnGhost}>
                   edit
                 </button>
               </div>
