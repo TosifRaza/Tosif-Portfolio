@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ExternalLink, Github } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink, Github, X } from 'lucide-react';
 import { apiUrl } from '@/utils/api';
 
 function projectImages(project) {
@@ -50,7 +50,7 @@ function ProjectImageCarousel({ project, className, controls = false, thumbnails
           key={images[current]}
           src={apiUrl(images[current])}
           alt={`${project.title} preview ${current + 1}`}
-          className={`h-full w-full ${useThumbnailCrop || fit !== 'contain' ? 'object-cover' : 'object-contain'}`}
+          className={`absolute inset-0 h-full w-full ${useThumbnailCrop || fit !== 'contain' ? 'object-cover' : 'object-contain'}`}
           style={useThumbnailCrop ? {
             objectPosition: `${thumbnailX}% ${thumbnailY}%`,
             transform: `scale(${thumbnailZoom})`,
@@ -212,7 +212,7 @@ export function ProjectModal({ project, onClose }) {
           className="h-[clamp(15rem,42vh,30rem)]"
           controls
           thumbnails
-          fit="contain"
+          fit="cover"
         />
         <div className="p-6 sm:p-8">
           <div className="flex items-start justify-between gap-4">
@@ -225,7 +225,7 @@ export function ProjectModal({ project, onClose }) {
               className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
               aria-label="Close"
             >
-              âœ•
+              <X size={16} aria-hidden="true" />
             </button>
           </div>
 

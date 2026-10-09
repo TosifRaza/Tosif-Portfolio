@@ -66,7 +66,7 @@ export default function GitHubContributions({ githubUrl }) {
   if (!username) return null;
 
   return (
-    <section className="mt-7 w-full min-w-0 rounded-xl border border-border bg-card/60 p-3 sm:p-4" aria-label="GitHub contributions">
+    <section className="mt-7 w-fit max-w-full min-w-0 justify-self-start rounded-xl border border-border bg-card/60 p-4 sm:p-5" aria-label="GitHub contributions">
       <div className="flex items-center justify-between gap-3">
         <div>
           <h2 className="text-sm font-semibold text-foreground">GitHub Activity</h2>
@@ -87,11 +87,11 @@ export default function GitHubContributions({ githubUrl }) {
       {weeks.length > 0 && (
         <div className="mt-3 overflow-x-auto pb-1">
           <div className="w-max">
-            <div className="ml-[26px] flex gap-[3px]" aria-hidden="true">
+            <div className="ml-[26px] flex gap-1" aria-hidden="true">
               {weeks.map((week, index) => {
                 const monthStart = week.find((day) => day.date.endsWith('-01')) || (index === 0 ? week[0] : null);
                 return (
-                  <span key={index} className="h-3 w-2.5 text-[9px] leading-3 text-muted-foreground">
+                <span key={index} className="h-3 w-3 text-[9px] leading-3 text-muted-foreground">
                     {monthStart ? new Date(`${monthStart.date}T00:00:00Z`).toLocaleString('en', { month: 'short', timeZone: 'UTC' }) : ''}
                   </span>
                 );
@@ -101,14 +101,14 @@ export default function GitHubContributions({ githubUrl }) {
               <div className="flex w-5 flex-col justify-between py-0.5 text-[8px] leading-[8px] text-muted-foreground" aria-hidden="true">
                 <span>Mon</span><span>Wed</span><span>Fri</span>
               </div>
-              <div className="flex gap-[3px]" role="img" aria-label={`${total} GitHub contributions over the last 6 months`}>
+              <div className="flex gap-1" role="img" aria-label={`${total} GitHub contributions over the last 6 months`}>
                 {weeks.map((week, weekIndex) => (
-                  <div key={weekIndex} className="flex flex-col gap-[3px]">
+                  <div key={weekIndex} className="flex flex-col gap-1">
                     {week.map((day) => (
                       <span
                         key={day.date}
                         title={`${day.count} contribution${day.count === 1 ? '' : 's'} on ${day.date}`}
-                        className="h-2.5 w-2.5 rounded-[2px]"
+                        className="h-3 w-3 rounded-[2px]"
                         style={{ backgroundColor: /^#[0-9a-f]{6}$/i.test(day.color || '') ? day.color : CONTRIBUTION_COLORS[day.level] || CONTRIBUTION_COLORS[0] }}
                       />
                     ))}
