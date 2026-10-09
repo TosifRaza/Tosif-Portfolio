@@ -53,7 +53,7 @@ export default function Dashboard() {
         <h1 className="text-3xl font-extrabold mb-2">
           Welcome back, <span className="text-gradient">{user?.name?.split(' ')[0] || 'Admin'}</span>
         </h1>
-        <p className="text-white/60 text-sm">
+        <p className="text-foreground/60 text-sm">
           Manage every aspect of the Founder OS portfolio from this control panel.
         </p>
       </motion.div>

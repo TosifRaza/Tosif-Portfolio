@@ -1,449 +1,285 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { useApp } from "@/context/AppContext";
-import { useApi } from "@/hooks/useApi";
-import { api } from "@/utils/api";
-import { profile as fallbackProfile } from "@/data/profile";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
-  Code2, GitBranch, Bot, FileDown, ChevronDown, FolderGit2,
-  Rocket, ArrowRight, Zap, Trophy, Clock, Package, Activity, Quote,
-} from "lucide-react";
+  ArrowRight, BarChart3, Code2, ExternalLink, Github, Linkedin, Mail,
+  MapPin, Sparkles, Zap,
+} from 'lucide-react';
+import { useApp } from '@/context/AppContext';
+import { useApi } from '@/hooks/useApi';
+import { api, apiUrl } from '@/utils/api';
 
-// ─── Feature Cards Data (nav targets = new public sections) ───
-const featureCards = [
-  { icon: GitBranch, title: "PROJECTS", desc: "What I've engineered, end to end", color: "#00D4FF", target: "projects" },
-  { icon: Package, title: "PRODUCTS", desc: "Startups and products I'm building", color: "#FF6B9D", target: "products" },
-  { icon: Code2, title: "SKILLS", desc: "The stack I use to ship", color: "#7C6AFF", target: "skills" },
-  { icon: Clock, title: "JOURNEY", desc: "From learner to founder", color: "#FFB800", target: "journey" },
-  { icon: Trophy, title: "ACHIEVEMENTS", desc: "Milestones worth surfacing", color: "#00FF88", target: "achievements" },
-  { icon: FileDown, title: "RESUME", desc: "Download the latest CV", color: "#a78bfa", target: "resume" },
-];
-
-// ─── Right Sidebar: live system stats (calculated from the database) ───
-const statIcons = [FolderGit2, Package, Code2, Activity, Trophy];
-const statColors = ["#00D4FF", "#FF6B9D", "#00FF88", "#7C6AFF", "#FFB800"];
-
-function RightSidebar({ stats }) {
-  const rows = (stats || []).slice(0, 5).map((s, i) => ({
-    icon: statIcons[i % statIcons.length],
-    color: statColors[i % statColors.length],
-    label: s.label,
-    value: `${s.value}`,
-  }));
-
+function TechChip({ label, index }) {
   return (
-    <motion.aside
-      className="hidden xl:flex fixed right-0 top-14 bottom-0 w-[240px] bg-[#0a0e17] border-l border-white/[0.06] flex-col p-5 z-40 overflow-y-auto"
-      initial={{ x: 240 }}
-      animate={{ x: 0 }}
-      transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-    >
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-4">
-          <Activity size={16} className="text-[#00D4FF]" />
-          <h3 className="text-xs font-bold tracking-wider text-[#6B6B80]">LIVE DATABASE STATS</h3>
-        </div>
-        <div className="space-y-3">
-          {rows.map((metric, i) => {
-            const IconComp = metric.icon;
-            return (
-              <motion.div
-                key={metric.label}
-                className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/[0.04] hover:border-white/[0.08] transition-colors"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 + i * 0.08 }}
-              >
-                <div
-                  className="w-8 h-8 rounded-md flex items-center justify-center flex-shrink-0"
-                  style={{ background: `${metric.color}15`, border: `1px solid ${metric.color}25` }}
-                >
-                  <IconComp size={14} style={{ color: metric.color }} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-[10px] text-[#6B6B80] truncate">{metric.label}</div>
-                  <div className="text-sm font-bold" style={{ color: metric.color }}>{metric.value}</div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
-
-      <motion.div
-        className="p-4 rounded-xl bg-gradient-to-br from-[#7C6AFF]/10 to-[#00D4FF]/5 border border-[#7C6AFF]/20"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.3 }}
-      >
-        <Quote size={16} className="text-[#7C6AFF]/50 mb-2" />
-        <p className="text-xs leading-relaxed text-[#E8E8F0]/80 italic">
-          &quot;Most developers build websites. I build products, businesses, and systems.&quot;
-        </p>
-        <div className="mt-3 text-[10px] text-[#7C6AFF] font-mono">— TOSIF RAZA</div>
-      </motion.div>
-    </motion.aside>
-  );
-}
-
-// ─── Central Visual Element ───
-function CentralVisual({ mission }) {
-  return (
-    <div className="relative w-48 h-48 md:w-56 md:h-56 mx-auto">
-      <motion.div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background: "conic-gradient(from 0deg, #7C6AFF, #00D4FF, #00FF88, #FFB800, #FF6B9D, #7C6AFF)",
-        }}
-        animate={{ rotate: 360 }}
-        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-      />
-      <div className="absolute inset-[3px] rounded-full bg-[#0a0e17] flex flex-col items-center justify-center">
-        <motion.div
-          className="absolute inset-4 rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(124,106,255,0.15) 0%, transparent 70%)" }}
-          animate={{ scale: [1, 1.1, 1] }}
-          transition={{ duration: 3, repeat: Infinity }}
-        />
-        <span className="text-[10px] tracking-[0.3em] text-[#6B6B80] font-mono mb-1">CURRENT MISSION</span>
-        <span
-          className="text-sm font-bold text-center px-4 leading-tight"
-          style={{ fontFamily: "'Space Grotesk', system-ui" }}
-        >
-          {mission?.title || "BUILDING WHAT MATTERS"}
-        </span>
-        <div className="flex items-center gap-1.5 mt-2">
-          <motion.div
-            className="w-1.5 h-1.5 rounded-full bg-[#00FF88]"
-            animate={{ opacity: [1, 0.3, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          />
-          <span className="text-[9px] font-mono text-[#00FF88]">{mission?.progressLabel || "STATUS: ONGOING"}</span>
-        </div>
-      </div>
+    <div className="flex items-center gap-2 rounded-md px-2 py-1.5 text-[11px] text-[#b3c5da]">
+      <span className={`h-2 w-2 rounded-full ${index % 2 ? 'bg-[#35b7ff]' : 'bg-[#32d4bb]'}`} />
+      {label}
     </div>
   );
 }
 
-// ─── Feature Cards Component ───
-function FeatureCards({ onNavigate }) {
+function ProjectCard({ project, onOpen, index }) {
+  const title = project.title || project.name || '';
+  const preview = project.image || project.images?.[0];
+  const image = preview ? apiUrl(preview) : null;
+  const stack = Array.isArray(project.stack) ? project.stack.slice(0, 4) : [];
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
-      {featureCards.map((card, i) => {
-        const IconComp = card.icon;
-        return (
-          <motion.div
-            key={card.title}
-            className="group relative p-5 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.12] transition-all cursor-pointer overflow-hidden"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.0 + i * 0.08 }}
-            whileHover={{ y: -4, scale: 1.02 }}
-            onClick={() => onNavigate(card.target)}
-          >
-            <div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl"
-              style={{ background: `radial-gradient(ellipse at center, ${card.color}08, transparent 70%)` }}
-            />
-            <div className="relative z-10">
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center mb-3"
-                style={{ background: `${card.color}15`, border: `1px solid ${card.color}25` }}
-              >
-                <IconComp size={20} style={{ color: card.color }} />
-              </div>
-              <h4
-                className="text-sm font-bold tracking-wider mb-1"
-                style={{ fontFamily: "'Space Grotesk', system-ui" }}
-              >
-                {card.title}
-              </h4>
-              <p className="text-xs text-[#6B6B80]">{card.desc}</p>
-              <div
-                className="flex items-center gap-1 mt-3 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"
-                style={{ color: card.color }}
-              >
-                <span>Explore</span>
-                <ArrowRight size={12} />
-              </div>
+    <motion.article
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.08, duration: 0.35 }}
+      className="group overflow-hidden rounded-xl border border-card bg-[#071426] transition-colors hover:border-[#2278d1]/70"
+    >
+      <button onClick={onOpen} className="block w-full text-left" aria-label={`View ${title}`}>
+        <div className="relative aspect-[16/8] overflow-hidden border-b border-card bg-[#081a30] sm:aspect-[16/7]">
+          {image ? (
+            <img src={image} alt={`${title} preview`} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-[#07182b] text-3xl font-semibold text-[#31577e]" aria-label="Project image not set">
+              {title.slice(0, 1).toUpperCase()}
             </div>
-          </motion.div>
-        );
-      })}
-    </div>
-  );
-}
-
-// ─── Bottom Terminal Component ───
-function BottomTerminal({ profile, site }) {
-  const [command, setCommand] = useState("");
-  const [output, setOutput] = useState([]);
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const handleExecute = () => {
-    if (!command.trim()) return;
-    const cmd = command.trim().toLowerCase();
-    let response = "";
-    if (cmd === "help") {
-      response = "Available commands: help, about, skills, projects, contact, clear";
-    } else if (cmd === "about") {
-      response = `${profile.name} — ${profile.roles?.join(", ") || profile.title}`;
-    } else if (cmd === "skills") {
-      response = `MERN + Tailwind + Framer Motion. Full list in the SKILLS section.`;
-    } else if (cmd === "projects") {
-      response = `Currently working on: ${site?.currentMission?.title || "new things"}`;
-    } else if (cmd === "contact") {
-      response = `Email: ${profile.email || "via the contact section"} | GitHub: ${profile.socials?.github || "see contact section"}`;
-    } else if (cmd === "clear") {
-      setOutput([]);
-      setCommand("");
-      return;
-    } else {
-      response = `Command not found: ${command}. Type 'help' for available commands.`;
-    }
-    setOutput((prev) => [...prev, `> ${command}`, response]);
-    setCommand("");
-  };
-
-  return (
-    <motion.div
-      className="fixed bottom-0 left-0 right-0 xl:right-[240px] z-40"
-      initial={{ y: 80 }}
-      animate={{ y: isExpanded ? 0 : 56 }}
-      transition={{ duration: 0.3 }}
-    >
-      <div className="bg-[#0a0e17] border-t border-white/[0.06]">
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full flex items-center justify-between px-4 py-1.5 hover:bg-white/[0.02] transition-colors"
-        >
-          <div className="flex items-center gap-2">
-            <motion.div
-              className="w-2 h-2 rounded-full bg-[#00FF88]"
-              animate={{ opacity: [1, 0.3, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-            <span className="text-[10px] font-mono text-[#00FF88]">SYSTEM ONLINE</span>
-          </div>
-          <ChevronDown
-            size={14}
-            className={`text-[#6B6B80] transition-transform ${isExpanded ? "rotate-180" : ""}`}
-          />
-        </button>
-
-        <AnimatePresence>
-          {isExpanded && (
-            <motion.div
-              className="px-4 pb-3"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className="max-h-32 overflow-y-auto mb-2 space-y-1">
-                {output.map((line, i) => (
-                  <div
-                    key={i}
-                    className={`text-xs font-mono ${line.startsWith("> ") ? "text-[#7C6AFF]" : "text-[#6B6B80]"}`}
-                  >
-                    {line}
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[#7C6AFF] text-xs font-mono">&#10095;</span>
-                <input
-                  type="text"
-                  value={command}
-                  onChange={(e) => setCommand(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleExecute()}
-                  placeholder="Type 'help' to see available commands..."
-                  className="flex-1 bg-transparent text-xs font-mono text-[#E8E8F0] placeholder-[#4A4A5E] outline-none"
-                  autoFocus
-                />
-                <motion.button
-                  onClick={handleExecute}
-                  className="px-3 py-1 rounded bg-[#7C6AFF]/20 text-[#7C6AFF] text-xs font-mono hover:bg-[#7C6AFF]/30 transition-colors"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  EXECUTE
-                </motion.button>
-              </div>
-            </motion.div>
           )}
-        </AnimatePresence>
+        </div>
+        <div className="p-3.5">
+          <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+          <p className="mt-1 line-clamp-2 min-h-8 text-[11px] leading-4 text-muted-foreground">
+            {project.tagline || project.description || ''}
+          </p>
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
+            {stack.map((technology) => (
+              <span key={technology} className="rounded bg-[#0c2038] px-1.5 py-1 text-[9px] text-muted-foreground">{technology}</span>
+            ))}
+          </div>
+        </div>
+      </button>
+      <div className="flex items-center gap-3 border-t border-card px-3.5 py-2.5">
+        <button onClick={onOpen} className="inline-flex items-center gap-1 text-[10px] font-medium text-[#3d9dff] hover:text-[#81c2ff]">
+          View details <ArrowRight size={12} />
+        </button>
+        {project.liveUrl && (
+          <a href={project.liveUrl} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} className="inline-flex items-center gap-1 text-[10px] text-muted-foreground hover:text-white">
+            Live demo <ExternalLink size={11} />
+          </a>
+        )}
+        {project.githubUrl && (
+          <a href={project.githubUrl} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} className="ml-auto inline-flex items-center gap-1 text-[10px] text-muted-foreground hover:text-white">
+            <Github size={12} /> Code
+          </a>
+        )}
       </div>
-    </motion.div>
+    </motion.article>
   );
 }
 
-// ─── Main HomePage Component ───
 export default function HomePage({ site }) {
-  const { setActiveSection, toggleRecruiterMode } = useApp();
+  const { setActiveSection } = useApp();
   const navigate = useNavigate();
-  const [showContent, setShowContent] = useState(false);
+  const [photoFailed, setPhotoFailed] = useState(false);
   const { data: profile } = useApi(() => api.getProfile());
-  const { data: stats } = useApi(() => api.getStats());
-  const { data: resume } = useApi(() => api.getResume());
+  const { data: aboutData } = useApi(() => api.getAbout());
+  const { data: skillData } = useApi(() => api.getSkills());
+  const { data: statsData } = useApi(() => api.getStats());
+  const { data: projectData } = useApi(() => api.getProjects());
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowContent(true), 300);
-    return () => clearTimeout(timer);
-  }, []);
+    setPhotoFailed(false);
+  }, [profile?.avatarUrl, profile?.avatar, profile?.photo, profile?.image]);
 
-  const p = profile || fallbackProfile;
+  const person = profile || {};
+  const socials = person.socials || person.socialLinks || {};
+  const githubUrl = socials.github || '';
+  const githubUsername = githubUrl.match(/github\.com\/([^/?#]+)/i)?.[1];
+  const photo = person.avatarUrl || person.avatar || person.photo || person.image || (githubUsername ? `https://github.com/${githubUsername}.png` : '');
+  const photoSrc = photo ? apiUrl(photo) : '';
   const hero = site?.hero || {};
-  const handleNavigate = (id) => {
-    if (id === "/os") {
-      navigate("/os");
-    } else {
-      setActiveSection(id);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+  const projects = Array.isArray(projectData) ? projectData : projectData?.projects || [];
+  const featuredProjects = projects.filter((project) => project.featured);
+  const shownProjects = (featuredProjects.length ? featuredProjects : projects).slice(0, 3);
+  const stats = (hero.showStats === false ? [] : statsData?.stats) || [];
+  const skills = Array.isArray(skillData) ? skillData : skillData?.skills || [];
+  const technologies = skills.map((skill) => typeof skill === 'string' ? skill : skill.name).filter(Boolean).slice(0, 8);
+  const bio = aboutData?.paragraphs?.filter(Boolean).length
+    ? aboutData.paragraphs.filter(Boolean)
+    : [person.shortBio || person.longBio || person.tagline || hero.description].filter(Boolean);
+  const title = person.title || person.roles?.[0] || hero.subtitle || '';
+  const currentMission = site?.currentMission || {};
+  const currentTitle = currentMission.title || person.availability?.status || '';
+  const currentDescription = currentMission.description || person.pitch || person.availability?.type || aboutData?.highlights?.[0]?.description || '';
+  const hasCurrentInfo = hero.showCurrentMission !== false && Boolean(currentTitle || currentDescription || person.location || person.email || socials.email);
+  const enabledOsEntry = site?.nav?.find((item) => item.target === '/os' && item.enabled && item.scope !== 'os');
+  const primaryCta = hero.primaryCta || {};
+  const secondaryCta = hero.secondaryCta || {};
+  const codeSkills = skills.slice(0, 4).map((skill) => typeof skill === 'string' ? skill : skill.name).filter(Boolean);
+  const codeFocus = (aboutData?.highlights || []).map((item) => item.title).filter(Boolean).slice(0, 3);
+
+  const handleNavigate = (section) => {
+    if (section === '/os') {
+      navigate('/os');
+      return;
     }
+    setActiveSection(section);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const openProjects = () => handleNavigate('projects');
   return (
-    <div className="min-h-screen bg-[#0a0e17]">
-      <RightSidebar stats={stats?.stats || []} />
+    <div className="min-h-screen w-full min-w-0 bg-[#030b17] text-foreground">
+      <main className="mx-0 w-full min-w-0 max-w-none px-3 pb-12 pt-5 sm:px-5 md:px-7 lg:px-[4vw] xl:px-[4.5vw] 2xl:px-[5vw] lg:pt-6">
+        <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="w-full min-w-0"
+        >
+          <div className="grid w-full min-w-0 items-center gap-6 border-b border-card py-7 sm:gap-8 sm:py-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(220px,0.8fr)_minmax(0,1.25fr)] lg:gap-6 lg:py-10 2xl:gap-10 2xl:py-12">
+            <div className="min-w-0">
+              <p className="mb-1 text-sm font-medium text-[#d4dfed]">{hero.badge || (person.name ? `Hi, I’m ${person.name}` : '')}</p>
+              <h1 className="text-4xl font-bold tracking-tight text-[#f0f6ff] sm:text-5xl" style={{ fontFamily: 'Inter, system-ui' }}>
+                {(hero.heading || person.name || '').trim().split(/\s+/).slice(0, -1).join(' ')}{' '}
+                <span className="text-[#4388ff]">{(hero.heading || person.name || '').trim().split(/\s+/).slice(-1)[0]}</span>
+              </h1>
+              {title && <p className="mt-1 text-xl font-semibold text-[#e0eaf6] sm:text-2xl">{title}</p>}
+              {bio.map((paragraph, index) => <p key={index} className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">{paragraph}</p>)}
 
-      <main className="xl:mr-[240px] pt-20 pb-24 min-h-screen flex items-center justify-center px-6">
-        <AnimatePresence>
-          {showContent && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8 }}
-            >
-              {/* Welcome Section */}
-              <div className="text-center mb-10">
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.6 }}>
-                  <span className="text-xs tracking-[0.4em] text-[#6B6B80] font-mono">{hero.badge || "SYSTEM ONLINE"}</span>
-                </motion.div>
-
-                <motion.h1
-                  className="text-5xl md:text-7xl font-black mt-2 mb-4"
-                  style={{
-                    fontFamily: "'Space Grotesk', system-ui",
-                    background: "linear-gradient(135deg, #7C6AFF, #00D4FF, #00FF88)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.7, duration: 0.6 }}
-                >
-                  {hero.heading || p.name}
-                </motion.h1>
-
-                <motion.div
-                  className="font-mono text-sm md:text-base text-[#6B6B80] mb-6"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.9, duration: 0.6 }}
-                >
-                  <span className="text-[#7C6AFF]">&lt; </span>
-                  {hero.subtitle || p.title || "Software Engineer & Founder"}
-                  <span className="text-[#7C6AFF]"> &gt;</span>
-                </motion.div>
-
-                <motion.p
-                  className="text-sm text-[#6B6B80] max-w-md mx-auto mb-2"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.0, duration: 0.6 }}
-                >
-                  Hello, visitor —
-                </motion.p>
-                <motion.p
-                  className="text-sm text-[#E8E8F0] max-w-lg mx-auto"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.1, duration: 0.6 }}
-                >
-                  I&apos;m <strong className="text-[#00D4FF]">{p.name}</strong> — {(p.roles || [p.title]).slice(0, 3).join(", ")}.
-                </motion.p>
-                <motion.p
-                  className="text-sm text-[#6B6B80] max-w-md mx-auto mt-1"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.15, duration: 0.6 }}
-                >
-                  {hero.description || "This is not just a portfolio, this is my operating system."}
-                </motion.p>
+              <div className="mt-5 flex flex-wrap gap-2.5">
+                <button onClick={() => handleNavigate(primaryCta.target || 'projects')} className="inline-flex items-center gap-2 rounded-md bg-[#1478ee] px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#328dff]">
+                  {primaryCta.label || 'View projects'} <ArrowRight size={14} />
+                </button>
+                {secondaryCta.label && <button onClick={() => handleNavigate(secondaryCta.target || 'contact')} className="inline-flex items-center gap-2 rounded-md border border-[#284362] px-4 py-2.5 text-xs font-medium text-[#d4e2f1] transition-colors hover:border-[#4a76a3] hover:bg-muted/40">
+                  {secondaryCta.label}
+                </button>}
+                {enabledOsEntry && <button onClick={() => handleNavigate('/os')} className="inline-flex items-center gap-2 rounded-md border border-[#26553f] bg-[#0b281f] px-4 py-2.5 text-xs font-medium text-[#6ee7b7] transition-colors hover:border-[#2e9467] hover:bg-[#103829]">
+                  <Zap size={14} /> {enabledOsEntry.label}
+                </button>}
               </div>
 
-              {/* Central Visual */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.2, duration: 0.8, ease: "easeOut" }}
-              >
-                <CentralVisual mission={site?.currentMission} />
-              </motion.div>
+              <div className="mt-4 flex items-center gap-2.5">
+                {[
+                  { href: githubUrl, label: 'GitHub', icon: Github },
+                  { href: socials?.linkedin, label: 'LinkedIn', icon: Linkedin },
+                  { href: socials?.email || person.email ? `mailto:${socials?.email || person.email}` : '', label: 'Email', icon: Mail },
+                ].filter((item) => item.href).map(({ href, label, icon: Icon }) => (
+                  <a key={label} href={href} target={label === 'Email' ? undefined : '_blank'} rel="noreferrer" aria-label={label} title={label} className="flex h-8 w-8 items-center justify-center rounded-md text-[#a9c1da] transition-colors hover:bg-[#0e2742] hover:text-white">
+                    <Icon size={16} />
+                  </a>
+                ))}
+              </div>
+            </div>
 
-              {/* CTA Buttons */}
-              <motion.div
-                className="flex flex-wrap items-center justify-center gap-4 mt-8"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.5, duration: 0.6 }}
-              >
-                <motion.button
-                  onClick={() => handleNavigate(hero.primaryCta?.target || "projects")}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#7C6AFF] to-[#00D4FF] text-white font-semibold text-sm hover:opacity-90 transition-opacity"
-                  whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(124, 106, 255, 0.4)" }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Rocket size={16} />
-                  {hero.primaryCta?.label || "VIEW PROJECTS"}
-                </motion.button>
-                <motion.button
-                  onClick={() => handleNavigate("resume")}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/[0.05] border border-white/[0.1] text-[#E8E8F0] font-semibold text-sm hover:bg-white/[0.08] transition-colors"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <FileDown size={16} />
-                  VIEW RESUME {resume ? "" : ""}
-                </motion.button>
-                <motion.button
-                  onClick={() => handleNavigate("/os")}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#00FF88]/10 border border-[#00FF88]/30 text-[#00FF88] font-semibold text-sm hover:bg-[#00FF88]/20 transition-colors"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Zap size={16} />
-                  ENTER TOSIF OS
-                </motion.button>
-              </motion.div>
+            <div className="grid w-full min-w-0 grid-cols-1 items-stretch gap-3 sm:grid-cols-[minmax(0,0.68fr)_minmax(0,1.32fr)] sm:gap-4 lg:col-span-2">
+              <div className="relative aspect-[4/3] min-h-[210px] min-w-0 overflow-hidden rounded-lg border border-[#1c3d61] bg-[#0b1e33] sm:aspect-auto sm:min-h-[260px] 2xl:min-h-[320px]">
+                {!photoFailed && photoSrc ? (
+                  <img src={photoSrc} alt={person.name || ''} onError={() => setPhotoFailed(true)} className="absolute inset-0 h-full w-full object-cover" />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_50%_30%,#1a4a79,#07172a_70%)] text-5xl font-bold text-[#78bfff]" style={{ fontFamily: 'Inter, system-ui' }}>
+                    {(person.name || '').split(' ').map((part) => part[0]).slice(0, 2).join('')}
+                  </div>
+                )}
+                {person.location && <div className="absolute bottom-2 left-2 flex items-center gap-1 rounded bg-[#030b17]/80 px-2 py-1 text-[9px] text-[#c6d5e8]">
+                  <MapPin size={10} className="text-[#48a8ff]" /> {person.location}
+                </div>}
+              </div>
+              <div className="min-h-[210px] min-w-0 rounded-lg border border-[#183655] bg-[#050d18] p-3 sm:min-h-[260px] sm:p-4 2xl:min-h-[320px] 2xl:p-6">
+                <div className="mb-3 flex items-center gap-1.5 border-b border-[#18304a] pb-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#ff657a]" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#ffc45c]" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#37d7a0]" />
+                  <span className="ml-auto text-[8px] text-[#607b98]">&lt;/&gt; {title}</span>
+                </div>
+                <code className="block whitespace-normal break-words text-[9px] leading-[1.65] text-muted-foreground sm:text-[10px] 2xl:text-xs">
+                  <span className="text-[#579eff]">const</span> developer = {'{'}<br />
+                  {[
+                    ['name', person.name],
+                    ['role', title],
+                    ['focus', codeFocus.length ? codeFocus : person.pitch ? [person.pitch] : []],
+                    ['tech', codeSkills],
+                    ['location', person.location],
+                  ].filter(([, value]) => value && (!Array.isArray(value) || value.length)).map(([key, value]) => (
+                    <span key={key}>&nbsp; {key}: <span className="text-[#58d8a8]">{JSON.stringify(value)}</span>,<br /></span>
+                  ))}
+                  {'}'};<br /><br />
+                </code>
+              </div>
+            </div>
+          </div>
+        </motion.section>
 
-              {/* Feature Cards */}
-              <FeatureCards onNavigate={handleNavigate} />
+        {technologies.length > 0 && <div className="flex flex-wrap items-center justify-between gap-2 border-b border-card py-3.5">
+          <div className="text-[10px] font-medium text-muted-foreground">Tech I work with</div>
+          <div className="flex flex-wrap gap-x-3 gap-y-1">
+            {technologies.map((technology, index) => <TechChip key={technology} label={technology} index={index} />)}
+          </div>
+        </div>}
 
-              {/* Recruiter shortcut */}
-              <motion.div
-                className="flex justify-center mt-8"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.9 }}
-              >
-                <button
-                  onClick={toggleRecruiterMode}
-                  className="flex items-center gap-2 text-xs text-[#6B6B80] hover:text-[#00FF88] transition-colors font-mono"
-                >
-                  <Bot size={13} />
-                  Recruiter? Activate Recruiter View — everything you need in one screen
-                </button>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {shownProjects.length > 0 && <section className="mt-6 sm:mt-7">
+          <div className="mb-3 flex items-end justify-between gap-3">
+            <div>
+              <div className="mb-1 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-primary">
+                <Sparkles size={13} /> Selected work
+              </div>
+              <h2 className="text-xl font-bold text-foreground sm:text-2xl" style={{ fontFamily: 'Inter, system-ui' }}>Featured projects</h2>
+            </div>
+            <button onClick={openProjects} className="mb-1 inline-flex items-center gap-1 text-[11px] font-medium text-primary hover:text-primary">
+              All projects <ArrowRight size={13} />
+            </button>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {shownProjects.map((project, index) => (
+              <ProjectCard key={project._id || project.slug || project.title || project.name} project={project} index={index} onOpen={openProjects} />
+            ))}
+          </div>
+        </section>}
+
+        {(bio.length > 0 || stats.length > 0 || hasCurrentInfo) && <section className="mt-5 flex flex-col gap-4 border-y border-card py-5 sm:gap-5 lg:flex-row lg:items-center">
+          {bio.length > 0 && <div className="min-w-0 flex-1">
+            <div className="mb-1 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-primary">
+              <Sparkles size={13} /> About me
+            </div>
+            {bio.slice(0, 2).map((paragraph, index) => <p key={index} className="mt-1 max-w-2xl text-xs leading-5 text-muted-foreground">{paragraph}</p>)}
+            <button onClick={() => handleNavigate('about')} className="mt-2 inline-flex items-center gap-1 text-[10px] font-medium text-primary hover:text-primary">
+              More about me <ArrowRight size={12} />
+            </button>
+          </div>}
+          {stats.length > 0 && <div className="min-w-0 flex-1">
+            <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold text-[#dce8f5]">
+              <BarChart3 size={13} className="text-[#428fff]" /> Quick stats
+            </div>
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(68px,1fr))] border-y border-card py-2">
+              {stats.map((stat, index) => (
+                <div key={`${stat.label}-${index}`} className={`px-2 py-1 text-center ${index > 0 ? 'border-l border-card' : ''}`}>
+                  <div className="text-lg font-bold text-[#e7f0fb]">{stat.value}</div>
+                  <div className="mt-0.5 text-[9px] text-[#91a8c0]">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>}
+          {hasCurrentInfo && <div className="min-w-0 flex-1 lg:border-l lg:border-card lg:pl-5">
+            <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#4a9eff]">
+              <Code2 size={13} /> Currently
+            </div>
+            {currentTitle && <div className="text-sm font-semibold text-[#e2ebf7]">{currentTitle}</div>}
+            {currentDescription && <p className="mt-1 text-[10px] leading-4 text-muted-foreground">{currentDescription}</p>}
+            <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
+              {person.location && <span className="inline-flex items-center gap-1"><MapPin size={11} /> {person.location}</span>}
+              {(socials?.email || person.email) && <a href={`mailto:${socials?.email || person.email}`} className="inline-flex items-center gap-1 hover:text-white"><Mail size={11} /> {socials?.email || person.email}</a>}
+            </div>
+          </div>}
+        </section>}
+
+        <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-card px-1 pt-3 text-[10px] text-[#7188a1]">
+          <span>{site?.footer?.text || (person.name ? `© ${new Date().getFullYear()} ${person.name}` : "")}</span>
+          <div className="flex items-center gap-4">
+            {[
+              { label: 'GitHub', href: githubUrl },
+              { label: 'LinkedIn', href: socials?.linkedin },
+              { label: 'Email', href: socials?.email ? `mailto:${socials.email}` : person.email ? `mailto:${person.email}` : '' },
+            ].filter((item) => item.href).map((item) => (
+              <a key={item.label} href={item.href} target={item.label === 'Email' ? undefined : '_blank'} rel="noreferrer" className="hover:text-[#cbd9e8]">{item.label}</a>
+            ))}
+          </div>
+        </footer>
       </main>
-
-      <BottomTerminal profile={p} site={site} />
     </div>
   );
 }

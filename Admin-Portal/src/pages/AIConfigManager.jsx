@@ -69,7 +69,7 @@ export default function AIConfigManager() {
           <textarea rows={2} className="input resize-none" value={doc.ai?.privateIntro || ''} onChange={(e) => set('privateIntro', e.target.value)} />
         </div>
 
-        <div className="p-4 rounded-lg bg-white/[0.02] border border-white/[0.06] mono text-[11px] text-muted leading-relaxed">
+        <div className="p-4 rounded-lg bg-white/[0.02] border border-border mono text-[11px] text-muted leading-relaxed">
           Optional LLM enhancement (server-side): set <span className="text-neon-cyan">AI_BASE_URL</span>,{' '}
           <span className="text-neon-cyan">AI_API_KEY</span> and <span className="text-neon-cyan">AI_MODEL</span> in{' '}
           <span className="text-neon-cyan">Backend/.env</span> to any OpenAI-compatible endpoint. The computed data

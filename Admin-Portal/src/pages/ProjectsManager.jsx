@@ -31,7 +31,7 @@ const COLUMNS = [
     key: 'status',
     label: 'Status',
     render: (i) => (
-      <span className={`badge border-white/10 ${i.status === 'Active' ? 'text-neon-green' : 'text-muted'}`}>
+      <span className={`badge border-border ${i.status === 'Active' ? 'text-neon-green' : 'text-muted'}`}>
         {i.status}
       </span>
     ),

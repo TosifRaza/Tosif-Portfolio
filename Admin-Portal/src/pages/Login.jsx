@@ -44,9 +44,9 @@ export default function Login() {
             <div className="absolute inset-6 rounded-full bg-gradient-to-br from-neon-purple to-neon-cyan animate-pulse-glow" />
           </div>
           <h1 className="text-2xl font-extrabold">
-            FOUNDER <span className="text-gradient">OS</span>
+            TOSIF <span className="text-gradient">OS</span>
           </h1>
-          <p className="mono text-xs text-muted mt-2 uppercase tracking-widest">Admin Portal · v4.0</p>
+          <p className="mono text-xs text-muted mt-2 uppercase tracking-widest">Control Center · v6.0</p>
         </div>
 
         <div className="glass-strong p-8">
@@ -68,7 +68,7 @@ export default function Login() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   className="input pl-9"
-                  placeholder="admin@founderos.dev"
+                  placeholder="admin email"
                 />
               </div>
             </div>
@@ -106,9 +106,9 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-white/10 mono text-[10px] text-muted text-center">
-            <div className="mb-1">Default credentials (for first run):</div>
-            <div className="text-white/80">Credentials are configured in Backend/.env</div>
+          <div className="mt-6 pt-6 border-t border-border mono text-[10px] text-muted text-center">
+            <div className="mb-1">Credentials are configured in Backend/.env</div>
+            <div className="text-foreground/80">(ADMIN_EMAIL · ADMIN_PASSWORD)</div>
           </div>
         </div>
       </motion.div>

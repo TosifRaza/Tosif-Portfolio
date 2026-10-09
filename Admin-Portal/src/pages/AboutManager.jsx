@@ -80,7 +80,7 @@ export default function AboutManager() {
             </div>
             <div className="space-y-3">
               {(doc[group.key] || []).map((item, i) => (
-                <div key={i} className="grid sm:grid-cols-3 gap-3 items-start p-3 rounded-lg bg-white/[0.02] border border-white/[0.05]">
+                <div key={i} className="grid sm:grid-cols-3 gap-3 items-start p-3 rounded-lg bg-white/[0.02] border border-border">
                   <input className={input} placeholder="Title" value={item.title || ''} onChange={(e) => upd(group.key, i, 'title', e.target.value)} />
                   <input className={`${input} sm:col-span-2`} placeholder="Description" value={item.description || ''} onChange={(e) => upd(group.key, i, 'description', e.target.value)} />
                   <div className="sm:col-span-3 flex justify-end">

@@ -1,4 +1,71 @@
 /** Lightweight GitHub profile fetcher using the public REST API */
+export async function fetchGitHubContributions(username, token) {
+  const to = new Date();
+  const targetDay = to.getUTCDate();
+  const from = new Date(to);
+  from.setUTCDate(1);
+  from.setUTCMonth(from.getUTCMonth() - 6);
+  const lastDayOfStartMonth = new Date(Date.UTC(from.getUTCFullYear(), from.getUTCMonth() + 1, 0)).getUTCDate();
+  from.setUTCDate(Math.min(targetDay, lastDayOfStartMonth));
+  const response = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `query($login: String!, $from: DateTime!, $to: DateTime!) {
+        user(login: $login) {
+          contributionsCollection(from: $from, to: $to) {
+            contributionCalendar {
+              totalContributions
+              weeks {
+                contributionDays {
+                  date
+                  contributionCount
+                  contributionLevel
+                  color
+                }
+              }
+            }
+          }
+        }
+      }`,
+      variables: { login: username, from: from.toISOString(), to: to.toISOString() },
+    }),
+  });
+
+  const result = await response.json();
+  if (!response.ok || result.errors?.length) {
+    throw new Error(result.errors?.map((error) => error.message).join('; ') || `GitHub GraphQL request failed (${response.status})`);
+  }
+
+  const calendar = result.data?.user?.contributionsCollection?.contributionCalendar;
+  if (!calendar) throw new Error(`GitHub user not found: ${username}`);
+
+  const levels = {
+    NONE: 0,
+    FIRST_QUARTILE: 1,
+    SECOND_QUARTILE: 2,
+    THIRD_QUARTILE: 3,
+    FOURTH_QUARTILE: 4,
+  };
+
+  return {
+    username,
+    total: calendar.totalContributions,
+    contributions: calendar.weeks.flatMap((week) =>
+      week.contributionDays.map((day) => ({
+        date: day.date,
+        count: day.contributionCount,
+        level: levels[day.contributionLevel] ?? 0,
+        color: day.color,
+      }))
+    ),
+  };
+}
+
 export async function fetchGitHubProfile(username, token) {
   const headers = { Accept: 'application/vnd.github+json' };
   if (token) headers.Authorization = `Bearer ${token}`;

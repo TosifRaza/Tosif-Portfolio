@@ -144,7 +144,7 @@ export default function ResourceManager({ title, resource, token, fields, column
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-white/[0.02] border-b border-white/10">
+              <thead className="bg-white/[0.02] border-b border-border">
                 <tr>
                   {columns.map((c) => (
                     <th
@@ -166,7 +166,7 @@ export default function ResourceManager({ title, resource, token, fields, column
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: i * 0.02 }}
-                    className="border-b border-white/5 hover:bg-white/[0.02]"
+                    className="border-b border-border hover:bg-white/[0.02]"
                   >
                     {columns.map((c) => (
                       <td key={c.key} className={`px-4 py-3 ${c.mono ? 'mono text-xs' : ''}`}>
@@ -220,7 +220,7 @@ export default function ResourceManager({ title, resource, token, fields, column
                 <h2 className="text-lg font-bold">
                   {editing._id ? 'Edit' : 'Create'} {title.replace(/s$/, '')}
                 </h2>
-                <button onClick={() => setEditing(null)} className="p-1.5 rounded hover:bg-white/5">
+                <button onClick={() => setEditing(null)} className="p-1.5 rounded hover:bg-muted/50">
                   <FaTimes />
                 </button>
               </div>
@@ -281,7 +281,7 @@ export default function ResourceManager({ title, resource, token, fields, column
                           onChange={(e) => setEditing({ ...editing, [f.name]: e.target.checked })}
                           className="w-4 h-4 accent-cyan-400"
                         />
-                        <span className="text-xs text-white/70">{f.checkboxLabel || 'Enabled'}</span>
+                        <span className="text-xs text-foreground/70">{f.checkboxLabel || 'Enabled'}</span>
                       </label>
                     ) : f.type === 'number' ? (
                       <input
@@ -304,7 +304,7 @@ export default function ResourceManager({ title, resource, token, fields, column
                 ))}
               </div>
 
-              <div className="flex justify-end gap-2 mt-6 pt-4 border-t border-white/10">
+              <div className="flex justify-end gap-2 mt-6 pt-4 border-t border-border">
                 <button onClick={() => setEditing(null)} className="btn-ghost">
                   Cancel
                 </button>

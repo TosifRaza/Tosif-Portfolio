@@ -6,10 +6,10 @@ import { Lock, Star } from "lucide-react";
 
 // Rarity system (kept static — these are presentation constants, not data)
 const rarityColors = {
-  common: "#6B6B80",
-  rare: "#00D4FF",
-  epic: "#7C6AFF",
-  legendary: "#FFB800",
+  common: "hsl(var(--muted-foreground))",
+  rare: "hsl(var(--primary))",
+  epic: "hsl(var(--primary))",
+  legendary: "#F59E0B",
 };
 
 const rarityLabels = {
@@ -45,7 +45,7 @@ function AchievementCard({ achievement }) {
           className="w-8 h-8 rounded-lg flex items-center justify-center text-sm"
           style={{
             background: isLocked ? "rgba(255,255,255,0.04)" : `${rarityColor}20`,
-            color: isLocked ? "#4A4A5E" : rarityColor,
+            color: isLocked ? "hsl(var(--muted-foreground))" : rarityColor,
           }}
         >
           {isLocked ? "🔒" : (achievement.icon || "🏆")}
@@ -92,7 +92,7 @@ function AchievementCard({ achievement }) {
             <span>Progress</span>
             <span>{achievement.progress}%</span>
           </div>
-          <div className="w-full h-1 rounded-full bg-white/[0.06] overflow-hidden">
+          <div className="w-full h-1 rounded-full bg-muted/60 overflow-hidden">
             <div className="h-full rounded-full bg-purple-500/50" style={{ width: `${achievement.progress}%` }} />
           </div>
         </div>
@@ -108,14 +108,14 @@ function TrophySkeleton() {
       {[1, 2, 3, 4, 5, 6].map((i) => (
         <div key={i} className="glass rounded-xl p-4 animate-pulse">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-white/[0.06]" />
+            <div className="w-8 h-8 rounded-lg bg-muted/60" />
             <div className="flex-1 space-y-1">
-              <div className="h-3 bg-white/[0.06] rounded w-2/3" />
-              <div className="h-2 bg-white/[0.04] rounded w-1/3" />
+              <div className="h-3 bg-muted/60 rounded w-2/3" />
+              <div className="h-2 bg-muted/50 rounded w-1/3" />
             </div>
           </div>
-          <div className="h-2 bg-white/[0.04] rounded w-full mb-1" />
-          <div className="h-2 bg-white/[0.04] rounded w-4/5" />
+          <div className="h-2 bg-muted/50 rounded w-full mb-1" />
+          <div className="h-2 bg-muted/50 rounded w-4/5" />
         </div>
       ))}
     </div>
@@ -172,7 +172,7 @@ export default function TrophyRoom() {
     return (
       <div className="min-h-full p-6 flex items-center justify-center">
         <div className="text-center max-w-md">
-          <div className="text-[#FF3366] text-4xl mb-3">⚠️</div>
+          <div className="text-red-500 text-4xl mb-3">⚠️</div>
           <h3 className="text-lg font-bold text-text-primary mb-2">Failed to load achievements</h3>
           <p className="text-sm text-text-secondary mb-4">{error}</p>
           <p className="text-xs text-text-muted mb-4">
@@ -216,7 +216,7 @@ export default function TrophyRoom() {
 
         {/* Progress bar */}
         <motion.div variants={staggerItem} className="glass rounded-xl p-4 mb-6">
-          <div className="w-full h-2 rounded-full bg-white/[0.06] overflow-hidden">
+          <div className="w-full h-2 rounded-full bg-muted/60 overflow-hidden">
             <motion.div
               className="h-full rounded-full bg-gradient-to-r from-purple-500 to-cyan-500"
               initial={{ width: 0 }}

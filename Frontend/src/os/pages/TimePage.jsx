@@ -8,7 +8,7 @@ import { Play, Square, Plus, Clock3 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 const CATEGORIES = ['work', 'learning', 'coding', 'exercise', 'reading', 'sleep', 'personal', 'other'];
-const COLORS = ['#00D4FF', '#7C6AFF', '#00FF88', '#FF6B9D', '#FFB800', '#a78bfa', '#4ADE80', '#6B6B80'];
+const COLORS = ['hsl(var(--primary))', 'hsl(var(--primary))', '#10B981', '#F472B6', '#F59E0B', 'hsl(var(--primary))', '#4ADE80', 'hsl(var(--muted-foreground))'];
 
 /** TIME — start/stop timer + manual entries + daily/weekly totals + category breakdown. */
 export default function TimePage() {
@@ -74,7 +74,7 @@ export default function TimePage() {
   const chartData = (summary?.byCategory || []).map((c, i) => ({
     name: c.category,
     minutes: c.minutes,
-    fill: COLORS[CATEGORIES.indexOf(c.category) % COLORS.length] || '#00D4FF',
+    fill: COLORS[CATEGORIES.indexOf(c.category) % COLORS.length] || 'hsl(var(--primary))',
   }));
 
   const dayTotal = (entries || []).reduce((s, e) => s + (e.minutes || 0), 0);
@@ -83,16 +83,16 @@ export default function TimePage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>Time</h1>
+          <h1 className="text-2xl font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>Time</h1>
         </div>
         <div className="flex items-center gap-2">
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={`${inputCls} w-40`} />
           {running ? (
-            <button onClick={stop} disabled={busy} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#FF3366]/10 border border-[#FF3366]/40 text-[#FF3366] text-xs font-semibold">
+            <button onClick={stop} disabled={busy} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/40 text-red-500 text-xs font-semibold">
               <Square size={13} /> Stop ({running.category})
             </button>
           ) : (
-            <button onClick={start} disabled={busy} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#00FF88]/10 border border-[#00FF88]/40 text-[#00FF88] text-xs font-semibold">
+            <button onClick={start} disabled={busy} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/40 text-emerald-500 text-xs font-semibold">
               <Play size={13} /> Start timer
             </button>
           )}
@@ -103,25 +103,25 @@ export default function TimePage() {
       {/* This week summary */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <StatCard label="Today total" value={fmtMinutes(dayTotal)} icon={Clock3} />
-        <StatCard label="This week total" value={fmtMinutes(summary?.totalMinutes || 0)} icon={Clock3} color="#7C6AFF" />
-        <StatCard label="Categories used" value={chartData.length} icon={Clock3} color="#00FF88" sub="this week" />
-        <StatCard label="Top category" value={chartData[0]?.name ? chartData[0].name : '—'} icon={Clock3} color="#FFB800" sub={chartData[0] ? fmtMinutes(chartData[0].minutes) : ''} />
+        <StatCard label="This week total" value={fmtMinutes(summary?.totalMinutes || 0)} icon={Clock3} color="hsl(var(--primary))" />
+        <StatCard label="Categories used" value={chartData.length} icon={Clock3} color="#10B981" sub="this week" />
+        <StatCard label="Top category" value={chartData[0]?.name ? chartData[0].name : '—'} icon={Clock3} color="#F59E0B" sub={chartData[0] ? fmtMinutes(chartData[0].minutes) : ''} />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Category chart */}
         <Panel title="This week by category" subtitle="Only real tracked minutes — never estimated">
           {chartData.length === 0 ? (
-            <div className="text-center py-10 text-xs text-[#6B6B80]">No time tracked this week yet. Start the timer or add a manual entry.</div>
+            <div className="text-center py-10 text-xs text-muted-foreground">No time tracked this week yet. Start the timer or add a manual entry.</div>
           ) : (
             <div className="h-56">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
-                  <XAxis dataKey="name" tick={{ fill: '#6B6B80', fontSize: 10 }} axisLine={{ stroke: '#1a1a2e' }} tickLine={false} />
-                  <YAxis tick={{ fill: '#6B6B80', fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <XAxis dataKey="name" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} axisLine={{ stroke: 'hsl(var(--card))' }} tickLine={false} />
+                  <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} axisLine={false} tickLine={false} />
                   <Tooltip
                     cursor={{ fill: 'rgba(255,255,255,0.03)' }}
-                    contentStyle={{ background: '#0a0e17', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, fontSize: 12 }}
+                    contentStyle={{ background: 'hsl(var(--card))', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, fontSize: 12 }}
                     formatter={(v) => [fmtMinutes(v), 'time']}
                   />
                   <Bar dataKey="minutes" radius={[6, 6, 0, 0]}>
@@ -136,19 +136,19 @@ export default function TimePage() {
         {/* Entries for the day */}
         <Panel title={`Entries — ${date}`} subtitle={`${entries?.length || 0} entr${entries?.length === 1 ? 'y' : 'ies'} · ${fmtMinutes(dayTotal)}`}>
           {loading ? <Spinner /> : error ? <ErrorState message={error} onRetry={refetch} /> : (entries || []).length === 0 ? (
-            <div className="text-center py-8 text-xs text-[#6B6B80]">Nothing tracked on this day.</div>
+            <div className="text-center py-8 text-xs text-muted-foreground">Nothing tracked on this day.</div>
           ) : (
             <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
               {entries.map((e) => (
-                <div key={e._id} className="flex items-center gap-3 p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <div key={e._id} className="flex items-center gap-3 p-2.5 rounded-lg bg-muted/30 border border-border">
                   <button onClick={() => { setForm({ category: e.category, minutes: e.minutes, notes: e.notes || '' }); setEditing(e._id); }} className="flex-1 text-left min-w-0">
-                    <div className="text-sm text-[#E8E8F0] capitalize">{e.category} <span className="text-[10px] text-[#4A4A5E] mono">({e.source})</span></div>
-                    <div className="text-[10px] text-[#6B6B80] mono truncate">
+                    <div className="text-sm text-foreground capitalize">{e.category} <span className="text-[10px] text-muted-foreground mono">({e.source})</span></div>
+                    <div className="text-[10px] text-muted-foreground mono truncate">
                       {e.startedAt && e.endedAt ? `${new Date(e.startedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}–${new Date(e.endedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : ''}
                       {e.notes ? ` ${e.notes}` : ''}
                     </div>
                   </button>
-                  <span className="text-xs mono text-[#00D4FF]">{fmtMinutes(e.minutes)}</span>
+                  <span className="text-xs mono text-primary">{fmtMinutes(e.minutes)}</span>
                   <DeleteButton onConfirm={() => remove(e)} />
                 </div>
               ))}
@@ -162,7 +162,7 @@ export default function TimePage() {
           <div className="grid sm:grid-cols-2 gap-4">
             <Field label="Category">
               <select className={inputCls} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
-                {CATEGORIES.map((c) => <option key={c} value={c} className="bg-[#0a0e17]">{c}</option>)}
+                {CATEGORIES.map((c) => <option key={c} value={c} className="bg-card">{c}</option>)}
               </select>
             </Field>
             <Field label="Minutes">
@@ -172,7 +172,7 @@ export default function TimePage() {
               <input className={inputCls} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
             </Field>
           </div>
-          <div className="flex justify-end gap-2 mt-6 pt-4 border-t border-white/10">
+          <div className="flex justify-end gap-2 mt-6 pt-4 border-t border-border">
             <button onClick={() => setEditing(null)} className={btnGhost}>Cancel</button>
             <button onClick={save} disabled={busy} className={btnPrimary}>Save</button>
           </div>

@@ -22,7 +22,7 @@ const COLUMNS = [
     label: 'Level',
     render: (i) => (
       <div className="flex items-center gap-2">
-        <div className="w-20 h-1.5 rounded-full bg-white/5 overflow-hidden">
+        <div className="w-20 h-1.5 rounded-full bg-muted/50 overflow-hidden">
           <div className="h-full bg-gradient-to-r from-neon-cyan to-neon-purple" style={{ width: `${i.level}%` }} />
         </div>
         <span className="mono text-xs text-muted">{i.level}%</span>

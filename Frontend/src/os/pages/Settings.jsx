@@ -54,7 +54,7 @@ export default function Settings() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>Settings</h1>
+        <h1 className="text-2xl font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>Settings</h1>
       </div>
 
       {/* Weekly plan */}
@@ -63,7 +63,7 @@ export default function Settings() {
         subtitle="Powers Plan vs Actual. 0 = no target for that category."
         right={
           <div className="flex items-center gap-2">
-            {planSaved && <span className="text-[11px] text-[#00FF88] flex items-center gap-1"><Check size={12} /> saved</span>}
+            {planSaved && <span className="text-[11px] text-emerald-500 flex items-center gap-1"><Check size={12} /> saved</span>}
             <button onClick={saveAllPlan} disabled={savingPlan || Object.keys(planEdits).length === 0} className={btnPrimary}>
               <Save size={13} /> Save plan
             </button>
@@ -71,7 +71,7 @@ export default function Settings() {
         }
       >
         {loading ? (
-          <div className="text-xs text-[#6B6B80] py-4">Loading plan…</div>
+          <div className="text-xs text-muted-foreground py-4">Loading plan…</div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {(plan || []).filter((p) => PLAN_CATEGORIES.includes(p.category)).map((p) => (
@@ -87,7 +87,7 @@ export default function Settings() {
                     onChange={(e) => setPlanEdits({ ...planEdits, [p.category]: Number(e.target.value) * 60 })}
                   />
                 </div>
-                <div className="text-[10px] text-[#4A4A5E] mono mt-1">
+                <div className="text-[10px] text-muted-foreground mono mt-1">
                   = {fmtMinutes(planEdits[p.category] ?? (p.weeklyTargetMinutes || 0))} target
                 </div>
               </Field>
@@ -107,7 +107,7 @@ export default function Settings() {
               <input type="password" className={inputCls} value={pw.newPassword} onChange={(e) => setPw({ ...pw, newPassword: e.target.value })} autoComplete="new-password" minLength={8} required />
             </Field>
             {pwMsg && (
-              <div className={`text-xs px-3 py-2 rounded-lg ${pwMsg.ok ? 'bg-[#00FF88]/10 text-[#00FF88]' : 'bg-[#FF3366]/10 text-[#FF3366]'}`}>
+              <div className={`text-xs px-3 py-2 rounded-lg ${pwMsg.ok ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}`}>
                 {pwMsg.text}
               </div>
             )}
@@ -119,13 +119,13 @@ export default function Settings() {
 
         {/* System info */}
         <Panel title="System">
-          <div className="space-y-2.5 text-xs text-[#8B8B9F]">
-            <div className="flex items-center gap-2"><Target size={13} className="text-[#00D4FF]" /> TOSIF OS v5.0 — Personal Operating System + Portfolio</div>
+          <div className="space-y-2.5 text-xs text-muted-foreground">
+            <div className="flex items-center gap-2"><Target size={13} className="text-primary" /> TOSIF OS v5.0 — Personal Operating System + Portfolio</div>
             <div>• Public site: CMS-driven, section visibility/order controlled from the Admin Control Center</div>
             <div>• Private mode: this OS — goals, tasks, time, learning, analytics, trajectory</div>
             <div>• Data lives in MongoDB; the backend computes all analytics and estimates</div>
             <div>• Goal trajectory = projection from recorded history, clearly labelled as an estimate</div>
-            <div className="pt-2 border-t border-white/[0.06] text-[#4A4A5E] mono text-[10px]">
+            <div className="pt-2 border-t border-border text-muted-foreground mono text-[10px]">
               Optional LLM: set AI_BASE_URL + AI_API_KEY + AI_MODEL in Backend/.env to let the Personal AI
               rephrase computed answers. Numbers always come from your data.
             </div>

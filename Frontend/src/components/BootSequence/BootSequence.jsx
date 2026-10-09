@@ -13,7 +13,7 @@ function VoidPhase({ onComplete }) {
 
   return (
     <motion.div
-      className="absolute inset-0 flex items-center justify-center bg-[#06060C]"
+      className="absolute inset-0 flex items-center justify-center bg-background"
       exit={{ opacity: 0 }}
       transition={{ duration: 0.8 }}
     >
@@ -39,7 +39,7 @@ function PulsePhase({ onComplete }) {
 
   return (
     <motion.div
-      className="absolute inset-0 flex items-center justify-center bg-[#06060C]"
+      className="absolute inset-0 flex items-center justify-center bg-background"
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
@@ -68,9 +68,9 @@ function PulsePhase({ onComplete }) {
         animate={{
           scale: [1, 1.4, 1],
           boxShadow: [
-            "0 0 10px rgba(124, 106, 255, 0.5)",
-            "0 0 40px rgba(124, 106, 255, 0.8), 0 0 80px rgba(124, 106, 255, 0.3)",
-            "0 0 10px rgba(124, 106, 255, 0.5)",
+            "0 0 10px rgba(59, 130, 246, 0.5)",
+            "0 0 40px rgba(59, 130, 246, 0.8), 0 0 80px rgba(59, 130, 246, 0.3)",
+            "0 0 10px rgba(59, 130, 246, 0.5)",
           ],
         }}
         transition={{ duration: 1, repeat: 2 }}
@@ -90,7 +90,7 @@ function ScanPhase({ onComplete }) {
 
   return (
     <motion.div
-      className="absolute inset-0 flex items-center justify-center bg-[#06060C] overflow-hidden"
+      className="absolute inset-0 flex items-center justify-center bg-background overflow-hidden"
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
@@ -111,7 +111,7 @@ function ScanPhase({ onComplete }) {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 0.6, x: 0 }}
             transition={{ delay: i * 0.3, duration: 0.5 }}
-            style={{ color: "#6B6B80" }}
+            style={{ color: "hsl(var(--muted-foreground))" }}
           >
             {"> "} {frag}
           </motion.div>
@@ -142,7 +142,7 @@ function TextPhase({ onComplete }) {
 
   return (
     <motion.div
-      className="absolute inset-0 flex items-center justify-center bg-[#06060C]"
+      className="absolute inset-0 flex items-center justify-center bg-background"
       exit={{ opacity: 0, scale: 1.05 }}
       transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
     >
@@ -164,10 +164,10 @@ function TextPhase({ onComplete }) {
             }
             style={
               line === "ACCESS GRANTED"
-                ? { color: "#00FF88", textShadow: "0 0 20px rgba(0, 255, 136, 0.5)" }
+                ? { color: "#10B981", textShadow: "0 0 20px rgba(16, 185, 129, 0.5)" }
                 : line.startsWith("SYSTEM") || line.startsWith("STATUS")
-                  ? { color: "#00D4FF" }
-                  : { color: "#6B6B80" }
+                  ? { color: "hsl(var(--primary))" }
+                  : { color: "hsl(var(--muted-foreground))" }
             }
           >
             {line === "ACCESS GRANTED" ? "> " + line : line ? "> " + line : ""}
@@ -219,10 +219,10 @@ export default function BootSequence() {
 
   return (
     <AnimatePresence mode="wait">
-      <motion.div className="fixed inset-0 z-[100] bg-[#06060C]">
+      <motion.div className="fixed inset-0 z-[100] bg-background">
         <button
           onClick={finish}
-          className="absolute top-5 right-5 z-10 px-4 py-1.5 rounded-lg border border-white/15 text-[#9B9BAF] hover:text-white hover:border-white/40 text-xs font-mono tracking-widest transition-colors"
+          className="absolute top-5 right-5 z-10 px-4 py-1.5 rounded-lg border border-border text-muted-foreground hover:text-white hover:border-primary/50 text-xs font-mono tracking-widest transition-colors"
         >
           SKIP →
         </button>

@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { PolarAngleAxis, RadialBar, RadialBarChart, ResponsiveContainer } from 'recharts';
 
-const HEALTH_COLORS = { 'on-track': '#00FF88', behind: '#FF3366', complete: '#00D4FF' };
+const HEALTH_COLORS = { 'on-track': '#10B981', behind: '#EF4444', complete: 'hsl(var(--primary))' };
 
 export default function Dashboard() {
   const { data, loading, error, refetch } = useApi(() => osApi.dashboard());
@@ -55,17 +55,17 @@ export default function Dashboard() {
       {/* Header row */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
+          <h1 className="text-2xl font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>
             Good to see you. Here's your system status.
           </h1>
         </div>
         {/* Timer widget */}
         {data.runningTimer ? (
-          <button onClick={stopTimer} disabled={timerBusy} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#FF3366]/10 border border-[#FF3366]/40 text-[#FF3366] text-xs font-semibold hover:bg-[#FF3366]/20 transition-colors">
+          <button onClick={stopTimer} disabled={timerBusy} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/40 text-red-500 text-xs font-semibold hover:bg-red-500/20 transition-colors">
             <Square size={13} /> Stop timer ({data.runningTimer.category})
           </button>
         ) : (
-          <button onClick={startTimer} disabled={timerBusy} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#00FF88]/10 border border-[#00FF88]/40 text-[#00FF88] text-xs font-semibold hover:bg-[#00FF88]/20 transition-colors">
+          <button onClick={startTimer} disabled={timerBusy} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/40 text-emerald-500 text-xs font-semibold hover:bg-emerald-500/20 transition-colors">
             <Play size={13} /> Start timer
           </button>
         )}
@@ -73,10 +73,10 @@ export default function Dashboard() {
 
       {/* Today at a glance */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard label="Time today" value={fmtMinutes(t.totalMinutes)} icon={Clock3} color="#00D4FF" sub="tracked time entries" />
-        <StatCard label="Learning today" value={fmtMinutes(t.learningMinutes)} icon={GraduationCap} color="#7C6AFF" sub={`${t.learning.length} session(s)`} />
-        <StatCard label="Tasks done" value={t.tasksCompleted} icon={ListChecks} color="#00FF88" sub="completed today" />
-        <StatCard label="Learning streak" value={`${data.learningStreak}d`} icon={Flame} color="#FFB800" sub="consecutive days" />
+        <StatCard label="Time today" value={fmtMinutes(t.totalMinutes)} icon={Clock3} color="hsl(var(--primary))" sub="tracked time entries" />
+        <StatCard label="Learning today" value={fmtMinutes(t.learningMinutes)} icon={GraduationCap} color="hsl(var(--primary))" sub={`${t.learning.length} session(s)`} />
+        <StatCard label="Tasks done" value={t.tasksCompleted} icon={ListChecks} color="#10B981" sub="completed today" />
+        <StatCard label="Learning streak" value={`${data.learningStreak}d`} icon={Flame} color="#F59E0B" sub="consecutive days" />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
@@ -84,7 +84,7 @@ export default function Dashboard() {
         <Panel
           title="What should I do today?"
           subtitle="Rule-based suggestions: due dates → priorities → behind goals"
-          right={<Link to="/os/tasks" className="text-[11px] text-[#00D4FF] hover:underline">All tasks →</Link>}
+          right={<Link to="/os/tasks" className="text-[11px] text-primary hover:underline">All tasks →</Link>}
         >
           {data.focus.length === 0 ? (
             <EmptyState
@@ -95,11 +95,11 @@ export default function Dashboard() {
           ) : (
             <ul className="space-y-2">
               {data.focus.map((f) => (
-                <li key={f.taskId} className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.03] border border-white/[0.05]">
-                  <AlertTriangle size={13} className="text-[#FFB800] flex-shrink-0" />
+                <li key={f.taskId} className="flex items-center gap-3 p-3 rounded-lg bg-muted/40 border border-border">
+                  <AlertTriangle size={13} className="text-amber-500 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm text-[#E8E8F0] truncate">{f.title}</div>
-                    <div className="text-[10px] text-[#6B6B80] mono">
+                    <div className="text-sm text-foreground truncate">{f.title}</div>
+                    <div className="text-[10px] text-muted-foreground mono">
                       {f.reason}{f.goal ? ` · ${f.goal}` : ''}
                     </div>
                   </div>
@@ -113,7 +113,7 @@ export default function Dashboard() {
         <Panel
           title="Which goals are progressing? Which are behind?"
           subtitle="Behind = progress is 10+ points below the straight-line expectation"
-          right={<Link to="/os/goals" className="text-[11px] text-[#00D4FF] hover:underline">All goals →</Link>}
+          right={<Link to="/os/goals" className="text-[11px] text-primary hover:underline">All goals →</Link>}
         >
           {data.goals.length === 0 ? (
             <EmptyState
@@ -125,19 +125,19 @@ export default function Dashboard() {
           ) : (
             <div className="space-y-3">
               {data.goals.slice(0, 5).map((g) => (
-                <Link key={g.id} to={`/os/goals/${g.id}`} className="block p-3 rounded-lg bg-white/[0.03] border border-white/[0.05] hover:border-white/[0.12] transition-colors">
+                <Link key={g.id} to={`/os/goals/${g.id}`} className="block p-3 rounded-lg bg-muted/40 border border-border hover:border-border transition-colors">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-[#E8E8F0] truncate pr-2">{g.title}</span>
+                    <span className="text-sm text-foreground truncate pr-2">{g.title}</span>
                     <Badge color={HEALTH_COLORS[g.health]}>{g.health.toUpperCase()}</Badge>
                   </div>
                   <ProgressBar value={g.progress} color={HEALTH_COLORS[g.health]} />
-                  <div className="flex justify-between mt-1 text-[10px] text-[#6B6B80] mono">
+                  <div className="flex justify-between mt-1 text-[10px] text-muted-foreground mono">
                     <span>{g.progress}%</span>
                     {g.expectedByNow !== null && <span>expected ~{g.expectedByNow}%</span>}
                   </div>
                 </Link>
               ))}
-              <div className="text-[10px] text-[#4A4A5E] mono">
+              <div className="text-[10px] text-muted-foreground mono">
                 {goalsOnTrack} on track · {data.behindGoals.length} behind
               </div>
             </div>
@@ -148,7 +148,7 @@ export default function Dashboard() {
         <Panel
           title="Am I following my plan?"
           subtitle="Weekly targets vs actual tracked time (or logged activities when no time entries exist)"
-          right={<Link to="/os/settings" className="text-[11px] text-[#00D4FF] hover:underline">Edit plan →</Link>}
+          right={<Link to="/os/settings" className="text-[11px] text-primary hover:underline">Edit plan →</Link>}
         >
           {plannedRows.length === 0 ? (
             <EmptyState
@@ -162,22 +162,22 @@ export default function Dashboard() {
               {plannedRows.map((r) => (
                 <div key={r.category}>
                   <div className="flex items-center justify-between text-xs mb-1.5">
-                    <span className="text-[#C8C8D8] capitalize">{r.category}</span>
-                    <span className="text-[#8B8B9F] mono">
+                    <span className="text-foreground capitalize">{r.category}</span>
+                    <span className="text-muted-foreground mono">
                       {fmtMinutes(r.actualMinutes)} / {fmtMinutes(r.targetMinutes)}
-                      <span className={r.execution >= 80 ? 'text-[#00FF88] ml-2' : r.execution >= 40 ? 'text-[#FFB800] ml-2' : 'text-[#FF3366] ml-2'}>
+                      <span className={r.execution >= 80 ? 'text-emerald-500 ml-2' : r.execution >= 40 ? 'text-amber-500 ml-2' : 'text-red-500 ml-2'}>
                         {r.execution}%
                       </span>
                     </span>
                   </div>
                   <ProgressBar
                     value={Math.min(100, r.execution)}
-                    color={r.execution >= 80 ? '#00FF88' : r.execution >= 40 ? '#FFB800' : '#FF3366'}
+                    color={r.execution >= 80 ? '#10B981' : r.execution >= 40 ? '#F59E0B' : '#EF4444'}
                   />
                 </div>
               ))}
               {avgExecution !== null && (
-                <div className="text-[10px] text-[#4A4A5E] mono pt-1">Average execution this week: {avgExecution}%</div>
+                <div className="text-[10px] text-muted-foreground mono pt-1">Average execution this week: {avgExecution}%</div>
               )}
             </div>
           )}
@@ -187,23 +187,23 @@ export default function Dashboard() {
         <Panel
           title="What is my current trajectory?"
           subtitle="Estimated — computed from recorded progress history, not guaranteed"
-          right={<Link to="/os/analytics" className="text-[11px] text-[#00D4FF] hover:underline">Analytics →</Link>}
+          right={<Link to="/os/analytics" className="text-[11px] text-primary hover:underline">Analytics →</Link>}
         >
           {data.trajectories.length === 0 ? (
             <EmptyState icon={Timer} title="No trajectories to estimate yet" hint="Create goals and record progress; after two recorded days estimates appear." />
           ) : (
             <div className="space-y-3">
               {data.trajectories.map((tr) => (
-                <div key={tr.goalId} className="p-3 rounded-lg bg-white/[0.03] border border-white/[0.05]">
+                <div key={tr.goalId} className="p-3 rounded-lg bg-muted/40 border border-border">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-[#E8E8F0] truncate pr-2">{tr.title}</span>
+                    <span className="text-sm text-foreground truncate pr-2">{tr.title}</span>
                     {tr.status === 'estimated' && tr.estimate && (
-                      <Badge color="#7C6AFF">ETA {tr.estimate.completionAround}</Badge>
+                      <Badge color="hsl(var(--primary))">ETA {tr.estimate.completionAround}</Badge>
                     )}
-                    {tr.status === 'insufficient_data' && <Badge color="#6B6B80">NO DATA</Badge>}
-                    {tr.status === 'complete' && <Badge color="#00D4FF">DONE</Badge>}
+                    {tr.status === 'insufficient_data' && <Badge color="hsl(var(--muted-foreground))">NO DATA</Badge>}
+                    {tr.status === 'complete' && <Badge color="hsl(var(--primary))">DONE</Badge>}
                   </div>
-                  <div className="text-[10px] text-[#6B6B80] mono">
+                  <div className="text-[10px] text-muted-foreground mono">
                     {tr.status === 'estimated' && tr.estimate
                       ? `${tr.currentProgress}% done · pace ${tr.observedPacePerWeek} pts/week · range ${tr.estimate.rangeStart} → ${tr.estimate.rangeEnd}`
                       : tr.message}
@@ -216,7 +216,7 @@ export default function Dashboard() {
       </div>
 
       {/* What did I do today? */}
-      <Panel title="What am I doing today?" subtitle="Your daily log — what was worked on, learned, and for how long" right={<Link to="/os/daily-log" className="text-[11px] text-[#00D4FF] hover:underline">Open Daily Log →</Link>}>
+      <Panel title="What am I doing today?" subtitle="Your daily log — what was worked on, learned, and for how long" right={<Link to="/os/daily-log" className="text-[11px] text-primary hover:underline">Open Daily Log →</Link>}>
         {t.activities.length === 0 ? (
           <EmptyState
             icon={NotebookIcon}
@@ -227,15 +227,15 @@ export default function Dashboard() {
         ) : (
           <div className="space-y-2">
             {t.activities.map((a) => (
-              <div key={a._id} className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.03] border border-white/[0.05]">
-                <CheckCircle2 size={13} className="text-[#00FF88] flex-shrink-0" />
+              <div key={a._id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/40 border border-border">
+                <CheckCircle2 size={13} className="text-emerald-500 flex-shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm text-[#E8E8F0] truncate">{a.title}</div>
-                  <div className="text-[10px] text-[#6B6B80] mono">
+                  <div className="text-sm text-foreground truncate">{a.title}</div>
+                  <div className="text-[10px] text-muted-foreground mono">
                     {a.type}{a.goalId ? ` · ${a.goalId.title}` : ''}{a.skillId ? ` · ${a.skillId.name}` : ''}
                   </div>
                 </div>
-                <span className="text-xs mono text-[#00D4FF]">{fmtMinutes(a.durationMinutes)}</span>
+                <span className="text-xs mono text-primary">{fmtMinutes(a.durationMinutes)}</span>
               </div>
             ))}
           </div>
@@ -260,7 +260,7 @@ export default function Dashboard() {
                     <RadialBar background dataKey="value" cornerRadius={10} />
                   </RadialBarChart>
                 </ResponsiveContainer>
-                <div className="text-[10px] text-[#8B8B9F] text-center truncate -mt-9 px-2">{g.title}</div>
+                <div className="text-[10px] text-muted-foreground text-center truncate -mt-9 px-2">{g.title}</div>
                 <div className="text-xs text-center font-bold mt-5" style={{ color: HEALTH_COLORS[g.health] }}>{g.progress}%</div>
               </div>
             ))}

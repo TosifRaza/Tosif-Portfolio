@@ -1,51 +1,25 @@
-import { Suspense, lazy, useCallback } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { AppProvider, useApp } from '@/context/AppContext';
-import { ThemeProvider } from '@/context/ThemeContext';
-import BootSequence from '@/components/BootSequence/BootSequence';
-import TopBar from '@/components/Layout/TopBar';
-import HomePage from '@/components/HomePage/HomePage';
-import SkillConstellation from '@/components/SkillConstellation/SkillConstellation';
-import MissionDeck from '@/components/MissionDeck/MissionDeck';
-import LaunchControl from '@/components/LaunchControl/LaunchControl';
-import ChronoScroll from '@/components/ChronoScroll/ChronoScroll';
-import RecruiterMode from '@/components/RecruiterMode/RecruiterMode';
-import TrophyRoom from '@/components/TrophyRoom/TrophyRoom';
-import ContactPortal from '@/components/ContactPortal/ContactPortal';
-import AboutSection from '@/components/AboutSection/AboutSection';
-import ExperienceSection from '@/components/ExperienceSection/ExperienceSection';
-import ResumeSection from '@/components/ResumeSection/ResumeSection';
-import GlobalMap from '@/components/GlobalMap/GlobalMap';
-import Terminal from '@/components/Terminal/Terminal';
-import FounderAI from '@/components/FounderAI/FounderAI';
-import { useKonamiCode } from '@/hooks/useCustomHooks';
-import { useApi } from '@/hooks/useApi';
-import { api } from '@/utils/api';
+import { Suspense, lazy } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Zap } from 'lucide-react';
+import { AppProvider } from '@/context/AppContext';
+import { ThemeProvider } from '@/context/ThemeContext';
+import PublicShell from '@/public/PublicShell';
+import HomePage from '@/public/pages/HomePage';
+import ProjectsPage from '@/public/pages/ProjectsPage';
+import SkillsPage from '@/public/pages/SkillsPage';
+import ExperiencePage from '@/public/pages/ExperiencePage';
+import EngineeringLabPage from '@/public/pages/EngineeringLabPage';
+import ResumePage from '@/public/pages/ResumePage';
+import ContactPage from '@/public/pages/ContactPage';
+import SectionPage from '@/public/pages/SectionPage';
 
 // Private OS bundle — lazy loaded so public visitors never download it.
 const OSApp = lazy(() => import('@/os/OSApp.jsx'));
 
-// ─── Section registry (public mode) ──────────────────────────
-const SECTION_COMPONENTS = {
-  home: HomePage,
-  about: AboutSection,
-  experience: ExperienceSection,
-  skills: SkillConstellation,
-  projects: MissionDeck,
-  products: LaunchControl,
-  achievements: TrophyRoom,
-  journey: ChronoScroll,
-  resume: ResumeSection,
-  contact: ContactPortal,
-  globalreach: GlobalMap,
-};
-
 function BootPlaceholder() {
   return (
-    <div className="min-h-screen bg-[#06060C] flex items-center justify-center">
-      <div className="flex items-center gap-3 text-[#00D4FF] font-mono text-sm">
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="flex items-center gap-3 text-primary font-mono text-sm">
         <Zap size={16} className="animate-pulse" />
         LOADING TOSIF OS…
       </div>
@@ -53,65 +27,15 @@ function BootPlaceholder() {
   );
 }
 
-function PublicApp() {
-  const { state, addEasterEgg } = useApp();
-  const { data: site } = useApi(() => api.getSite());
-
-  // Konami code easter egg
-  const handleKonami = useCallback(() => {
-    addEasterEgg('konami');
-    alert('🎮 KONAMI CODE DETECTED!\n\nWelcome to the Founder\'s Secret Room!\n\nFun fact: This portfolio was built with pure passion and 3am coding sessions.');
-  }, [addEasterEgg]);
-  useKonamiCode(handleKonami);
-
-  const renderSection = () => {
-    if (state.recruiterMode) return <RecruiterMode />;
-
-    // Render enabled sections in admin-defined order (default: home)
-    const enabled = (site?.sections || [])
-      .filter((s) => s.enabled && SECTION_COMPONENTS[s.key])
-      .sort((a, b) => a.order - b.order);
-    const activeKey = enabled.some((s) => s.key === state.activeSection)
-      ? state.activeSection
-      : enabled[0]?.key || 'home';
-    const Section = SECTION_COMPONENTS[activeKey] || HomePage;
-    return <Section site={site} />;
-  };
-
+function NotFound() {
   return (
-    <div className="min-h-screen bg-[#06060C]">
-      <BootSequence />
-
-      <AnimatePresence>
-        {state.bootComplete && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-          >
-            {/* Professional top navigation — recruiter-friendly, CMS-driven */}
-            <TopBar site={site} />
-
-            <div className="pt-14">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={state.recruiterMode ? 'recruiter' : state.activeSection}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {renderSection()}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Overlay Components */}
-      <Terminal />
-      {site?.ai?.publicEnabled !== false && <FounderAI />}
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-24 text-center w-full">
+      <p className="font-mono text-6xl font-bold text-primary/40">404</p>
+      <h1 className="mt-4 text-xl font-semibold text-foreground">Page not found</h1>
+      <p className="mt-2 text-sm text-muted-foreground">The page you are looking for does not exist or is not published.</p>
+      <a href="/" className="mt-6 inline-block px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
+        Back to Home
+      </a>
     </div>
   );
 }
@@ -130,7 +54,22 @@ export default function App() {
                 </Suspense>
               }
             />
-            <Route path="/*" element={<PublicApp />} />
+            <Route path="/" element={<PublicShell />}>
+              <Route index element={<HomePage />} />
+              <Route path="projects" element={<ProjectsPage />} />
+              <Route path="skills" element={<SkillsPage />} />
+              <Route path="experience" element={<ExperiencePage />} />
+              <Route path="engineering-lab" element={<EngineeringLabPage />} />
+              <Route path="resume" element={<ResumePage />} />
+              <Route path="contact" element={<ContactPage />} />
+              {/* CMS-gated legacy sections */}
+              <Route path="about" element={<SectionPage sectionKey="about" />} />
+              <Route path="products" element={<SectionPage sectionKey="products" />} />
+              <Route path="achievements" element={<SectionPage sectionKey="achievements" />} />
+              <Route path="journey" element={<SectionPage sectionKey="journey" />} />
+              <Route path="globalreach" element={<SectionPage sectionKey="globalreach" />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
           </Routes>
         </BrowserRouter>
       </AppProvider>

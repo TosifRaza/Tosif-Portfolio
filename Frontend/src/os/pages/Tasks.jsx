@@ -4,7 +4,7 @@ import { osApi } from '../osApi.js';
 import { Panel, Spinner, ErrorState, Badge, fmtMinutes, DeleteButton } from '../components/ui.jsx';
 import { CheckCircle2, Circle, ListChecks } from 'lucide-react';
 
-const PRIORITY_COLORS = { low: '#6B6B80', medium: '#00D4FF', high: '#FFB800', critical: '#FF3366' };
+const PRIORITY_COLORS = { low: 'hsl(var(--muted-foreground))', medium: 'hsl(var(--primary))', high: '#F59E0B', critical: '#EF4444' };
 const FILTERS = ['all', 'todo', 'in-progress', 'done'];
 
 /** All tasks across goals — with filters. */
@@ -27,8 +27,8 @@ export default function Tasks() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>All Tasks</h1>
-        <p className="text-xs text-[#6B6B80] mt-1">Completing a task automatically updates its milestone and goal progress.</p>
+        <h1 className="text-2xl font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>All Tasks</h1>
+        <p className="text-xs text-muted-foreground mt-1">Completing a task automatically updates its milestone and goal progress.</p>
       </div>
 
       <div className="flex gap-2">
@@ -37,7 +37,7 @@ export default function Tasks() {
             key={f}
             onClick={() => setFilter(f)}
             className={`px-3 py-1.5 rounded-lg text-xs transition-colors ${
-              filter === f ? 'bg-[#00D4FF]/15 border border-[#00D4FF]/40 text-[#00D4FF]' : 'bg-white/[0.03] border border-white/[0.07] text-[#9B9BAF]'
+              filter === f ? 'bg-primary/15 border border-primary/40 text-primary' : 'bg-muted/40 border border-border text-muted-foreground'
             }`}
           >
             {f}
@@ -49,20 +49,20 @@ export default function Tasks() {
         <Panel>
           {filtered.length === 0 ? (
             <div className="text-center py-10">
-              <ListChecks size={30} className="mx-auto mb-3 text-[#4A4A5E]" />
-              <p className="text-sm text-[#C8C8D8]">No tasks here</p>
-              <p className="text-xs text-[#6B6B80] mt-1">Tasks are created inside goals — open a goal to add milestones and tasks.</p>
+              <ListChecks size={30} className="mx-auto mb-3 text-muted-foreground" />
+              <p className="text-sm text-foreground">No tasks here</p>
+              <p className="text-xs text-muted-foreground mt-1">Tasks are created inside goals — open a goal to add milestones and tasks.</p>
             </div>
           ) : (
             <div className="space-y-2">
               {filtered.map((t) => (
-                <div key={t._id} className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <div key={t._id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border">
                   <button onClick={() => toggle(t)} aria-label="Toggle task">
-                    {t.status === 'done' ? <CheckCircle2 size={16} className="text-[#00FF88]" /> : <Circle size={16} className="text-[#4A4A5E] hover:text-[#00D4FF]" />}
+                    {t.status === 'done' ? <CheckCircle2 size={16} className="text-emerald-500" /> : <Circle size={16} className="text-muted-foreground hover:text-primary" />}
                   </button>
                   <div className="flex-1 min-w-0">
-                    <div className={`text-sm truncate ${t.status === 'done' ? 'text-[#4A4A5E] line-through' : 'text-[#E8E8F0]'}`}>{t.title}</div>
-                    <div className="text-[10px] text-[#6B6B80] mono">
+                    <div className={`text-sm truncate ${t.status === 'done' ? 'text-muted-foreground line-through' : 'text-foreground'}`}>{t.title}</div>
+                    <div className="text-[10px] text-muted-foreground mono">
                       {t.goalId ? `${t.goalId.title}` : 'no goal'}
                       {t.milestoneId ? ` → ${t.milestoneId.title}` : ''}
                       {t.estimateMinutes ? ` · ~${fmtMinutes(t.estimateMinutes)}` : ''}

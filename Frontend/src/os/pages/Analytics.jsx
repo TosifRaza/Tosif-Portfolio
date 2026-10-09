@@ -4,7 +4,7 @@ import { osApi } from '../osApi.js';
 import { Panel, Spinner, ErrorState, fmtMinutes, NotEnoughData } from '../components/ui.jsx';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, Legend } from 'recharts';
 
-const COLORS = ['#00D4FF', '#7C6AFF', '#00FF88', '#FF6B9D', '#FFB800', '#a78bfa', '#4ADE80', '#6B6B80'];
+const COLORS = ['hsl(var(--primary))', 'hsl(var(--primary))', '#10B981', '#F472B6', '#F59E0B', 'hsl(var(--primary))', '#4ADE80', 'hsl(var(--muted-foreground))'];
 const TABS = ['daily', 'weekly', 'monthly', 'yearly'];
 
 /** ANALYTICS — daily / weekly / monthly / yearly views + Plan vs Actual. Every number is computed from real records. */
@@ -22,8 +22,8 @@ export default function Analytics() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>Analytics</h1>
-        <p className="text-xs text-[#6B6B80] mt-1">Every visualization answers a real question from your logged data. If there isn't enough data, we say so.</p>
+        <h1 className="text-2xl font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>Analytics</h1>
+        <p className="text-xs text-muted-foreground mt-1">Every visualization answers a real question from your logged data. If there isn't enough data, we say so.</p>
       </div>
 
       <div className="flex gap-2">
@@ -32,7 +32,7 @@ export default function Analytics() {
             key={t}
             onClick={() => setTab(t)}
             className={`px-4 py-1.5 rounded-lg text-xs capitalize transition-colors ${
-              tab === t ? 'bg-[#00D4FF]/15 border border-[#00D4FF]/40 text-[#00D4FF]' : 'bg-white/[0.03] border border-white/[0.07] text-[#9B9BAF]'
+              tab === t ? 'bg-primary/15 border border-primary/40 text-primary' : 'bg-muted/40 border border-border text-muted-foreground'
             }`}
           >
             {t}
@@ -60,10 +60,10 @@ export default function Analytics() {
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={(data.learningByMonth || []).map((m) => ({ month: String(m.month), hours: Math.round((m.minutes / 60) * 10) / 10 }))} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
-                      <XAxis dataKey="month" tick={{ fill: '#6B6B80', fontSize: 10 }} axisLine={{ stroke: '#1a1a2e' }} tickLine={false} />
-                      <YAxis tick={{ fill: '#6B6B80', fontSize: 10 }} axisLine={false} tickLine={false} />
+                      <XAxis dataKey="month" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} axisLine={{ stroke: 'hsl(var(--card))' }} tickLine={false} />
+                      <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} axisLine={false} tickLine={false} />
                       <Tooltip contentStyle={tipStyle} formatter={(v) => [`${v}h`, 'learning']} />
-                      <Bar dataKey="hours" fill="#7C6AFF" radius={[6, 6, 0, 0]} />
+                      <Bar dataKey="hours" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -73,11 +73,11 @@ export default function Analytics() {
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={(data.timeByDay || []).map((d) => ({ date: d.date.slice(5), minutes: Math.round(d.total) }))} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
-                      <XAxis dataKey="date" tick={{ fill: '#6B6B80', fontSize: 10 }} axisLine={{ stroke: '#1a1a2e' }} tickLine={false} />
-                      <YAxis tick={{ fill: '#6B6B80', fontSize: 10 }} axisLine={false} tickLine={false} />
+                      <XAxis dataKey="date" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} axisLine={{ stroke: 'hsl(var(--card))' }} tickLine={false} />
+                      <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} axisLine={false} tickLine={false} />
                       <Tooltip contentStyle={tipStyle} formatter={(v) => [fmtMinutes(v), 'time']} />
                       <Bar dataKey="minutes" radius={[6, 6, 0, 0]}>
-                        {(data.timeByDay || []).map((d, i) => <Cell key={i} fill={d.total > 0 ? '#00D4FF' : '#1a1a2e'} />)}
+                        {(data.timeByDay || []).map((d, i) => <Cell key={i} fill={d.total > 0 ? 'hsl(var(--primary))' : 'hsl(var(--card))'} />)}
                       </Bar>
                     </BarChart>
                   </ResponsiveContainer>
@@ -104,10 +104,10 @@ export default function Analytics() {
                       }))}
                       margin={{ top: 5, right: 5, bottom: 5, left: -20 }}
                     >
-                      <XAxis dataKey="label" tick={{ fill: '#6B6B80', fontSize: 10 }} axisLine={{ stroke: '#1a1a2e' }} tickLine={false} />
-                      <YAxis tick={{ fill: '#6B6B80', fontSize: 10 }} axisLine={false} tickLine={false} />
+                      <XAxis dataKey="label" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} axisLine={{ stroke: 'hsl(var(--card))' }} tickLine={false} />
+                      <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} axisLine={false} tickLine={false} />
                       <Tooltip contentStyle={tipStyle} formatter={(v) => [fmtMinutes(v), 'learning']} />
-                      <Bar dataKey="minutes" fill="#7C6AFF" radius={[6, 6, 0, 0]} />
+                      <Bar dataKey="minutes" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -123,13 +123,13 @@ export default function Analytics() {
                   {data.goalMovement.map((g) => (
                     <div key={g.goalId}>
                       <div className="flex justify-between text-xs mb-1">
-                        <span className="text-[#C8C8D8] truncate pr-2">{g.title}</span>
-                        <span className={`mono ${g.delta > 0 ? 'text-[#00FF88]' : g.delta < 0 ? 'text-[#FF3366]' : 'text-[#6B6B80]'}`}>
+                        <span className="text-foreground truncate pr-2">{g.title}</span>
+                        <span className={`mono ${g.delta > 0 ? 'text-emerald-500' : g.delta < 0 ? 'text-red-500' : 'text-muted-foreground'}`}>
                           {g.delta > 0 ? '+' : ''}{g.delta} pts ({g.start}% → {g.end}%)
                         </span>
                       </div>
-                      <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
-                        <div className="h-full rounded-full bg-gradient-to-r from-[#7C6AFF] to-[#00D4FF]" style={{ width: `${g.end}%` }} />
+                      <div className="h-1.5 rounded-full bg-muted/60 overflow-hidden">
+                        <div className="h-full rounded-full bg-gradient-to-r from-primary to-cyan-400" style={{ width: `${g.end}%` }} />
                       </div>
                     </div>
                   ))}
@@ -154,23 +154,23 @@ export default function Analytics() {
                 {plan.rows.map((r) => (
                   <div key={r.category}>
                     <div className="flex items-center justify-between text-xs mb-1.5">
-                      <span className="text-[#C8C8D8] capitalize">{r.category}</span>
-                      <span className="text-[#8B8B9F] mono">
+                      <span className="text-foreground capitalize">{r.category}</span>
+                      <span className="text-muted-foreground mono">
                         {fmtMinutes(r.actualMinutes)} / {fmtMinutes(r.targetMinutes)}
                         {r.execution !== null && (
-                          <span className={r.execution >= 80 ? 'text-[#00FF88] ml-2' : r.execution >= 40 ? 'text-[#FFB800] ml-2' : 'text-[#FF3366] ml-2'}>
+                          <span className={r.execution >= 80 ? 'text-emerald-500 ml-2' : r.execution >= 40 ? 'text-amber-500 ml-2' : 'text-red-500 ml-2'}>
                             {r.execution}%
                           </span>
                         )}
                       </span>
                     </div>
                     {r.execution !== null && (
-                      <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                      <div className="h-1.5 rounded-full bg-muted/60 overflow-hidden">
                         <div
                           className="h-full rounded-full"
                           style={{
                             width: `${Math.min(100, r.execution)}%`,
-                            background: r.execution >= 80 ? '#00FF88' : r.execution >= 40 ? '#FFB800' : '#FF3366',
+                            background: r.execution >= 80 ? '#10B981' : r.execution >= 40 ? '#F59E0B' : '#EF4444',
                           }}
                         />
                       </div>
@@ -186,7 +186,7 @@ export default function Analytics() {
   );
 }
 
-const tipStyle = { background: '#0a0e17', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, fontSize: 12 };
+const tipStyle = { background: 'hsl(var(--card))', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, fontSize: 12 };
 
 function TimePie({ rows }) {
   const data = rows.filter((r) => r.minutes > 0).map((r) => ({ name: r.category, value: Math.round(r.minutes) }));
@@ -198,7 +198,7 @@ function TimePie({ rows }) {
             {data.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
           </Pie>
           <Tooltip contentStyle={tipStyle} formatter={(v) => [fmtMinutes(v), 'time']} />
-          <Legend wrapperStyle={{ fontSize: 11, color: '#9B9BAF' }} />
+          <Legend wrapperStyle={{ fontSize: 11, color: 'hsl(var(--muted-foreground))' }} />
         </PieChart>
       </ResponsiveContainer>
     </div>

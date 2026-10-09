@@ -17,6 +17,6 @@
     "start": "npm --prefix Backend start"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^9.2.5"
   }
 }

@@ -48,16 +48,16 @@ function OSShell({ children }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#06060C] flex">
+    <div className="min-h-screen bg-background flex">
       {/* Sidebar (desktop) */}
-      <aside className="hidden lg:flex flex-col w-56 flex-shrink-0 border-r border-white/[0.06] bg-[#0a0e17] sticky top-0 h-screen">
-        <div className="flex items-center gap-2.5 px-5 py-5 border-b border-white/[0.06]">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#7C6AFF] to-[#00D4FF] flex items-center justify-center">
+      <aside className="hidden lg:flex flex-col w-56 flex-shrink-0 border-r border-border bg-card sticky top-0 h-screen">
+        <div className="flex items-center gap-2.5 px-5 py-5 border-b border-border">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-cyan-400 flex items-center justify-center">
             <Zap size={15} className="text-white" />
           </div>
           <div>
-            <div className="text-sm font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>TOSIF OS</div>
-            <div className="text-[9px] text-[#4A4A5E] mono">PRIVATE MODE</div>
+            <div className="text-sm font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>TOSIF OS</div>
+            <div className="text-[9px] text-muted-foreground mono">PRIVATE MODE</div>
           </div>
         </div>
         <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
@@ -69,8 +69,8 @@ function OSShell({ children }) {
               className={({ isActive }) =>
                 `flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] transition-colors ${
                   isActive
-                    ? 'bg-[#7C6AFF]/15 text-[#9D8AFF] border border-[#7C6AFF]/20'
-                    : 'text-[#6B6B80] hover:text-[#E8E8F0] hover:bg-white/[0.03] border border-transparent'
+                    ? 'bg-primary/15 text-primary border border-primary/20'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/40 border border-transparent'
                 }`
               }
             >
@@ -79,19 +79,19 @@ function OSShell({ children }) {
             </NavLink>
           ))}
         </nav>
-        <div className="px-3 py-4 border-t border-white/[0.06] space-y-1">
-          <div className="px-3 text-[10px] text-[#4A4A5E] mono truncate">
+        <div className="px-3 py-4 border-t border-border space-y-1">
+          <div className="px-3 text-[10px] text-muted-foreground mono truncate">
             {user?.email || 'logged in'}
           </div>
           <button
             onClick={() => navigate('/')}
-            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[12px] text-[#6B6B80] hover:text-[#00D4FF] transition-colors"
+            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[12px] text-muted-foreground hover:text-primary transition-colors"
           >
             <ArrowLeft size={14} /> Public Portfolio
           </button>
           <button
             onClick={logout}
-            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[12px] text-[#6B6B80] hover:text-[#FF3366] transition-colors"
+            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[12px] text-muted-foreground hover:text-red-500 transition-colors"
           >
             <LogOut size={14} /> Log out
           </button>
@@ -101,22 +101,22 @@ function OSShell({ children }) {
       {/* Main */}
       <div className="flex-1 min-w-0">
         {/* Mobile top bar */}
-        <div className="lg:hidden sticky top-0 z-40 h-14 bg-[#0a0e17]/95 backdrop-blur-xl border-b border-white/[0.06] flex items-center justify-between px-4">
+        <div className="lg:hidden sticky top-0 z-40 h-14 bg-card/95 backdrop-blur-xl border-b border-border flex items-center justify-between px-4">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#7C6AFF] to-[#00D4FF] flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-cyan-400 flex items-center justify-center">
               <Zap size={13} className="text-white" />
             </div>
-            <span className="text-sm font-bold text-[#E8E8F0]">TOSIF OS</span>
+            <span className="text-sm font-bold text-foreground">TOSIF OS</span>
           </div>
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="text-[10px] mono px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.1] text-[#9B9BAF]"
+            className="text-[10px] mono px-3 py-1.5 rounded-lg bg-muted/50 border border-border text-muted-foreground"
           >
             {menuOpen ? 'CLOSE' : 'MENU'}
           </button>
         </div>
         {menuOpen && (
-          <div className="lg:hidden sticky top-14 z-40 bg-[#0a0e17] border-b border-white/[0.06] p-3 grid grid-cols-2 gap-1.5">
+          <div className="lg:hidden sticky top-14 z-40 bg-card border-b border-border p-3 grid grid-cols-2 gap-1.5">
             {NAV.map((item) => (
               <NavLink
                 key={item.to}
@@ -124,13 +124,13 @@ function OSShell({ children }) {
                 end={item.end}
                 onClick={() => setMenuOpen(false)}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded-lg text-xs ${isActive ? 'bg-[#7C6AFF]/15 text-[#9D8AFF]' : 'text-[#9B9BAF]'}`
+                  `flex items-center gap-2 px-3 py-2 rounded-lg text-xs ${isActive ? 'bg-primary/15 text-primary' : 'text-muted-foreground'}`
                 }
               >
                 <item.icon size={13} /> {item.label}
               </NavLink>
             ))}
-            <button onClick={logout} className="col-span-2 flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-[#FF3366]/80">
+            <button onClick={logout} className="col-span-2 flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-red-500/80">
               <LogOut size={13} /> Log out
             </button>
           </div>

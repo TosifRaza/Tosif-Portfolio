@@ -1,12 +1,13 @@
-# TOSIF OS v5.0 — Personal Operating System + Professional Portfolio
+# TOSIF OS v6.0 — Personal Operating System + Professional Portfolio
 
 > **"A professional portfolio on the outside and a personal operating system on the inside."**
 
 TOSIF OS is a fully dynamic, database-driven MERN application with two modes:
 
-- **PUBLIC MODE** — an instantly-understandable professional portfolio for recruiters:
-  Home · About · Experience · Projects · Products · Skills · Achievements · Journey · Resume · Contact,
-  plus a **Recruiter View (HIRE ME)** and an **ENTER TOSIF OS** gateway.
+- **PUBLIC MODE** — a clean, professional multi-page portfolio (navy/blue design, dark + light theme):
+  Home · Projects · Skills · Experience · Engineering Lab · Resume · Contact,
+  plus CMS-gated About / Products / Achievements / Journey / Global Reach pages,
+  a **Recruiter View (HIRE ME)** and an **ENTER TOSIF OS** gateway.
 - **PRIVATE MODE** (`/os`, JWT-protected) — a personal operating system:
   Dashboard intelligence · Goals → Milestones → Tasks · Daily Log · Time tracking with a live timer ·
   Learning sessions & topics · Skills with current/target levels · Analytics (daily/weekly/monthly/yearly)
@@ -24,6 +25,8 @@ GSAP, Recharts. No TypeScript, no Next.js.
 ## Quick start
 
 Prerequisites: Node.js 18+ (Node 20/22/24 recommended). A local MongoDB is **optional**.
+
+From the repository root, install all three apps with `npm run install:all` before starting them. Running `npm install` at the root installs only the root development tools.
 
 ```bash
 # 1 — Backend (port 5000)
@@ -45,7 +48,12 @@ npm run dev
 
 Open http://localhost:3000 (portfolio) and http://localhost:5174 (Control Center).
 
-On first boot, an admin is created only when both `ADMIN_EMAIL` and `ADMIN_PASSWORD` are set. In development, you can create the first user through the registration page/API. Production registration is disabled.
+On boot the backend **ensures the configured admin exists** (`ADMIN_EMAIL` / `ADMIN_PASSWORD` from `.env`) — an existing admin's password is never overwritten. Forgot your password? Run:
+
+```bash
+cd Backend
+npm run reset-admin          # or: node reset-admin.js <email> <newpassword>
+```
 
 The same account unlocks the private OS at http://localhost:3000/os.
 
@@ -181,3 +189,32 @@ Frontend and Admin production builds must both succeed (`npm run build` in each)
   nav mismatch removed, login prefills removed.
 - Unused heavy dependencies (three/@react-three, @mdxeditor, zustand, etc.) left declared but
   unimported in the bundle — the private OS is lazy-loaded so public visitors never download it.
+
+---
+
+## Changelog v5.0 → v6.0 (professional redesign)
+
+- **New design system** — professional navy + blue palette replacing the purple/cyan OS theme,
+  applied consistently across the public site, private OS and Admin Control Center.
+- **Dark + light theme** — moon/sun toggle in the public navbar; every screen is theme-aware via
+  CSS design tokens (Tailwind `darkMode: 'class'`). Choice persists in localStorage.
+- **Multi-page public site** — real routes instead of a single scrolling page:
+  `/` · `/projects` · `/skills` · `/experience` · `/engineering-lab` · `/resume` · `/contact`,
+  plus `/about`, `/products`, `/achievements`, `/journey`, `/globalreach` — every route is
+  CMS-gated (disable the section in Admin and the page disappears, nav included).
+- **New Engineering Lab page** — "Learn · Build · Improve": projects categorised as
+  `learning` / `open-source` (or any `lab:` prefix) with category filters and detail modals.
+- **CMS still controls everything** — navigation labels/order/targets, section visibility + order,
+  hero (badge/heading/subtitle/description/CTAs), current mission, stats mode, footer.
+- **Fixed a silent theme bug** — the old Tailwind config defined `purple`/`cyan` as single strings,
+  which silently disabled every `purple-500`-style shade class. Both are now full blue scales.
+- **Migrated ~250 hardcoded hex colours to design tokens** across 126 files, so light/dark themes
+  and future re-themes are one-line changes.
+- **Admin bootstrap hardening** — the admin account is now ensured on every boot (previously only
+  created when the users collection was empty, which silently skipped it on non-empty databases),
+  and `npm run reset-admin` force-creates/resets credentials.
+- **Vercel/Docker deployment (from your fork) preserved** — `Backend/Dockerfile`,
+  `compose.production.yaml`, Vercel SPA rewrite, production CORS whitelist all untouched.
+- **Testing** — 15-check backend API suite (`scripts/test_backend.mjs`), production builds for
+  Frontend and Admin, browser E2E across all public pages, both themes, mobile (390×844),
+  private OS login → dashboard, and CMS → public reflection. Zero console errors.

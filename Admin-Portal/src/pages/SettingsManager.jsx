@@ -62,7 +62,7 @@ export default function SettingsManager() {
         <div className="glass rounded-2xl p-6">
           <h2 className="font-bold mb-4 text-sm text-neon-cyan mono uppercase tracking-widest">System</h2>
           <div className="space-y-2 text-xs text-muted leading-relaxed">
-            <p><span className="text-white/80">TOSIF OS v5.0</span> — Personal Operating System + Professional Portfolio.</p>
+            <p><span className="text-foreground/80">TOSIF OS v5.0</span> — Personal Operating System + Professional Portfolio.</p>
             <p>• Public website: fully CMS-driven — profile, hero, about, experience, skills, projects, products, achievements, timeline, resume, navigation and section visibility.</p>
             <p>• Private OS: goals → milestones → tasks with automatic progress rollups, daily log, time tracking with timer, learning sessions, analytics, plan vs actual and estimated goal trajectories.</p>
             <p>• Draft/publish: projects, products and experience support draft → published → archived. Drafts never appear publicly.</p>

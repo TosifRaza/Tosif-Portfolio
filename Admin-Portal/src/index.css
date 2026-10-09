@@ -1,49 +1,115 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.js";
+@source inline("{hover:,}{text,bg,border,from,to,via}-neon-{cyan,purple,green,orange,teal,red}{,-300,-400,-500,-600}");
+@source inline("shadow-{glow,glow-purple,glow-green}");
 
-:root { color-scheme: dark; }
+/* ─────────────────────────────────────────────
+   TOSIF OS — Admin Control Center design system
+   Same navy/blue tokens as the public site.
+   Dark-first; light theme via <html> without .dark
+   ───────────────────────────────────────────── */
 
-* { -webkit-tap-highlight-color: transparent; }
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222 45% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 45% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 45% 12%;
+    --primary: 217 91% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 214 32% 93%;
+    --secondary-foreground: 222 40% 16%;
+    --muted: 214 30% 92%;
+    --muted-foreground: 215 18% 40%;
+    --accent: 214 32% 92%;
+    --accent-foreground: 222 40% 16%;
+    --destructive: 0 72% 48%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 214 25% 86%;
+    --input: 214 25% 84%;
+    --ring: 217 91% 52%;
+    --radius: 0.625rem;
 
-html, body, #root { height: 100%; }
+    color-scheme: light;
+  }
 
-body {
-  font-family: 'Inter', system-ui, sans-serif;
-  background-color: #0a0a0a;
-  background-image:
-    radial-gradient(circle at 0% 0%, rgba(168,85,247,0.08), transparent 40%),
-    radial-gradient(circle at 100% 100%, rgba(0,212,255,0.06), transparent 45%);
-  background-attachment: fixed;
+  .dark {
+    --background: 222 47% 5%;
+    --foreground: 213 30% 94%;
+    --card: 221 44% 8%;
+    --card-foreground: 213 30% 94%;
+    --popover: 221 44% 7%;
+    --popover-foreground: 213 30% 94%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 221 32% 14%;
+    --secondary-foreground: 213 30% 94%;
+    --muted: 221 32% 13%;
+    --muted-foreground: 217 18% 62%;
+    --accent: 221 32% 15%;
+    --accent-foreground: 213 30% 94%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 219 30% 15%;
+    --input: 219 30% 17%;
+    --ring: 217 91% 60%;
+
+    color-scheme: dark;
+  }
+
+  * { @apply border-border; -webkit-tap-highlight-color: transparent; }
+
+  html, body, #root { height: 100%; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+
+  .dark body {
+    background-image:
+      radial-gradient(circle at 0% 0%, hsl(var(--primary) / 0.07), transparent 40%),
+      radial-gradient(circle at 100% 100%, hsl(var(--primary) / 0.05), transparent 45%);
+    background-attachment: fixed;
+  }
 }
 
 ::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: #0a0a0a; }
-::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #a855f7, #00d4ff); border-radius: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(var(--muted-foreground) / 0.35); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--primary) / 0.6); }
 
 @layer components {
-  .glass { @apply bg-white/[0.03] backdrop-blur-xl border border-white/[0.07] rounded-2xl; }
-  .glass-strong { @apply bg-white/[0.05] backdrop-blur-2xl border border-white/[0.1] rounded-2xl; }
+  .glass {
+    @apply bg-card/75 backdrop-blur-xl border border-border rounded-2xl;
+  }
+  .glass-strong {
+    @apply bg-card/95 backdrop-blur-2xl border border-border rounded-2xl;
+  }
   .mono { font-family: 'JetBrains Mono', monospace; }
   .text-gradient {
-    background: linear-gradient(135deg, #00d4ff 0%, #a855f7 100%);
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, #60A5FA 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
   .input {
-    @apply w-full bg-white/[0.03] border border-white/10 rounded-lg px-3.5 py-2 text-sm placeholder:text-muted focus:border-neon-purple/50 focus:outline-none transition-colors;
+    @apply w-full bg-card border border-input rounded-lg px-3.5 py-2 text-sm placeholder:text-muted-foreground focus:border-primary/60 focus:outline-none transition-colors text-foreground;
   }
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-neon-purple/15 border border-neon-purple/40 text-neon-purple hover:bg-neon-purple/25 transition-colors text-sm font-medium;
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/15 border border-primary/40 text-primary hover:bg-primary/25 transition-colors text-sm font-medium;
   }
   .btn-ghost {
-    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 text-white/70 hover:bg-white/5 hover:text-white transition-colors text-xs;
+    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors text-xs;
   }
   .btn-danger {
-    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-neon-red/30 text-neon-red hover:bg-neon-red/10 transition-colors text-xs;
+    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-destructive/30 text-destructive hover:bg-destructive/10 transition-colors text-xs;
   }
   .badge {
-    @apply mono text-[10px] uppercase tracking-widest px-2 py-0.5 rounded border;
+    @apply font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 rounded border;
   }
 }

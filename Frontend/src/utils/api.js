@@ -40,6 +40,7 @@ export const api = {
   getProducts: () => request('/products'),
   getResume: () => request('/resume'),
   getGithub: () => request('/github'),
+  getGithubContributions: (signal) => request('/github/contributions', { signal, cache: 'no-store' }),
 
   // AI Recruiter — backend pulls live data from MongoDB
   askRecruiter: (question) =>

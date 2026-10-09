@@ -12,12 +12,12 @@ if (typeof window !== "undefined") {
 
 // Journey category colours — driven by the CMS `category` field.
 const CATEGORY_COLORS = {
-  career: "#00D4FF",
-  learning: "#7C6AFF",
-  product: "#FF6B9D",
-  achievement: "#FFB800",
-  project: "#00FF88",
-  personal: "#a78bfa",
+  career: "hsl(var(--primary))",
+  learning: "hsl(var(--primary))",
+  product: "#F472B6",
+  achievement: "#F59E0B",
+  project: "#10B981",
+  personal: "hsl(var(--primary))",
 };
 const CATEGORY_LABELS = {
   career: "Career",
@@ -100,17 +100,17 @@ export default function ChronoScroll() {
               className="w-[400px] flex-shrink-0"
             >
               {/* Year */}
-              <div className="text-6xl font-heading font-bold mb-4" style={{ color: CATEGORY_COLORS[event.category] || "#00D4FF", opacity: 0.3 }}>
+              <div className="text-6xl font-heading font-bold mb-4" style={{ color: CATEGORY_COLORS[event.category] || "hsl(var(--primary))", opacity: 0.3 }}>
                 {event.year}
               </div>
 
               {/* Card */}
-              <div className="glass rounded-xl p-5 border-l-2" style={{ borderLeftColor: CATEGORY_COLORS[event.category] || "#00D4FF" }}>
+              <div className="glass rounded-xl p-5 border-l-2" style={{ borderLeftColor: CATEGORY_COLORS[event.category] || "hsl(var(--primary))" }}>
                 <h3 className="text-lg font-heading font-bold text-text-primary mb-2">{event.title}</h3>
                 <p className="text-sm text-text-secondary leading-relaxed mb-4">{event.description}</p>
 
                 {event.image && (
-                  <img src={apiUrl(event.image)} alt={event.title} className="w-full rounded-lg mb-3 border border-white/[0.06]" />
+                  <img src={apiUrl(event.image)} alt={event.title} className="w-full rounded-lg mb-3 border border-border" />
                 )}
               </div>
 

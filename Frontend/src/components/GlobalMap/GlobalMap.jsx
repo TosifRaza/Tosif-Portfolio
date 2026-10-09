@@ -46,7 +46,7 @@ export default function GlobalMap({ site }) {
 
         {regions.length === 0 ? (
           <motion.div variants={staggerItem} className="glass rounded-xl p-12 text-center max-w-lg mx-auto">
-            <Globe2 size={36} className="mx-auto mb-4 text-[#4A4A5E]" />
+            <Globe2 size={36} className="mx-auto mb-4 text-muted-foreground" />
             <h3 className="text-base font-bold text-text-primary mb-2">Nothing published yet</h3>
             <p className="text-sm text-text-secondary leading-relaxed">
               I keep this section honest — it will only ever show regions tied to real professional
@@ -61,7 +61,7 @@ export default function GlobalMap({ site }) {
               <div
                 className="absolute inset-0 opacity-[0.06]"
                 style={{
-                  backgroundImage: "radial-gradient(circle at 25% 40%, #7C6AFF 1px, transparent 1.5px), radial-gradient(circle at 70% 30%, #00D4FF 1px, transparent 1.5px), radial-gradient(circle at 50% 70%, #00FF88 1px, transparent 1.5px)",
+                  backgroundImage: "radial-gradient(circle at 25% 40%, hsl(var(--primary)) 1px, transparent 1.5px), radial-gradient(circle at 70% 30%, hsl(var(--primary)) 1px, transparent 1.5px), radial-gradient(circle at 50% 70%, #10B981 1px, transparent 1.5px)",
                   backgroundSize: "48px 48px",
                 }}
               />
@@ -79,8 +79,8 @@ export default function GlobalMap({ site }) {
                     transition={{ delay: 0.3 + i * 0.15 }}
                   >
                     <motion.div
-                      className="w-3.5 h-3.5 rounded-full bg-[#00D4FF] border-2 border-white/40"
-                      animate={{ boxShadow: ["0 0 0 0 rgba(0,212,255,0.5)", "0 0 0 12px rgba(0,212,255,0)"] }}
+                      className="w-3.5 h-3.5 rounded-full bg-primary border-2 border-primary/50"
+                      animate={{ boxShadow: ["0 0 0 0 rgba(59, 130, 246,0.5)", "0 0 0 12px rgba(59, 130, 246,0)"] }}
                       transition={{ duration: 1.8, repeat: Infinity, delay: i * 0.3 }}
                     />
                   </motion.div>
@@ -95,10 +95,10 @@ export default function GlobalMap({ site }) {
             <motion.div variants={staggerItem} className="space-y-3">
               {regions.map((r, i) => (
                 <div key={i} className="glass glass-hover rounded-xl p-4 flex items-start gap-3">
-                  <MapPin size={15} className="text-[#00D4FF] mt-0.5 flex-shrink-0" />
+                  <MapPin size={15} className="text-primary mt-0.5 flex-shrink-0" />
                   <div>
-                    <div className="text-sm font-semibold text-[#E8E8F0]">{r.region}</div>
-                    {r.note && <div className="text-xs text-[#8B8B9F] leading-relaxed mt-0.5">{r.note}</div>}
+                    <div className="text-sm font-semibold text-foreground">{r.region}</div>
+                    {r.note && <div className="text-xs text-muted-foreground leading-relaxed mt-0.5">{r.note}</div>}
                   </div>
                 </div>
               ))}

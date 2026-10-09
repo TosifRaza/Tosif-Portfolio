@@ -23,7 +23,7 @@ export default function Sidebar() {
 
   return (
     <motion.aside
-      className="fixed left-0 top-0 bottom-0 w-[72px] bg-[#06060C] border-r border-white/[0.06] flex flex-col items-center py-4 z-10"
+      className="fixed left-0 top-0 bottom-0 w-[72px] bg-background border-r border-border flex flex-col items-center py-4 z-10"
       initial={{ x: -72 }}
       animate={{ x: 0 }}
       transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
@@ -31,7 +31,7 @@ export default function Sidebar() {
       {/* Logo */}
       <motion.div
         className="w-10 h-10 rounded-lg bg-purple-600/20 border border-purple-500/30 flex items-center justify-center mb-6 cursor-pointer"
-        whileHover={{ scale: 1.1, borderColor: "rgba(124, 106, 255, 0.6)" }}
+        whileHover={{ scale: 1.1, borderColor: "rgba(59, 130, 246, 0.6)" }}
         onClick={() => setActiveSection("mission")}
       >
         <span className="text-purple-400 font-bold font-mono text-sm">OS</span>
@@ -80,7 +80,7 @@ export default function Sidebar() {
               </span>
 
               {/* Tooltip on hover */}
-              <div className="absolute left-full ml-3 px-2 py-1 rounded bg-white/10 backdrop-blur-md text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/[0.06]">
+              <div className="absolute left-full ml-3 px-2 py-1 rounded bg-muted/70 backdrop-blur-md text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-border">
                 {section.label}
               </div>
             </motion.button>

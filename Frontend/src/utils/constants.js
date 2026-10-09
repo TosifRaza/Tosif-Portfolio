@@ -49,17 +49,17 @@ export const ANIMATION_SPEEDS = {
 } ;
 
 export const COLORS = {
-  bg: "#06060C",
+  bg: "hsl(var(--background))",
   surface: "rgba(255, 255, 255, 0.03)",
   surfaceHover: "rgba(255, 255, 255, 0.06)",
   border: "rgba(255, 255, 255, 0.06)",
   borderHover: "rgba(255, 255, 255, 0.12)",
-  text: "#E8E8F0",
-  textSecondary: "#6B6B80",
-  textMuted: "#4A4A5E",
-  purple: "#7C6AFF",
-  cyan: "#00D4FF",
-  green: "#00FF88",
-  amber: "#FFB800",
-  red: "#FF3366",
+  text: "hsl(var(--foreground))",
+  textSecondary: "hsl(var(--muted-foreground))",
+  textMuted: "hsl(var(--muted-foreground))",
+  purple: "hsl(var(--primary))",
+  cyan: "hsl(var(--primary))",
+  green: "#10B981",
+  amber: "#F59E0B",
+  red: "#EF4444",
 } ;

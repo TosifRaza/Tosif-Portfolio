@@ -47,7 +47,7 @@ export default function Terminal() {
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed bottom-4 left-20 w-[500px] max-h-[400px] z-[40] flex flex-col rounded-xl overflow-hidden"
+        className="fixed inset-x-3 bottom-3 w-auto max-h-[min(55dvh,400px)] z-[40] flex flex-col rounded-xl overflow-hidden sm:inset-x-auto sm:bottom-4 sm:left-4 lg:left-20 sm:w-[min(500px,calc(100vw-2rem))] sm:max-h-[400px]"
         style={{
           background: "rgba(6, 6, 12, 0.95)",
           border: "1px solid rgba(255, 255, 255, 0.06)",
@@ -59,7 +59,7 @@ export default function Terminal() {
         transition={{ duration: 0.2 }}
       >
         {/* Title bar */}
-        <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.06]">
+        <div className="flex items-center justify-between px-4 py-2 border-b border-border">
           <div className="flex items-center gap-2">
             <button onClick={() => dispatch({ type: "SET_TERMINAL", payload: false })} className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500" />
             <button className="w-3 h-3 rounded-full bg-amber-500/80" />
@@ -72,7 +72,7 @@ export default function Terminal() {
         {/* Output area */}
         <div
           className="flex-1 overflow-y-auto p-4 font-mono text-xs leading-relaxed"
-          style={{ maxHeight: "280px" }}
+          style={{ maxHeight: "min(280px, 38dvh)" }}
           onClick={() => _optionalChain([inputRef, 'access', _4 => _4.current, 'optionalAccess', _5 => _5.focus, 'call', _6 => _6()])}
         >
           {history.map((item, i) => (
@@ -84,7 +84,7 @@ export default function Terminal() {
         </div>
 
         {/* Input area */}
-        <div className="flex items-center gap-2 px-4 py-2 border-t border-white/[0.06]">
+        <div className="flex items-center gap-2 px-4 py-2 border-t border-border">
           <span className="text-green-400 font-mono text-xs">❯</span>
           <input
             ref={inputRef}

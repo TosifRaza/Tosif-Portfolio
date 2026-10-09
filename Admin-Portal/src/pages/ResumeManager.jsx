@@ -58,7 +58,7 @@ export default function ResumeManager() {
   return (
     <div>
       <h1 className="text-2xl font-extrabold mb-2">Resume Manager</h1>
-      <p className="text-white/60 text-sm mb-6">Upload, replace, or remove resume versions.</p>
+      <p className="text-foreground/60 text-sm mb-6">Upload, replace, or remove resume versions.</p>
 
       {error && (
         <div className="mono text-xs text-neon-red bg-neon-red/10 border border-neon-red/30 rounded-lg px-3 py-2 mb-4">
@@ -67,7 +67,7 @@ export default function ResumeManager() {
       )}
 
       {/* Upload box */}
-      <label className="glass p-8 rounded-2xl border-2 border-dashed border-white/15 hover:border-neon-cyan/40 flex flex-col items-center justify-center cursor-pointer transition-colors mb-6">
+      <label className="glass p-8 rounded-2xl border-2 border-dashed border-border hover:border-neon-cyan/40 flex flex-col items-center justify-center cursor-pointer transition-colors mb-6">
         <input type="file" accept=".pdf,.doc,.docx" onChange={handleUpload} className="hidden" disabled={uploading} />
         <FaUpload className={`text-neon-cyan mb-3 ${uploading ? 'animate-bounce' : ''}`} size={28} />
         <div className="font-semibold mb-1">
@@ -123,7 +123,7 @@ export default function ResumeManager() {
 
       <div className="glass p-4 rounded-xl mt-6 flex items-start gap-3">
         <FaCheckCircle className="text-neon-green mt-0.5 shrink-0" size={14} />
-        <p className="text-xs text-white/70">
+        <p className="text-xs text-foreground/70">
           Uploading a new resume automatically marks it as the active version (shown on the public
           portfolio). Previous versions remain listed here for record-keeping.
         </p>

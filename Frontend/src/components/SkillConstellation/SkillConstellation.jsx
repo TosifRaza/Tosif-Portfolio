@@ -6,12 +6,12 @@ import { staggerContainer, staggerItem, slideUp } from "@/utils/animations";
 import { ChevronRight, X } from "lucide-react";
 
 const CATEGORY_COLORS = {
-  Frontend: "#7C6AFF",
-  Backend: "#00D4FF",
-  Database: "#00FF88",
-  Tools: "#FFB800",
-  DevOps: "#FF6B9D",
-  Soft: "#a78bfa",
+  Frontend: "hsl(var(--primary))",
+  Backend: "hsl(var(--primary))",
+  Database: "#10B981",
+  Tools: "#F59E0B",
+  DevOps: "#F472B6",
+  Soft: "hsl(var(--primary))",
 };
 
 function SkillNode({ skill, categoryColor, onClick }) {
@@ -44,7 +44,7 @@ function SkillNode({ skill, categoryColor, onClick }) {
       </div>
 
       {/* Proficiency bar */}
-      <div className="w-16 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+      <div className="w-16 h-1.5 rounded-full bg-muted/60 overflow-hidden">
         <motion.div
           className="h-full rounded-full"
           style={{ background: categoryColor }}
@@ -74,7 +74,7 @@ function SkillDeepDive({ skill, categoryColor, onClose }) {
           <h3 className="text-xl font-heading font-bold text-text-primary">{skill.name}</h3>
           <p className="text-xs text-text-secondary">{skill.category}</p>
         </div>
-        <button onClick={onClose} className="p-1 rounded-lg hover:bg-white/[0.06] text-text-secondary">
+        <button onClick={onClose} className="p-1 rounded-lg hover:bg-muted/60 text-text-secondary">
           <X size={18} />
         </button>
       </div>
@@ -118,7 +118,7 @@ function SkillDeepDive({ skill, categoryColor, onClose }) {
         </div>
       ) : null}
 
-      <div className="text-[10px] text-text-muted mono leading-relaxed border-t border-white/[0.05] pt-3">
+      <div className="text-[10px] text-text-muted mono leading-relaxed border-t border-border pt-3">
         Want to see the learning system behind this skill — hours, topics, targets? That lives inside
         the private OS. Use ENTER TOSIF OS.
       </div>
@@ -133,7 +133,7 @@ function SkillDeepDive({ skill, categoryColor, onClose }) {
 export default function SkillConstellation() {
   const { data: skills, loading, error } = useApi(() => api.getSkills());
   const [selectedSkill, setSelectedSkill] = useState(null);
-  const [selectedColor, setSelectedColor] = useState("#7C6AFF");
+  const [selectedColor, setSelectedColor] = useState("hsl(var(--primary))");
   const [activeCategory, setActiveCategory] = useState(null);
 
   const skillCategories = (() => {
@@ -144,7 +144,7 @@ export default function SkillConstellation() {
     }
     return Object.entries(groups).map(([name, list]) => ({
       name,
-      color: CATEGORY_COLORS[name] || "#00D4FF",
+      color: CATEGORY_COLORS[name] || "hsl(var(--primary))",
       skills: list,
     }));
   })();
@@ -163,7 +163,7 @@ export default function SkillConstellation() {
         </motion.div>
 
         {loading && <div className="grid gap-2 max-w-md">{[...Array(6)].map((_, i) => <div key={i} className="glass rounded-lg h-14 animate-pulse" />)}</div>}
-        {error && <div className="glass rounded-xl p-6 text-sm text-[#FF6B9D]">Could not load skills: {error}</div>}
+        {error && <div className="glass rounded-xl p-6 text-sm text-pink-400">Could not load skills: {error}</div>}
 
         {/* Category Filter */}
         {!loading && !error && (
@@ -171,7 +171,7 @@ export default function SkillConstellation() {
             <button
               onClick={() => setActiveCategory(null)}
               className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
-                !activeCategory ? "bg-purple-500/20 text-purple-400 border-purple-500/30" : "bg-white/[0.03] text-text-secondary border-white/[0.06] hover:border-white/[0.12]"
+                !activeCategory ? "bg-purple-500/20 text-purple-400 border-purple-500/30" : "bg-muted/40 text-text-secondary border-border hover:border-border"
               }`}
             >
               All
@@ -181,7 +181,7 @@ export default function SkillConstellation() {
                 key={cat.name}
                 onClick={() => setActiveCategory(cat.name)}
                 className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
-                  activeCategory === cat.name ? "border-opacity-60" : "bg-white/[0.03] text-text-secondary border-white/[0.06] hover:border-white/[0.12]"
+                  activeCategory === cat.name ? "border-opacity-60" : "bg-muted/40 text-text-secondary border-border hover:border-border"
                 }`}
                 style={activeCategory === cat.name ? {
                   background: `${cat.color}20`,

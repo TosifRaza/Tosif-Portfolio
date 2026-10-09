@@ -39,27 +39,27 @@ export default function OSLogin({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#06060C] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="glass-strong rounded-2xl p-8 w-full max-w-sm"
       >
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#7C6AFF] to-[#00D4FF] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-cyan-400 flex items-center justify-center">
             <Zap size={18} className="text-white" />
           </div>
           <div>
-            <div className="text-lg font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
+            <div className="text-lg font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>
               TOSIF OS
             </div>
-            <div className="text-[10px] text-[#4A4A5E] mono tracking-widest">PRIVATE MODE · AUTH REQUIRED</div>
+            <div className="text-[10px] text-muted-foreground mono tracking-widest">PRIVATE MODE · AUTH REQUIRED</div>
           </div>
         </div>
 
-        <div className="h-1 w-full bg-white/[0.05] rounded-full mt-4 mb-6 overflow-hidden">
+        <div className="h-1 w-full bg-muted/50 rounded-full mt-4 mb-6 overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-[#7C6AFF] to-[#00FF88]"
+            className="h-full bg-gradient-to-r from-primary to-emerald-500"
             initial={{ width: '0%' }}
             animate={{ width: '100%' }}
             transition={{ duration: 1.2 }}
@@ -68,30 +68,30 @@ export default function OSLogin({ onLogin }) {
 
         <form onSubmit={submit} className="space-y-4">
           <div>
-            <label className="mono text-[10px] uppercase tracking-widest text-[#8B8B9F] mb-1.5 block">Email</label>
+            <label className="mono text-[10px] uppercase tracking-widest text-muted-foreground mb-1.5 block">Email</label>
             <div className="relative">
-              <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#4A4A5E]" />
+              <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.1] text-sm text-[#E8E8F0] placeholder-[#4A4A5E] focus:outline-none focus:border-[#00D4FF]/50"
+                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-muted/50 border border-border text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50"
                 placeholder="you@yourdomain.com"
                 autoComplete="username"
               />
             </div>
           </div>
           <div>
-            <label className="mono text-[10px] uppercase tracking-widest text-[#8B8B9F] mb-1.5 block">Password</label>
+            <label className="mono text-[10px] uppercase tracking-widest text-muted-foreground mb-1.5 block">Password</label>
             <div className="relative">
-              <Lock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#4A4A5E]" />
+              <Lock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.1] text-sm text-[#E8E8F0] placeholder-[#4A4A5E] focus:outline-none focus:border-[#00D4FF]/50"
+                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-muted/50 border border-border text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50"
                 placeholder="••••••••"
                 autoComplete="current-password"
               />
@@ -99,7 +99,7 @@ export default function OSLogin({ onLogin }) {
           </div>
 
           {error && (
-            <div className="text-xs text-[#FF3366] bg-[#FF3366]/10 border border-[#FF3366]/25 rounded-lg px-3 py-2">
+            <div className="text-xs text-red-500 bg-red-500/10 border border-red-500/25 rounded-lg px-3 py-2">
               {error}
             </div>
           )}
@@ -107,14 +107,14 @@ export default function OSLogin({ onLogin }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 rounded-lg bg-gradient-to-r from-[#7C6AFF] to-[#00D4FF] text-white text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="w-full py-2.5 rounded-lg bg-gradient-to-r from-primary to-cyan-400 text-white text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
           >
             {loading ? 'AUTHENTICATING…' : 'ENTER TOSIF OS'}
           </button>
         </form>
 
         <div className="mt-5 text-center">
-          <a href="/" className="text-[11px] text-[#6B6B80] hover:text-[#00D4FF] transition-colors">
+          <a href="/" className="text-[11px] text-muted-foreground hover:text-primary transition-colors">
             ← Back to public portfolio
           </a>
         </div>

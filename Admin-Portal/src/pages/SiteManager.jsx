@@ -113,7 +113,7 @@ export default function SiteManager() {
           <p className="text-xs text-muted mb-4">Disabled sections disappear from the public website (rendering, not CSS hiding).</p>
           <div className="space-y-2">
             {sections.map((s, i) => (
-              <div key={s.key} className="flex items-center gap-3 p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+              <div key={s.key} className="flex items-center gap-3 p-2.5 rounded-lg bg-muted/40 border border-border">
                 <button
                   onClick={() => set('sections', sections.map((x) => (x.key === s.key ? { ...x, enabled: !x.enabled } : x)))}
                   className={`p-1.5 rounded ${s.enabled ? 'text-neon-green' : 'text-muted'}`}
@@ -133,10 +133,10 @@ export default function SiteManager() {
         {/* Navigation */}
         <div className="glass rounded-2xl p-6">
           <h2 className="font-bold mb-1 text-sm text-neon-cyan mono uppercase tracking-widest">Top navigation</h2>
-          <p className="text-xs text-muted mb-4">Labels and order for the public top bar. Use target <code>section-key</code> for scroll sections or <code>/os</code> for the OS entry.</p>
+          <p className="text-xs text-muted mb-4">Labels and order for the public top bar. Targets: section keys (home, projects, skills, experience, engineeringlab, resume, contact, about, products, achievements, journey, globalreach) or /os for the private OS.</p>
           <div className="space-y-2">
             {nav.map((n, i) => (
-              <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+              <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg bg-muted/40 border border-border">
                 <button onClick={() => set('nav', nav.map((x, xi) => (xi === i ? { ...x, enabled: !x.enabled } : x)))}
                   className={`p-1.5 rounded ${n.enabled ? 'text-neon-green' : 'text-muted'}`}>
                   {n.enabled ? <FaEye size={13} /> : <FaEyeSlash size={13} />}

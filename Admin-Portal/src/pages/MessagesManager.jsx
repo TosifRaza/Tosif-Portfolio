@@ -52,7 +52,7 @@ export default function MessagesManager() {
   return (
     <div>
       <h1 className="text-2xl font-extrabold mb-2">Contact Messages</h1>
-      <p className="text-white/60 text-sm mb-6">
+      <p className="text-foreground/60 text-sm mb-6">
         {items.length} total · {unread} unread
       </p>
 
@@ -98,8 +98,8 @@ export default function MessagesManager() {
                   </span>
                 </div>
                 <div className="mono text-xs text-muted mb-1">{m.email}</div>
-                {m.subject && <div className="text-xs text-white/80">{m.subject}</div>}
-                <p className="text-xs text-white/60 mt-1 line-clamp-2">{m.message}</p>
+                {m.subject && <div className="text-xs text-foreground/80">{m.subject}</div>}
+                <p className="text-xs text-foreground/60 mt-1 line-clamp-2">{m.message}</p>
               </motion.button>
             ))
           )}

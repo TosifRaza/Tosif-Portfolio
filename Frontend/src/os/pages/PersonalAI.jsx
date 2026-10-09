@@ -49,8 +49,8 @@ export default function PersonalAI() {
   return (
     <div className="space-y-6 flex flex-col h-[calc(100vh-120px)]">
       <div>
-        <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>Personal AI</h1>
-        <p className="text-xs text-[#6B6B80] mt-1">
+        <h1 className="text-2xl font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>Personal AI</h1>
+        <p className="text-xs text-muted-foreground mt-1">
           {siteData?.ai?.privateIntro || 'Ask about your goals, learning, time and progress.'} Every answer is computed from your own records.
         </p>
       </div>
@@ -59,14 +59,14 @@ export default function PersonalAI() {
         <div className="flex-1 overflow-y-auto space-y-4 pr-1">
           {messages.length === 0 && (
             <div className="text-center py-8">
-              <Bot size={36} className="mx-auto mb-4 text-[#4A4A5E]" />
-              <p className="text-sm text-[#C8C8D8] mb-1">Try asking:</p>
+              <Bot size={36} className="mx-auto mb-4 text-muted-foreground" />
+              <p className="text-sm text-foreground mb-1">Try asking:</p>
               <div className="flex flex-wrap justify-center gap-2 mt-3 max-w-lg mx-auto">
                 {SUGGESTIONS.map((s) => (
                   <button
                     key={s}
                     onClick={() => ask(s)}
-                    className="text-[11px] px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-[#9B9BAF] hover:text-[#00D4FF] hover:border-[#00D4FF]/40 transition-colors"
+                    className="text-[11px] px-3 py-1.5 rounded-full bg-muted/50 border border-border text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
                   >
                     {s}
                   </button>
@@ -80,14 +80,14 @@ export default function PersonalAI() {
               <div
                 className={`max-w-[85%] rounded-xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
                   m.role === 'user'
-                    ? 'bg-gradient-to-r from-[#7C6AFF]/25 to-[#00D4FF]/25 border border-[#7C6AFF]/30 text-[#E8E8F0]'
-                    : 'bg-white/[0.03] border border-white/[0.06] text-[#C8C8D8]'
+                    ? 'bg-gradient-to-r from-primary/25 to-primary/25 border border-primary/30 text-foreground'
+                    : 'bg-muted/40 border border-border text-foreground'
                 }`}
               >
                 {m.text}
                 {m.role === 'ai' && m.source && (
                   <div className="mt-2">
-                    <Badge color={m.source.includes('llm') ? '#a855f7' : '#00FF88'}>
+                    <Badge color={m.source.includes('llm') ? 'hsl(var(--primary))' : '#10B981'}>
                       {m.source === 'insights-engine+llm' ? 'LLM + DATA' : 'FROM YOUR DATA'}
                     </Badge>
                   </div>
@@ -98,13 +98,13 @@ export default function PersonalAI() {
 
           {busy && (
             <div className="flex justify-start">
-              <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 flex items-center gap-2">
-                <Sparkles size={13} className="text-[#FF6B9D] animate-pulse" />
-                <span className="text-xs text-[#6B6B80] mono">Computing from your data…</span>
+              <div className="bg-muted/40 border border-border rounded-xl px-4 py-3 flex items-center gap-2">
+                <Sparkles size={13} className="text-pink-400 animate-pulse" />
+                <span className="text-xs text-muted-foreground mono">Computing from your data…</span>
               </div>
             </div>
           )}
-          {error && <div className="text-xs text-[#FF3366] text-center">{error}</div>}
+          {error && <div className="text-xs text-red-500 text-center">{error}</div>}
           <div ref={endRef} />
         </div>
 
@@ -113,15 +113,15 @@ export default function PersonalAI() {
             e.preventDefault();
             ask(input);
           }}
-          className="flex gap-2 pt-4 border-t border-white/[0.06]"
+          className="flex gap-2 pt-4 border-t border-border"
         >
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about your data…"
-            className="flex-1 px-4 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.1] text-sm text-[#E8E8F0] placeholder-[#4A4A5E] focus:outline-none focus:border-[#FF6B9D]/50"
+            className="flex-1 px-4 py-2.5 rounded-lg bg-muted/50 border border-border text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-pink-400/50"
           />
-          <button type="submit" disabled={busy || !input.trim()} className="px-4 rounded-lg bg-gradient-to-r from-[#FF6B9D] to-[#7C6AFF] text-white disabled:opacity-40">
+          <button type="submit" disabled={busy || !input.trim()} className="px-4 rounded-lg bg-gradient-to-r from-pink-400 to-primary text-white disabled:opacity-40">
             <Send size={15} />
           </button>
         </form>

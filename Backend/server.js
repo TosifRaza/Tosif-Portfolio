@@ -173,15 +173,29 @@ app.use(errorHandler);
 
 // ── Bootstrap: ensure an admin + seed content exist on first boot ──
 async function ensureBootstrapData() {
-  const userCount = await User.countDocuments();
-  if (userCount === 0 && process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
-    const adminEmail = process.env.ADMIN_EMAIL;
-    const adminPassword = process.env.ADMIN_PASSWORD;
-    await User.create({ name: 'Tosif Raza', email: adminEmail, password: adminPassword, role: 'admin' });
-    console.log(`[bootstrap] Admin user created: ${adminEmail}`);
-  } else if (userCount === 0) {
-    console.log('[bootstrap] No admin configured; create the first development user through /api/auth/register');
+  // Admin upsert — created whenever the configured ADMIN_EMAIL does not exist
+  // yet (fixed: previously only ran when the users collection was completely
+  // empty, which silently skipped the admin on non-empty databases).
+  // An existing admin's password is NEVER overwritten (Settings changes win).
+  const adminEmail = process.env.ADMIN_EMAIL?.trim();
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (adminEmail && adminPassword) {
+    const existing = await User.findOne({ email: adminEmail.toLowerCase() });
+    if (!existing) {
+      await User.create({ name: 'Tosif Raza', email: adminEmail, password: adminPassword, role: 'admin' });
+      console.log(`[bootstrap] Admin user created: ${adminEmail}`);
+    } else if (existing.role !== 'admin') {
+      existing.role = 'admin';
+      await existing.save();
+      console.log(`[bootstrap] Existing user ${adminEmail} promoted to admin`);
+    } else {
+      console.log(`[bootstrap] Admin user ready: ${adminEmail}`);
+    }
+  } else {
+    console.log('[bootstrap] No ADMIN_EMAIL/ADMIN_PASSWORD configured; create the first user through /api/auth/register');
   }
+
+  await ensureSiteConfigDefaults();
 
   const projectCount = await Project.countDocuments();
   if (projectCount === 0) {
@@ -190,6 +204,31 @@ async function ensureBootstrapData() {
       Profile, AboutContent, SiteConfig, Experience, Product, PlanSetting,
     });
     console.log('[bootstrap] ✓ Seed content inserted (profile, site, projects, skills, products, experience, timeline, achievements)');
+  }
+}
+
+// v6.0: make sure newly-introduced sections/nav entries exist on databases
+// seeded by earlier versions, without touching the admin's own edits.
+async function ensureSiteConfigDefaults() {
+  const { DEFAULT_SECTIONS, DEFAULT_NAV } = await import('./models/SiteConfig.js');
+  const site = await SiteConfig.getSingleton();
+  let changed = false;
+
+  for (const section of DEFAULT_SECTIONS) {
+    if (!site.sections.some((s) => s.key === section.key)) {
+      site.sections.push({ ...section });
+      changed = true;
+    }
+  }
+  for (const item of DEFAULT_NAV) {
+    if (!site.nav.some((n) => n.target === item.target && n.label === item.label)) {
+      site.nav.push({ ...item, order: (site.nav.reduce((m, n) => Math.max(m, n.order || 0), 0) || 0) + 1 });
+      changed = true;
+    }
+  }
+  if (changed) {
+    await site.save();
+    console.log('[bootstrap] ✓ SiteConfig updated with new v6 sections/nav entries');
   }
 }
 

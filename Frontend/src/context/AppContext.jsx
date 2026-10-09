@@ -64,15 +64,19 @@ function appReducer(state, action) {
     case "BOOT_COMPLETE":
       return { ...state, bootComplete: true };
     case "TOGGLE_RECRUITER_MODE":
-      return { ...state, recruiterMode: !state.recruiterMode };
+      return { ...state, recruiterMode: !state.recruiterMode, terminalOpen: false, aiOpen: false };
     case "TOGGLE_TERMINAL":
-      return { ...state, terminalOpen: !state.terminalOpen };
+      if (state.recruiterMode) return state;
+      return { ...state, terminalOpen: !state.terminalOpen, aiOpen: false };
     case "SET_TERMINAL":
-      return { ...state, terminalOpen: action.payload };
+      if (state.recruiterMode && action.payload) return state;
+      return { ...state, terminalOpen: action.payload, aiOpen: action.payload ? false : state.aiOpen };
     case "TOGGLE_AI":
-      return { ...state, aiOpen: !state.aiOpen };
+      if (state.recruiterMode) return state;
+      return { ...state, aiOpen: !state.aiOpen, terminalOpen: false };
     case "SET_AI":
-      return { ...state, aiOpen: action.payload };
+      if (state.recruiterMode && action.payload) return state;
+      return { ...state, aiOpen: action.payload, terminalOpen: action.payload ? false : state.terminalOpen };
     case "ADD_EASTER_EGG":
       if (state.easterEggs.includes(action.payload)) return state;
       return { ...state, easterEggs: [...state.easterEggs, action.payload] };

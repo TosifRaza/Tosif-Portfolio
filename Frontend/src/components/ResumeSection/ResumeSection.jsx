@@ -24,7 +24,7 @@ export default function ResumeSection() {
     <section className="min-h-screen px-4 sm:px-8 lg:px-16 py-12 sm:py-16" id="resume">
       <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="max-w-5xl mx-auto">
         <motion.div variants={staggerItem} className="mb-10">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
+          <h2 className="text-3xl sm:text-4xl font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>
             Resume
           </h2>
         </motion.div>
@@ -33,13 +33,13 @@ export default function ResumeSection() {
           {/* Download card */}
           <motion.div variants={staggerItem} className="glass rounded-2xl p-8 flex flex-col items-start justify-between">
             <div>
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#7C6AFF]/30 to-[#00D4FF]/30 flex items-center justify-center mb-4">
-                <FileText size={24} className="text-[#00D4FF]" />
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/30 to-primary/30 flex items-center justify-center mb-4">
+                <FileText size={24} className="text-primary" />
               </div>
-              <div className="text-xl font-bold text-[#E8E8F0] mb-1">
+              <div className="text-xl font-bold text-foreground mb-1">
                 {profile?.name || 'Tosif Raza'} — Resume
               </div>
-              <div className="text-sm text-[#8B8B9F] mb-6">
+              <div className="text-sm text-muted-foreground mb-6">
                 {loading
                   ? 'Checking for the latest version…'
                   : error
@@ -60,8 +60,8 @@ export default function ResumeSection() {
                 }}
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
                   resume
-                    ? 'bg-gradient-to-r from-[#7C6AFF] to-[#00D4FF] text-white hover:opacity-90'
-                    : 'bg-white/[0.05] border border-white/10 text-[#8B8B9F]'
+                    ? 'bg-gradient-to-r from-primary to-cyan-400 text-white hover:opacity-90'
+                    : 'bg-muted/50 border border-border text-muted-foreground'
                 }`}
               >
                 <FileDown size={15} />
@@ -69,7 +69,7 @@ export default function ResumeSection() {
               </a>
               <button
                 onClick={toggleRecruiterMode}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#00FF88]/10 border border-[#00FF88]/30 text-[#00FF88] text-sm font-semibold hover:bg-[#00FF88]/20 transition-colors"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 text-sm font-semibold hover:bg-emerald-500/20 transition-colors"
               >
                 <Bot size={15} />
                 Recruiter View
@@ -82,24 +82,24 @@ export default function ResumeSection() {
             <div className="space-y-4 max-h-72 overflow-y-auto pr-1">
               {Object.entries(grouped).map(([cat, names]) => (
                 <div key={cat}>
-                  <div className="text-xs font-semibold text-[#00D4FF] mono uppercase tracking-widest mb-2">{cat}</div>
+                  <div className="text-xs font-semibold text-primary mono uppercase tracking-widest mb-2">{cat}</div>
                   <div className="flex flex-wrap gap-2">
                     {names.map((n) => (
-                      <span key={n} className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] text-[#B8B8CC] text-[11px]">
+                      <span key={n} className="px-2.5 py-1 rounded-lg bg-muted/50 border border-border text-muted-foreground text-[11px]">
                         {n}
                       </span>
                     ))}
                   </div>
                 </div>
               ))}
-              {!skills?.length && <div className="text-xs text-[#8B8B9F]">No skills configured yet.</div>}
+              {!skills?.length && <div className="text-xs text-muted-foreground">No skills configured yet.</div>}
             </div>
             {profile?.socials?.github && (
               <a
                 href={profile.socials.github}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-5 inline-flex items-center gap-1.5 text-xs text-[#9D8AFF] hover:text-[#00D4FF] transition-colors"
+                className="mt-5 inline-flex items-center gap-1.5 text-xs text-primary hover:text-primary transition-colors"
               >
                 <ExternalLink size={12} /> View GitHub profile
               </a>

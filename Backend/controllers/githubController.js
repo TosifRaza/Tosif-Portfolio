@@ -1,5 +1,28 @@
 import { asyncHandler } from '../middleware/errorHandler.js';
-import { fetchGitHubProfile } from '../services/githubService.js';
+import Profile from '../models/Profile.js';
+import { fetchGitHubContributions, fetchGitHubProfile } from '../services/githubService.js';
+
+// GET /api/github/contributions — fetch a fresh calendar from GitHub GraphQL.
+export const getContributions = asyncHandler(async (_req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) {
+    return res.status(503).json({ message: 'Live GitHub contributions require GITHUB_TOKEN in the backend environment.' });
+  }
+
+  const profile = await Profile.getSingleton();
+  const username = profile.socials?.github?.match(/github\.com\/([^/?#]+)/i)?.[1];
+  if (!username) {
+    return res.status(400).json({ message: 'Add a GitHub profile URL in the public profile settings first.' });
+  }
+
+  try {
+    res.json(await fetchGitHubContributions(username, token));
+  } catch (error) {
+    console.error('[github] Live contribution lookup failed:', error.message);
+    res.status(502).json({ message: 'Unable to fetch live contributions from GitHub.' });
+  }
+});
 
 // GET /api/github
 // Returns GitHub stats. If no token / username configured, returns a

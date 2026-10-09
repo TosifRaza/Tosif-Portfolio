@@ -88,33 +88,33 @@ export default function FounderAI() {
 
   return (
     <motion.div
-      className="fixed bottom-4 right-4 w-[360px] max-h-[500px] z-[45] flex flex-col glass-strong rounded-2xl overflow-hidden"
+      className="fixed inset-x-3 bottom-3 w-auto max-h-[min(70dvh,500px)] z-[45] flex flex-col glass-strong rounded-2xl overflow-hidden sm:inset-x-auto sm:right-4 sm:bottom-4 sm:w-[min(360px,calc(100vw-2rem))]"
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 20, scale: 0.95 }}
       transition={{ duration: 0.3 }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
         <div className="flex items-center gap-2">
           <Bot size={18} className="text-purple-400" />
           <span className="text-sm font-medium text-text-primary">Founder AI</span>
           <span className="text-[10px] text-text-muted ml-1">· Live</span>
         </div>
-        <button onClick={toggleAI} className="p-1 rounded hover:bg-white/[0.06] text-text-secondary">
+        <button onClick={toggleAI} className="p-1 rounded hover:bg-muted/60 text-text-secondary">
           <X size={16} />
         </button>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-[340px]">
+      <div className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 space-y-3 max-h-[45dvh] sm:max-h-[340px]">
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
             <div
               className={`max-w-[85%] px-3 py-2 rounded-xl text-sm whitespace-pre-wrap ${
                 msg.role === "user"
                   ? "bg-purple-500/20 text-purple-200 border border-purple-500/20"
-                  : "bg-white/[0.04] text-text-secondary border border-white/[0.06]"
+                  : "bg-muted/50 text-text-secondary border border-border"
               }`}
             >
               {msg.text}
@@ -125,7 +125,7 @@ export default function FounderAI() {
         {/* Loading indicator */}
         {loading && (
           <div className="flex justify-start">
-            <div className="max-w-[85%] px-3 py-2 rounded-xl text-sm bg-white/[0.04] text-text-secondary border border-white/[0.06] flex items-center gap-2">
+            <div className="max-w-[85%] px-3 py-2 rounded-xl text-sm bg-muted/50 text-text-secondary border border-border flex items-center gap-2">
               <Loader2 size={14} className="animate-spin text-purple-400" />
               <span className="text-xs">Searching database…</span>
             </div>
@@ -136,14 +136,14 @@ export default function FounderAI() {
       </div>
 
       {/* Quick questions */}
-      <div className="px-4 py-2 border-t border-white/[0.04]">
+      <div className="px-4 py-2 border-t border-border">
         <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
           {suggestions.slice(0, 4).map((q) => (
             <button
               key={q}
               onClick={() => sendMessage(q)}
               disabled={loading}
-              className="text-[10px] px-2 py-1 rounded-full bg-white/[0.04] text-text-secondary hover:bg-white/[0.08] whitespace-nowrap border border-white/[0.04] disabled:opacity-50"
+              className="text-[10px] px-2 py-1 rounded-full bg-muted/50 text-text-secondary hover:bg-muted/80 whitespace-nowrap border border-border disabled:opacity-50"
             >
               {q}
             </button>
@@ -152,7 +152,7 @@ export default function FounderAI() {
       </div>
 
       {/* Input */}
-      <div className="px-4 py-3 border-t border-white/[0.06]">
+      <div className="px-4 py-3 border-t border-border">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -166,7 +166,7 @@ export default function FounderAI() {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about skills, projects..."
             disabled={loading}
-            className="flex-1 px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.06] text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-purple-500/40 disabled:opacity-50"
+            className="flex-1 px-3 py-2 rounded-lg bg-muted/50 border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-purple-500/40 disabled:opacity-50"
           />
           <button
             type="submit"

@@ -8,8 +8,8 @@ import { Plus, NotebookPen } from 'lucide-react';
 
 const TYPES = ['work', 'learning', 'coding', 'exercise', 'reading', 'sleep', 'personal', 'other'];
 const TYPE_COLORS = {
-  work: '#00D4FF', learning: '#7C6AFF', coding: '#00FF88', exercise: '#FF6B9D',
-  reading: '#FFB800', sleep: '#a78bfa', personal: '#4ADE80', other: '#6B6B80',
+  work: 'hsl(var(--primary))', learning: 'hsl(var(--primary))', coding: '#10B981', exercise: '#F472B6',
+  reading: '#F59E0B', sleep: 'hsl(var(--primary))', personal: '#4ADE80', other: 'hsl(var(--muted-foreground))',
 };
 
 /** DAILY LOG — what I worked on, what I learned, how long, tied to goals/skills. */
@@ -73,8 +73,8 @@ export default function DailyLog() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>Daily Log</h1>
-          <p className="text-xs text-[#6B6B80] mt-1">Track what you plan → track what you actually do. Everything feeds analytics.</p>
+          <h1 className="text-2xl font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>Daily Log</h1>
+          <p className="text-xs text-muted-foreground mt-1">Track what you plan → track what you actually do. Everything feeds analytics.</p>
         </div>
         <div className="flex items-center gap-2">
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={`${inputCls} w-40`} />
@@ -89,27 +89,27 @@ export default function DailyLog() {
         >
           {activities.length === 0 ? (
             <div className="text-center py-10">
-              <NotebookPen size={30} className="mx-auto mb-3 text-[#4A4A5E]" />
-              <p className="text-sm text-[#C8C8D8]">Nothing logged for this day</p>
-              <p className="text-xs text-[#6B6B80] mt-1 max-w-sm mx-auto">
+              <NotebookPen size={30} className="mx-auto mb-3 text-muted-foreground" />
+              <p className="text-sm text-foreground">Nothing logged for this day</p>
+              <p className="text-xs text-muted-foreground mt-1 max-w-sm mx-auto">
                 Example: "MySQL indexing practice — 1h 30m — related goal: Backend Engineering — related skill: MySQL".
               </p>
             </div>
           ) : (
             <div className="space-y-2">
               {activities.map((a) => (
-                <div key={a._id} className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: TYPE_COLORS[a.type] || '#6B6B80' }} />
+                <div key={a._id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border">
+                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: TYPE_COLORS[a.type] || 'hsl(var(--muted-foreground))' }} />
                   <button onClick={() => openEdit(a)} className="flex-1 min-w-0 text-left">
-                    <div className="text-sm text-[#E8E8F0] truncate">{a.title}</div>
-                    <div className="text-[10px] text-[#6B6B80] mono">
+                    <div className="text-sm text-foreground truncate">{a.title}</div>
+                    <div className="text-[10px] text-muted-foreground mono">
                       {a.type}
                       {a.goalId ? ` · goal: ${a.goalId.title}` : ''}
                       {a.skillId ? ` · skill: ${a.skillId.name}` : ''}
                       {a.notes ? ` · ${a.notes}` : ''}
                     </div>
                   </button>
-                  <span className="text-xs mono text-[#00D4FF] flex-shrink-0">{fmtMinutes(a.durationMinutes)}</span>
+                  <span className="text-xs mono text-primary flex-shrink-0">{fmtMinutes(a.durationMinutes)}</span>
                   <DeleteButton onConfirm={() => remove(a)} />
                 </div>
               ))}
@@ -126,7 +126,7 @@ export default function DailyLog() {
             </Field>
             <Field label="Type">
               <select className={inputCls} value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>
-                {TYPES.map((t) => <option key={t} value={t} className="bg-[#0a0e17]">{t}</option>)}
+                {TYPES.map((t) => <option key={t} value={t} className="bg-card">{t}</option>)}
               </select>
             </Field>
             <Field label="Duration (minutes)">
@@ -134,21 +134,21 @@ export default function DailyLog() {
             </Field>
             <Field label="Related goal">
               <select className={inputCls} value={form.goalId} onChange={(e) => setForm({ ...form, goalId: e.target.value })}>
-                <option value="" className="bg-[#0a0e17]">— none —</option>
-                {(goals || []).map((g) => <option key={g._id} value={g._id} className="bg-[#0a0e17]">{g.title}</option>)}
+                <option value="" className="bg-card">— none —</option>
+                {(goals || []).map((g) => <option key={g._id} value={g._id} className="bg-card">{g.title}</option>)}
               </select>
             </Field>
             <Field label="Related skill">
               <select className={inputCls} value={form.skillId} onChange={(e) => setForm({ ...form, skillId: e.target.value })}>
-                <option value="" className="bg-[#0a0e17]">— none —</option>
-                {(skills || []).map((s) => <option key={s._id} value={s._id} className="bg-[#0a0e17]">{s.name}</option>)}
+                <option value="" className="bg-card">— none —</option>
+                {(skills || []).map((s) => <option key={s._id} value={s._id} className="bg-card">{s.name}</option>)}
               </select>
             </Field>
             <Field label="Notes" full>
               <textarea className={`${inputCls} resize-none`} rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Practiced indexes and query optimization" />
             </Field>
           </div>
-          <div className="flex justify-end gap-2 mt-6 pt-4 border-t border-white/10">
+          <div className="flex justify-end gap-2 mt-6 pt-4 border-t border-border">
             <button onClick={() => setEditing(null)} className={btnGhost}>Cancel</button>
             <button onClick={save} disabled={saving} className={btnPrimary}>{saving ? 'Saving…' : 'Save'}</button>
           </div>

@@ -25,7 +25,7 @@ export default function AboutSection({ site }) {
       <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="max-w-6xl mx-auto">
         {/* Heading */}
         <motion.div variants={staggerItem} className="mb-10">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
+          <h2 className="text-3xl sm:text-4xl font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>
             Who I Am
           </h2>
         </motion.div>
@@ -37,7 +37,7 @@ export default function AboutSection({ site }) {
               <div className="glass rounded-xl p-6 animate-pulse h-40" />
             ) : (
               paragraphs.map((text, i) => (
-                <p key={i} className="text-[15px] leading-relaxed text-[#B8B8CC]">
+                <p key={i} className="text-[15px] leading-relaxed text-muted-foreground">
                   {text}
                 </p>
               ))
@@ -48,8 +48,8 @@ export default function AboutSection({ site }) {
               <div className="grid sm:grid-cols-3 gap-3 pt-2">
                 {values.map((v, i) => (
                   <div key={i} className="glass rounded-xl p-4">
-                    <div className="text-sm font-semibold text-[#00D4FF] mb-1">{v.title}</div>
-                    <div className="text-xs text-[#8B8B9F] leading-relaxed">{v.description}</div>
+                    <div className="text-sm font-semibold text-primary mb-1">{v.title}</div>
+                    <div className="text-xs text-muted-foreground leading-relaxed">{v.description}</div>
                   </div>
                 ))}
               </div>
@@ -59,18 +59,18 @@ export default function AboutSection({ site }) {
           {/* Side panel */}
           <motion.div variants={staggerItem} className="lg:col-span-2 space-y-4">
             <div className="glass rounded-xl p-6">
-              <div className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
+              <div className="text-2xl font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>
                 {p.name}
               </div>
-              <div className="text-sm text-[#00D4FF] mt-1">{p.title || p.roles?.join(' · ')}</div>
-              <div className="mt-4 space-y-2 text-xs text-[#8B8B9F]">
+              <div className="text-sm text-primary mt-1">{p.title || p.roles?.join(' · ')}</div>
+              <div className="mt-4 space-y-2 text-xs text-muted-foreground">
                 <div className="flex items-center gap-2">
-                  <MapPin size={13} className="text-[#7C6AFF]" />
+                  <MapPin size={13} className="text-primary" />
                   {p.location || 'Earth'}
                 </div>
                 {p.availability?.status && (
                   <div className="flex items-center gap-2">
-                    <Clock3 size={13} className="text-[#00FF88]" />
+                    <Clock3 size={13} className="text-emerald-500" />
                     {p.availability.status} · {p.availability.type}
                   </div>
                 )}
@@ -80,10 +80,10 @@ export default function AboutSection({ site }) {
             {/* Highlights */}
             {highlights.slice(0, 5).map((h, i) => (
               <div key={i} className="glass glass-hover rounded-xl p-4 flex gap-3">
-                <Sparkles size={15} className="text-[#FFB800] flex-shrink-0 mt-0.5" />
+                <Sparkles size={15} className="text-amber-500 flex-shrink-0 mt-0.5" />
                 <div>
-                  <div className="text-sm font-semibold text-[#E8E8F0]">{h.title}</div>
-                  <div className="text-xs text-[#8B8B9F] mt-0.5 leading-relaxed">{h.description}</div>
+                  <div className="text-sm font-semibold text-foreground">{h.title}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{h.description}</div>
                 </div>
               </div>
             ))}
@@ -91,14 +91,14 @@ export default function AboutSection({ site }) {
             {/* Global Reach — demoted secondary block */}
             {globalReach.length > 0 && (
               <div className="glass rounded-xl p-5">
-                <div className="flex items-center gap-2 text-xs mono text-[#00D4FF] tracking-widest mb-3">
+                <div className="flex items-center gap-2 text-xs mono text-primary tracking-widest mb-3">
                   <Globe2 size={13} /> GLOBAL REACH
                 </div>
                 <div className="space-y-2">
                   {globalReach.map((g, i) => (
-                    <div key={i} className="text-xs text-[#B8B8CC]">
-                      <span className="text-[#E8E8F0] font-medium">{g.region}</span>
-                      {g.note ? <span className="text-[#8B8B9F]"> — {g.note}</span> : null}
+                    <div key={i} className="text-xs text-muted-foreground">
+                      <span className="text-foreground font-medium">{g.region}</span>
+                      {g.note ? <span className="text-muted-foreground"> — {g.note}</span> : null}
                     </div>
                   ))}
                 </div>

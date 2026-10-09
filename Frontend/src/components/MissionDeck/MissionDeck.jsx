@@ -7,17 +7,17 @@ import {
 } from "lucide-react";
 
 const STATUS_COLORS = {
-  Active: "#00FF88",
-  Completed: "#00D4FF",
-  "In Progress": "#FFB800",
-  Archived: "#6B6B80",
+  Active: "#10B981",
+  Completed: "hsl(var(--primary))",
+  "In Progress": "#F59E0B",
+  Archived: "hsl(var(--muted-foreground))",
 };
 
 const DIFFICULTY_COLORS = {
-  Low: "#00FF88",
-  Medium: "#FFB800",
-  High: "#FF6B9D",
-  Extreme: "#a855f7",
+  Low: "#10B981",
+  Medium: "#F59E0B",
+  High: "#F472B6",
+  Extreme: "hsl(var(--primary))",
 };
 
 const CATEGORIES = [
@@ -46,69 +46,69 @@ function ProjectModal({ project, onClose }) {
       >
         <div className="flex items-start justify-between gap-4 mb-5">
           <div>
-            <div className="mono text-[10px] text-[#00D4FF] tracking-[0.3em] mb-1">{project.missionId}</div>
-            <h3 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
+            <div className="mono text-[10px] text-primary tracking-[0.3em] mb-1">{project.missionId}</div>
+            <h3 className="text-2xl font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>
               {project.title}
             </h3>
-            {project.tagline && <p className="text-sm text-[#8B8B9F] mt-1">{project.tagline}</p>}
+            {project.tagline && <p className="text-sm text-muted-foreground mt-1">{project.tagline}</p>}
           </div>
-          <button onClick={onClose} className="p-2 rounded-lg hover:bg-white/[0.06] text-[#9B9BAF]" aria-label="Close">
+          <button onClick={onClose} className="p-2 rounded-lg hover:bg-muted/60 text-muted-foreground" aria-label="Close">
             <X size={18} />
           </button>
         </div>
 
         {project.image && (
-          <img src={apiUrl(project.image)} alt={project.title} className="w-full rounded-xl mb-5 border border-white/[0.06]" />
+          <img src={apiUrl(project.image)} alt={project.title} className="w-full rounded-xl mb-5 border border-border" />
         )}
 
         <div className="space-y-4">
           <div>
-            <div className="flex items-center gap-2 text-xs mono tracking-widest text-[#00D4FF] mb-1.5">
+            <div className="flex items-center gap-2 text-xs mono tracking-widest text-primary mb-1.5">
               <BookOpen size={12} /> DESCRIPTION
             </div>
-            <p className="text-sm text-[#B8B8CC] leading-relaxed">{project.description}</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">{project.description}</p>
           </div>
 
           {project.problem && (
             <div>
-              <div className="flex items-center gap-2 text-xs mono tracking-widest text-[#FF6B9D] mb-1.5">
+              <div className="flex items-center gap-2 text-xs mono tracking-widest text-pink-400 mb-1.5">
                 <Target size={12} /> PROBLEM
               </div>
-              <p className="text-sm text-[#B8B8CC] leading-relaxed">{project.problem}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{project.problem}</p>
             </div>
           )}
 
           {project.solution && (
             <div>
-              <div className="flex items-center gap-2 text-xs mono tracking-widest text-[#00FF88] mb-1.5">
+              <div className="flex items-center gap-2 text-xs mono tracking-widest text-emerald-500 mb-1.5">
                 <Lightbulb size={12} /> SOLUTION
               </div>
-              <p className="text-sm text-[#B8B8CC] leading-relaxed">{project.solution}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{project.solution}</p>
             </div>
           )}
 
           {project.role && (
             <div>
-              <div className="flex items-center gap-2 text-xs mono tracking-widest text-[#FFB800] mb-1.5">
+              <div className="flex items-center gap-2 text-xs mono tracking-widest text-amber-500 mb-1.5">
                 <User size={12} /> MY ROLE
               </div>
-              <p className="text-sm text-[#B8B8CC]">{project.role}</p>
+              <p className="text-sm text-muted-foreground">{project.role}</p>
             </div>
           )}
 
           {project.caseStudy && (
             <div>
-              <div className="flex items-center gap-2 text-xs mono tracking-widest text-[#a855f7] mb-1.5">
+              <div className="flex items-center gap-2 text-xs mono tracking-widest text-primary mb-1.5">
                 <Rocket size={12} /> CASE STUDY
               </div>
-              <p className="text-sm text-[#B8B8CC] leading-relaxed">{project.caseStudy}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{project.caseStudy}</p>
             </div>
           )}
 
           {project.stack?.length > 0 && (
             <div className="flex flex-wrap gap-2 pt-1">
               {project.stack.map((t, i) => (
-                <span key={i} className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] text-[#9B9BAF] text-[11px] mono">
+                <span key={i} className="px-2.5 py-1 rounded-lg bg-muted/50 border border-border text-muted-foreground text-[11px] mono">
                   {t}
                 </span>
               ))}
@@ -121,7 +121,7 @@ function ProjectModal({ project, onClose }) {
                 href={project.liveUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-[#7C6AFF] to-[#00D4FF] text-white text-xs font-semibold hover:opacity-90"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-primary to-cyan-400 text-white text-xs font-semibold hover:opacity-90"
               >
                 <ExternalLink size={13} /> Live Demo
               </a>
@@ -131,7 +131,7 @@ function ProjectModal({ project, onClose }) {
                 href={project.githubUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.05] border border-white/[0.1] text-[#E8E8F0] text-xs font-semibold hover:bg-white/[0.08]"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted/50 border border-border text-foreground text-xs font-semibold hover:bg-muted/80"
               >
                 <Github size={13} /> Source Code
               </a>
@@ -164,10 +164,10 @@ export default function MissionDeck() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
+          <h2 className="text-3xl sm:text-4xl font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>
             Projects
           </h2>
-          <p className="text-sm text-[#6B6B80] mt-2">Live from the database — filter by kind.</p>
+          <p className="text-sm text-muted-foreground mt-2">Live from the database — filter by kind.</p>
         </motion.div>
 
         {/* Category filter */}
@@ -178,8 +178,8 @@ export default function MissionDeck() {
               onClick={() => setFilter(c.key)}
               className={`px-4 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 filter === c.key
-                  ? "bg-[#00D4FF]/15 border border-[#00D4FF]/40 text-[#00D4FF]"
-                  : "bg-white/[0.03] border border-white/[0.07] text-[#9B9BAF] hover:text-[#E8E8F0]"
+                  ? "bg-primary/15 border border-primary/40 text-primary"
+                  : "bg-muted/40 border border-border text-muted-foreground hover:text-foreground"
               }`}
             >
               {c.label}
@@ -194,10 +194,10 @@ export default function MissionDeck() {
             ))}
           </div>
         )}
-        {error && <div className="glass rounded-xl p-6 text-sm text-[#FF6B9D]">Could not load projects: {error}</div>}
+        {error && <div className="glass rounded-xl p-6 text-sm text-pink-400">Could not load projects: {error}</div>}
 
         {!loading && filtered.length === 0 && !error && (
-          <div className="glass rounded-xl p-10 text-center text-sm text-[#6B6B80]">
+          <div className="glass rounded-xl p-10 text-center text-sm text-muted-foreground">
             No projects in this category yet.
           </div>
         )}
@@ -206,7 +206,7 @@ export default function MissionDeck() {
           {filtered.map((project, i) => (
             <motion.article
               key={project._id}
-              className="group relative p-5 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-[#00D4FF]/30 transition-all cursor-pointer overflow-hidden"
+              className="group relative p-5 rounded-xl bg-muted/30 border border-border hover:border-primary/30 transition-all cursor-pointer overflow-hidden"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06 }}
@@ -214,24 +214,24 @@ export default function MissionDeck() {
               onClick={() => setSelected(project)}
             >
               {project.featured && (
-                <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-[#FFB800]/15 border border-[#FFB800]/30 text-[#FFB800] text-[9px] mono tracking-wider">
+                <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-500 text-[9px] mono tracking-wider">
                   FEATURED
                 </span>
               )}
-              <div className="mono text-[9px] text-[#4A4A5E] tracking-[0.25em] mb-2">{project.missionId}</div>
-              <h3 className="text-base font-bold text-[#E8E8F0] mb-1" style={{ fontFamily: "'Space Grotesk', system-ui" }}>
+              <div className="mono text-[9px] text-muted-foreground tracking-[0.25em] mb-2">{project.missionId}</div>
+              <h3 className="text-base font-bold text-foreground mb-1" style={{ fontFamily: 'Inter, system-ui' }}>
                 {project.title}
               </h3>
-              {project.tagline && <p className="text-xs text-[#6B6B80] mb-3 line-clamp-2">{project.tagline}</p>}
-              <p className="text-xs text-[#8B8B9F] leading-relaxed line-clamp-3 mb-4">{project.description}</p>
+              {project.tagline && <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{project.tagline}</p>}
+              <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 mb-4">{project.description}</p>
 
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 <span
                   className="px-2 py-0.5 rounded-full text-[9px] mono border"
                   style={{
-                    color: STATUS_COLORS[project.status] || "#9B9BAF",
-                    borderColor: `${STATUS_COLORS[project.status] || "#9B9BAF"}40`,
-                    background: `${STATUS_COLORS[project.status] || "#9B9BAF"}10`,
+                    color: STATUS_COLORS[project.status] || "hsl(var(--muted-foreground))",
+                    borderColor: `${STATUS_COLORS[project.status] || "hsl(var(--muted-foreground))"}40`,
+                    background: `${STATUS_COLORS[project.status] || "hsl(var(--muted-foreground))"}10`,
                   }}
                 >
                   {project.status}
@@ -240,9 +240,9 @@ export default function MissionDeck() {
                   <span
                     className="px-2 py-0.5 rounded-full text-[9px] mono border"
                     style={{
-                      color: DIFFICULTY_COLORS[project.difficulty] || "#9B9BAF",
-                      borderColor: `${DIFFICULTY_COLORS[project.difficulty] || "#9B9BAF"}40`,
-                      background: `${DIFFICULTY_COLORS[project.difficulty] || "#9B9BAF"}10`,
+                      color: DIFFICULTY_COLORS[project.difficulty] || "hsl(var(--muted-foreground))",
+                      borderColor: `${DIFFICULTY_COLORS[project.difficulty] || "hsl(var(--muted-foreground))"}40`,
+                      background: `${DIFFICULTY_COLORS[project.difficulty] || "hsl(var(--muted-foreground))"}10`,
                     }}
                   >
                     {project.difficulty}
@@ -253,12 +253,12 @@ export default function MissionDeck() {
               {project.stack?.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
                   {project.stack.slice(0, 4).map((t) => (
-                    <span key={t} className="px-2 py-0.5 rounded bg-white/[0.04] text-[#8B8B9F] text-[10px] mono">
+                    <span key={t} className="px-2 py-0.5 rounded bg-muted/50 text-muted-foreground text-[10px] mono">
                       {t}
                     </span>
                   ))}
                   {project.stack.length > 4 && (
-                    <span className="px-2 py-0.5 text-[#4A4A5E] text-[10px] mono">+{project.stack.length - 4}</span>
+                    <span className="px-2 py-0.5 text-muted-foreground text-[10px] mono">+{project.stack.length - 4}</span>
                   )}
                 </div>
               )}

@@ -59,46 +59,46 @@ export default function Learning() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-[#E8E8F0]" style={{ fontFamily: "'Space Grotesk', system-ui" }}>Learning</h1>
+          <h1 className="text-2xl font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>Learning</h1>
         </div>
         <div className="flex items-center gap-2">
           <select className={`${inputCls} w-32`} value={range} onChange={(e) => setRange(e.target.value)}>
-            <option value="7" className="bg-[#0a0e17]">7 days</option>
-            <option value="30" className="bg-[#0a0e17]">30 days</option>
-            <option value="90" className="bg-[#0a0e17]">90 days</option>
+            <option value="7" className="bg-card">7 days</option>
+            <option value="30" className="bg-card">30 days</option>
+            <option value="90" className="bg-card">90 days</option>
           </select>
           <button onClick={() => { setForm(blank); setEditing('new'); }} className={btnPrimary}><Plus size={14} /> Log session</button>
         </div>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard label={`Learning in ${range}d`} value={fmtMinutes(stats?.totalMinutes || 0)} icon={GraduationCap} color="#7C6AFF" />
-        <StatCard label="Current streak" value={`${stats?.streakDays || 0} days`} icon={Flame} color="#FFB800" />
-        <StatCard label="Sessions" value={stats?.byDay?.reduce((s, d) => s + d.sessions, 0) || 0} icon={Clock3} color="#00D4FF" />
-        <StatCard label="Avg confidence" value={avgConfidence(sessions)} icon={GraduationCap} color="#00FF88" sub="1-5 self-rating" />
+        <StatCard label={`Learning in ${range}d`} value={fmtMinutes(stats?.totalMinutes || 0)} icon={GraduationCap} color="hsl(var(--primary))" />
+        <StatCard label="Current streak" value={`${stats?.streakDays || 0} days`} icon={Flame} color="#F59E0B" />
+        <StatCard label="Sessions" value={stats?.byDay?.reduce((s, d) => s + d.sessions, 0) || 0} icon={Clock3} color="hsl(var(--primary))" />
+        <StatCard label="Avg confidence" value={avgConfidence(sessions)} icon={GraduationCap} color="#10B981" sub="1-5 self-rating" />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
         <Panel title="Learning minutes per day" subtitle="Computed from real sessions">
           {chart.length === 0 ? (
-            <div className="text-center py-10 text-xs text-[#6B6B80]">Not enough data yet — log your first session.</div>
+            <div className="text-center py-10 text-xs text-muted-foreground">Not enough data yet — log your first session.</div>
           ) : (
             <div className="h-56">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chart} margin={{ top: 5, right: 5, bottom: 5, left: -20 }}>
                   <defs>
                     <linearGradient id="lg" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#7C6AFF" stopOpacity={0.5} />
-                      <stop offset="100%" stopColor="#7C6AFF" stopOpacity={0} />
+                      <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.5} />
+                      <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="date" tick={{ fill: '#6B6B80', fontSize: 10 }} axisLine={{ stroke: '#1a1a2e' }} tickLine={false} />
-                  <YAxis tick={{ fill: '#6B6B80', fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <XAxis dataKey="date" tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} axisLine={{ stroke: 'hsl(var(--card))' }} tickLine={false} />
+                  <YAxis tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} axisLine={false} tickLine={false} />
                   <Tooltip
-                    contentStyle={{ background: '#0a0e17', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, fontSize: 12 }}
+                    contentStyle={{ background: 'hsl(var(--card))', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, fontSize: 12 }}
                     formatter={(v) => [fmtMinutes(v), 'learning']}
                   />
-                  <Area type="monotone" dataKey="minutes" stroke="#7C6AFF" strokeWidth={2} fill="url(#lg)" />
+                  <Area type="monotone" dataKey="minutes" stroke="hsl(var(--primary))" strokeWidth={2} fill="url(#lg)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -107,7 +107,7 @@ export default function Learning() {
 
         <Panel title="By skill" subtitle="Where your learning time actually goes">
           {(stats?.bySkill || []).length === 0 ? (
-            <div className="text-center py-10 text-xs text-[#6B6B80]">No skill-linked sessions yet.</div>
+            <div className="text-center py-10 text-xs text-muted-foreground">No skill-linked sessions yet.</div>
           ) : (
             <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
               {stats.bySkill.map((s) => {
@@ -115,11 +115,11 @@ export default function Learning() {
                 return (
                   <div key={s.skillId}>
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-[#C8C8D8]">{s.skillName || 'General'}</span>
-                      <span className="text-[#8B8B9F] mono">{fmtMinutes(s.minutes)}</span>
+                      <span className="text-foreground">{s.skillName || 'General'}</span>
+                      <span className="text-muted-foreground mono">{fmtMinutes(s.minutes)}</span>
                     </div>
-                    <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
-                      <div className="h-full rounded-full bg-[#7C6AFF]" style={{ width: `${(s.minutes / max) * 100}%` }} />
+                    <div className="h-1.5 rounded-full bg-muted/60 overflow-hidden">
+                      <div className="h-full rounded-full bg-primary" style={{ width: `${(s.minutes / max) * 100}%` }} />
                     </div>
                   </div>
                 );
@@ -131,24 +131,24 @@ export default function Learning() {
 
       <Panel title={`Sessions — last ${range} days`}>
         {loading ? <Spinner /> : error ? <ErrorState message={error} onRetry={refetch} /> : (sessions || []).length === 0 ? (
-          <div className="text-center py-8 text-xs text-[#6B6B80]">No sessions in this range.</div>
+          <div className="text-center py-8 text-xs text-muted-foreground">No sessions in this range.</div>
         ) : (
           <div className="space-y-2">
             {sessions.map((s) => (
-              <div key={s._id} className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+              <div key={s._id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border">
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm text-[#E8E8F0] truncate">
+                  <div className="text-sm text-foreground truncate">
                     {s.skillId?.name || 'General'}
                     {s.topicId ? ` — ${s.topicId.title}` : ''}
                   </div>
-                  <div className="text-[10px] text-[#6B6B80] mono">
+                  <div className="text-[10px] text-muted-foreground mono">
                     {s.date} · difficulty {s.difficulty} · confidence {s.confidence}/5
                     {s.goalId ? ` · goal: ${s.goalId.title}` : ''}
                     {s.notes ? ` · ${s.notes}` : ''}
                   </div>
                 </div>
-                <Badge color={s.difficulty === 'hard' ? '#FF3366' : s.difficulty === 'easy' ? '#00FF88' : '#FFB800'}>{s.difficulty.toUpperCase()}</Badge>
-                <span className="text-xs mono text-[#7C6AFF] flex-shrink-0">{fmtMinutes(s.durationMinutes)}</span>
+                <Badge color={s.difficulty === 'hard' ? '#EF4444' : s.difficulty === 'easy' ? '#10B981' : '#F59E0B'}>{s.difficulty.toUpperCase()}</Badge>
+                <span className="text-xs mono text-primary flex-shrink-0">{fmtMinutes(s.durationMinutes)}</span>
                 <DeleteButton onConfirm={() => remove(s)} />
               </div>
             ))}
@@ -161,8 +161,8 @@ export default function Learning() {
           <div className="grid sm:grid-cols-2 gap-4">
             <Field label="Skill *">
               <select className={inputCls} value={form.skillId} onChange={(e) => setForm({ ...form, skillId: e.target.value })}>
-                <option value="" className="bg-[#0a0e17]">— pick a skill —</option>
-                {(skills || []).map((s) => <option key={s._id} value={s._id} className="bg-[#0a0e17]">{s.name}</option>)}
+                <option value="" className="bg-card">— pick a skill —</option>
+                {(skills || []).map((s) => <option key={s._id} value={s._id} className="bg-card">{s.name}</option>)}
               </select>
             </Field>
             <Field label="Duration (minutes) *">
@@ -170,8 +170,8 @@ export default function Learning() {
             </Field>
             <Field label="Related goal">
               <select className={inputCls} value={form.goalId} onChange={(e) => setForm({ ...form, goalId: e.target.value })}>
-                <option value="" className="bg-[#0a0e17]">— none —</option>
-                {(goals || []).filter((g) => g.status === 'active').map((g) => <option key={g._id} value={g._id} className="bg-[#0a0e17]">{g.title}</option>)}
+                <option value="" className="bg-card">— none —</option>
+                {(goals || []).filter((g) => g.status === 'active').map((g) => <option key={g._id} value={g._id} className="bg-card">{g.title}</option>)}
               </select>
             </Field>
             <Field label="Resource (course/book/URL)">
@@ -179,7 +179,7 @@ export default function Learning() {
             </Field>
             <Field label="Difficulty">
               <select className={inputCls} value={form.difficulty} onChange={(e) => setForm({ ...form, difficulty: e.target.value })}>
-                {['easy', 'medium', 'hard'].map((d) => <option key={d} value={d} className="bg-[#0a0e17]">{d}</option>)}
+                {['easy', 'medium', 'hard'].map((d) => <option key={d} value={d} className="bg-card">{d}</option>)}
               </select>
             </Field>
             <Field label="Confidence after (1-5)">
@@ -189,7 +189,7 @@ export default function Learning() {
               <textarea className={`${inputCls} resize-none`} rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
             </Field>
           </div>
-          <div className="flex justify-end gap-2 mt-6 pt-4 border-t border-white/10">
+          <div className="flex justify-end gap-2 mt-6 pt-4 border-t border-border">
             <button onClick={() => setEditing(null)} className={btnGhost}>Cancel</button>
             <button onClick={save} disabled={busy} className={btnPrimary}>Save session</button>
           </div>
