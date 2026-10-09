@@ -95,6 +95,7 @@ const IMAGE_EXTENSIONS = {
   'image/webp': '.webp',
   'image/avif': '.avif',
 };
+const RESTORABLE_IMAGE_FILENAME = /^[a-zA-Z0-9][a-zA-Z0-9._-]{0,200}\.(?:jpe?g|png|gif|webp|avif)$/i;
 const imageUpload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: IMAGE_MAX },
@@ -121,6 +122,40 @@ export const uploadImage = [
       size: req.file.size,
     });
     res.status(201).json({ url: `/uploads/${filename}`, fileName: req.file.originalname });
+  }),
+];
+
+// Restore legacy local upload files under their existing URLs. This is used by
+// the one-time migration script; the route is protected by admin auth.
+export const restoreUploadedImage = [
+  (req, res, next) => {
+    if (!req.headers['content-type']?.startsWith('multipart/form-data')) {
+      return res.status(400).json({ message: 'Send multipart/form-data with an "image" file field' });
+    }
+    imageUpload(req, res, (error) => error ? res.status(400).json({ message: error.message }) : next());
+  },
+  asyncHandler(async (req, res) => {
+    if (!req.file) return res.status(400).json({ message: 'No image uploaded' });
+    const filename = typeof req.body.filename === 'string' ? req.body.filename.trim() : '';
+    if (!RESTORABLE_IMAGE_FILENAME.test(filename)) {
+      return res.status(400).json({ message: 'A valid original image filename is required' });
+    }
+    const expectedExtension = IMAGE_EXTENSIONS[req.file.mimetype];
+    const lowerFilename = filename.toLowerCase();
+    const extensionMatches = expectedExtension && (
+      lowerFilename.endsWith(expectedExtension)
+      || (expectedExtension === '.jpg' && lowerFilename.endsWith('.jpeg'))
+    );
+    if (!extensionMatches) {
+      return res.status(400).json({ message: 'Image filename extension does not match its content type' });
+    }
+
+    await UploadedImage.updateOne(
+      { filename },
+      { $set: { contentType: req.file.mimetype, data: req.file.buffer, size: req.file.size }, $setOnInsert: { filename } },
+      { upsert: true, runValidators: true }
+    );
+    res.status(201).json({ url: `/uploads/${filename}`, fileName: req.file.originalname, restored: true });
   }),
 ];
 

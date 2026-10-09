@@ -2,7 +2,10 @@
 // In production VITE_API_URL is the backend origin; local development uses Vite's proxy.
 // The database is the single source of truth: every section renders API data.
 
-const API_ORIGIN = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+const DEFAULT_PRODUCTION_API_ORIGIN = 'https://tosif-portfolio-1.onrender.com';
+const API_ORIGIN = (
+  import.meta.env.VITE_API_URL || (import.meta.env.PROD ? DEFAULT_PRODUCTION_API_ORIGIN : '')
+).replace(/\/+$/, '');
 const BASE = '/api';
 
 export function apiUrl(path) {

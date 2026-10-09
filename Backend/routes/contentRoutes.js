@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { protect, adminOnly } from '../middleware/auth.js';
 import {
-  getProfile, updateProfile, getAbout, updateAbout, getSite, updateSite, getStats, uploadImage,
+  getProfile, updateProfile, getAbout, updateAbout, getSite, updateSite, getStats, uploadImage, restoreUploadedImage,
 } from '../controllers/contentController.js';
 
 // Absolute paths — mounted with app.use(router) so the public API follows
@@ -19,5 +19,6 @@ router.put('/api/profile', protect, adminOnly, updateProfile);
 router.put('/api/about', protect, adminOnly, updateAbout);
 router.put('/api/site', protect, adminOnly, updateSite);
 router.post('/api/upload', protect, adminOnly, ...uploadImage);
+router.post('/api/upload/restore', protect, adminOnly, ...restoreUploadedImage);
 
 export default router;

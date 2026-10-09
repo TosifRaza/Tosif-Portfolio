@@ -92,7 +92,9 @@ For Docker Compose, set `UPLOAD_DIR` automatically to `/data/uploads`; the named
 
 The service listens on the provider's `PORT`, binds to `0.0.0.0`, and exposes `GET /health`. The health check returns HTTP 503 until MongoDB is connected. Production startup fails when a required variable is missing or invalid. Copy `Backend/.env.example` for the variable names; it contains no production credentials.
 
-For the deployed public frontend, set Vercel's `VITE_API_URL` environment variable to the backend origin (for example, `https://api.your-domain.com`, with no `/api` suffix), then redeploy the frontend. The backend CORS list already includes `https://tosif.site` and the stable `https://tosif-portfolio-frontend.vercel.app` domain. If the Admin Portal is deployed at another domain, add that exact HTTPS origin to `CORS_ORIGINS` and set the same `VITE_API_URL` for its build. Templates are in `Frontend/.env.production.example` and `Admin-Portal/.env.production.example`.
+The public frontend and Admin Portal default to `https://tosif-portfolio-1.onrender.com` in production. Set `VITE_API_URL` in the hosting project only when overriding that backend origin; use the origin without an `/api` suffix. The backend CORS list already includes `https://tosif.site` and the stable `https://tosif-portfolio-frontend.vercel.app` domain. If the Admin Portal is deployed at another domain, add that exact HTTPS origin to `CORS_ORIGINS`.
+
+After deploying the current Backend code, restore legacy public images that exist only on the development machine by setting `IMAGE_MIGRATION_ADMIN_EMAIL` and `IMAGE_MIGRATION_ADMIN_PASSWORD` in the local environment, then run `npm run migrate:public-images` from `Backend`. The script reads local files from `Backend/uploads`, finds referenced `/uploads/...` paths in production content, and stores those image bytes in MongoDB under the same filenames. It never prints or stores the admin password; it sends it only to the backend login endpoint over HTTPS.
 
 ---
 

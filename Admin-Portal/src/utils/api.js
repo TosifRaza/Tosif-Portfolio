@@ -1,5 +1,8 @@
 // Admin API client — talks to the same backend as the public Frontend.
-const API_ORIGIN = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+const DEFAULT_PRODUCTION_API_ORIGIN = 'https://tosif-portfolio-1.onrender.com';
+const API_ORIGIN = (
+  import.meta.env.VITE_API_URL || (import.meta.env.PROD ? DEFAULT_PRODUCTION_API_ORIGIN : '')
+).replace(/\/+$/, '');
 const BASE = '/api';
 export const AUTH_EXPIRED_EVENT = 'founder-os-admin-auth-expired';
 
