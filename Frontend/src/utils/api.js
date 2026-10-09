@@ -45,6 +45,48 @@ export const api = {
   getGithub: () => request('/github'),
   getGithubContributions: (signal) => request('/github/contributions', { signal, cache: 'no-store' }),
 
+  // Authenticated text editing from the terminal. These writes use the same
+  // admin-protected CMS routes as the Admin Portal.
+  adminLogin: (email, password) => request('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ email, password }),
+  }),
+  getAdminTextContent: (token) => {
+    const headers = { Authorization: `Bearer ${token}` };
+    return Promise.all([
+      request('/profile', { headers }),
+      request('/about', { headers }),
+      request('/site', { headers }),
+      request('/projects?all=1', { headers }),
+      request('/products/all', { headers }),
+      request('/skills?all=1', { headers }),
+      request('/timeline?all=1', { headers }),
+      request('/experience/all', { headers }),
+      request('/achievements?all=1', { headers }),
+    ]).then(([profile, about, site, projects, products, skills, timeline, experience, achievements]) => ({
+      profile, about, site, projects, products, skills, timeline, experience, achievements,
+    }));
+  },
+  updateAdminTextContent: (resource, id, content, token) => {
+    const singletonPaths = { profile: '/profile', about: '/about', site: '/site' };
+    const collectionPaths = {
+      projects: '/projects',
+      products: '/products',
+      skills: '/skills',
+      timeline: '/timeline',
+      experience: '/experience',
+      achievements: '/achievements',
+    };
+    const path = singletonPaths[resource]
+      || (collectionPaths[resource] && id ? `${collectionPaths[resource]}/${encodeURIComponent(id)}` : null);
+    if (!path) throw new Error('This content item cannot be edited from the terminal.');
+    return request(path, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(content),
+    });
+  },
+
   // AI Recruiter — backend pulls live data from MongoDB
   askRecruiter: (question) =>
     request('/ai-recruiter/ask', {

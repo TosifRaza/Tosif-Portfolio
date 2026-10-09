@@ -18,9 +18,11 @@ export const commands = [
   skills      - List all skills
   projects    - Show project status
   resume      - Download resume
+  colors      - Change or restore site colors
+  edit        - Edit live website text
+  matrix      - Enter the matrix
   hire        - Why you should hire me
   contact     - How to reach me
-  matrix      - Enter the matrix
   coffee      - Brew some coffee
   sudo        - Try it ;)
   clear       - Clear terminal
@@ -111,9 +113,19 @@ export const commands = [
   Or use the Contact Portal →`,
   },
   {
+    name: "edit",
+    description: "Edit live website text",
+    handler: () => "__CONTENT__",
+  },
+  {
+    name: "colors",
+    description: "Change or restore site colors",
+    handler: () => "__COLORS__",
+  },
+  {
     name: "matrix",
     description: "Enter the matrix",
-    handler: () => `ENTERING THE MATRIX...`,
+    handler: () => "__MATRIX__",
   },
   {
     name: "coffee",
