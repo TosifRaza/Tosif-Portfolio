@@ -107,7 +107,7 @@ function formatRecruiterResponse(data) {
 export default function Terminal() {
   const { state, dispatch } = useApp();
   const [history, setHistory] = useState([
-    { type: "output", text: "FOUNDER OS Terminal v3.0\nType 'help' for available commands.\n" },
+    { type: "output", text: "FOUNDER OS Terminal v3.0\nClick Help or type 'help' for available commands.\n" },
   ]);
   const [input, setInput] = useState("");
   const [position, setPosition] = useState(null);
@@ -560,6 +560,14 @@ export default function Terminal() {
 
         <div className="flex items-center gap-2 border-t border-border px-4 py-2">
           <span className="font-mono text-xs text-green-400">&gt;</span>
+          <button
+            type="button"
+            onClick={() => executeCommand("help")}
+            className="rounded border border-green-400/40 px-2 py-1 font-mono text-[11px] text-green-300 transition-colors hover:bg-green-400/10 hover:text-green-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-400"
+            title="Show available terminal commands"
+          >
+            Help
+          </button>
           <input
             ref={inputRef}
             type="text"
