@@ -46,7 +46,7 @@ export default function Login() {
           <h1 className="text-2xl font-extrabold">
             TOSIF <span className="text-gradient">OS</span>
           </h1>
-          <p className="mono text-xs text-muted mt-2 uppercase tracking-widest">Control Center · v6.0</p>
+          <p className="mono text-xs text-muted-foreground mt-2 uppercase tracking-widest">Control Center · v6.0</p>
         </div>
 
         <div className="glass-strong p-8">
@@ -57,11 +57,11 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mono text-[10px] uppercase tracking-widest text-muted mb-1.5 block">
+              <label className="mono text-[10px] uppercase tracking-widest text-muted-foreground mb-1.5 block">
                 Email
               </label>
               <div className="relative">
-                <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" size={12} />
+                <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={12} />
                 <input
                   type="email"
                   value={email}
@@ -74,11 +74,11 @@ export default function Login() {
             </div>
 
             <div>
-              <label className="mono text-[10px] uppercase tracking-widest text-muted mb-1.5 block">
+              <label className="mono text-[10px] uppercase tracking-widest text-muted-foreground mb-1.5 block">
                 Password
               </label>
               <div className="relative">
-                <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" size={12} />
+                <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={12} />
                 <input
                   type="password"
                   value={password}
@@ -106,7 +106,7 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-border mono text-[10px] text-muted text-center">
+          <div className="mt-6 pt-6 border-t border-border mono text-[10px] text-muted-foreground text-center">
             <div className="mb-1">Credentials are configured in Backend/.env</div>
             <div className="text-foreground/80">(ADMIN_EMAIL · ADMIN_PASSWORD)</div>
           </div>

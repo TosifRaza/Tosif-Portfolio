@@ -36,7 +36,7 @@ export default function AboutManager() {
     }
   };
 
-  if (loading) return <div className="mono text-sm text-muted">Loading…</div>;
+  if (loading) return <div className="mono text-sm text-muted-foreground">Loading…</div>;
   if (!doc) return <div className="mono text-sm text-neon-red">Failed to load about content.</div>;
 
   const input = 'input';
@@ -61,7 +61,7 @@ export default function AboutManager() {
             value={(doc.paragraphs || []).join('\n\n')}
             onChange={(e) => setDoc({ ...doc, paragraphs: e.target.value.split(/\n\s*\n/).filter((p) => p.trim()) })}
           />
-          <p className="text-[11px] text-muted mt-1.5">Separate paragraphs with a blank line.</p>
+          <p className="text-[11px] text-muted-foreground mt-1.5">Separate paragraphs with a blank line.</p>
         </div>
 
         {[

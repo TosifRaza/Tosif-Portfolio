@@ -25,6 +25,7 @@ import Experience from './models/Experience.js';
 import Product from './models/Product.js';
 import PlanSetting from './models/PlanSetting.js';
 import { seedContent } from './utils/seedData.js';
+import { syncGitHubRepoSuggestions } from './services/githubRepoImportService.js';
 
 // ── Routes ──────────────────────────────────────────────────
 import authRoutes from './routes/authRoutes.js';
@@ -234,10 +235,17 @@ async function ensureSiteConfigDefaults() {
 
 // ── Start ────────────────────────────────────────────────────
 let server;
+let githubRepoSyncTimer;
 
 async function start() {
   await connectDB();
   await ensureBootstrapData();
+  const runGitHubRepoSync = () => syncGitHubRepoSuggestions().catch((error) => {
+    console.warn('[github-imports] Automatic check failed:', error.message);
+  });
+  void runGitHubRepoSync();
+  githubRepoSyncTimer = setInterval(runGitHubRepoSync, 10 * 60 * 1000);
+  githubRepoSyncTimer.unref?.();
   server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`[server] TOSIF OS backend listening on port ${PORT}; uploads: ${uploadDir}`);
   });
@@ -251,6 +259,7 @@ start().catch(async (err) => {
 
 const shutdown = async (signal) => {
   console.log(`[server] ${signal} received, shutting down`);
+  if (githubRepoSyncTimer) clearInterval(githubRepoSyncTimer);
   const finish = async () => {
     await closeDB();
     process.exit(0);

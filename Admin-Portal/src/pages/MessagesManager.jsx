@@ -66,9 +66,9 @@ export default function MessagesManager() {
         {/* List */}
         <div className="space-y-3">
           {loading ? (
-            <div className="glass p-6 text-center mono text-sm text-muted">Loading…</div>
+            <div className="glass p-6 text-center mono text-sm text-muted-foreground">Loading…</div>
           ) : items.length === 0 ? (
-            <div className="glass p-6 text-center mono text-sm text-muted">No messages yet.</div>
+            <div className="glass p-6 text-center mono text-sm text-muted-foreground">No messages yet.</div>
           ) : (
             items.map((m, i) => (
               <motion.button
@@ -89,15 +89,15 @@ export default function MessagesManager() {
                     {!m.read ? (
                       <FaCircle className="text-neon-green" size={6} />
                     ) : (
-                      <FaEnvelopeOpen className="text-muted" size={10} />
+                      <FaEnvelopeOpen className="text-muted-foreground" size={10} />
                     )}
                     <span className="font-semibold text-sm">{m.name}</span>
                   </div>
-                  <span className="mono text-[10px] text-muted">
+                  <span className="mono text-[10px] text-muted-foreground">
                     {new Date(m.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-                <div className="mono text-xs text-muted mb-1">{m.email}</div>
+                <div className="mono text-xs text-muted-foreground mb-1">{m.email}</div>
                 {m.subject && <div className="text-xs text-foreground/80">{m.subject}</div>}
                 <p className="text-xs text-foreground/60 mt-1 line-clamp-2">{m.message}</p>
               </motion.button>
@@ -120,11 +120,11 @@ export default function MessagesManager() {
               </div>
               <dl className="space-y-3 text-sm">
                 <div>
-                  <dt className="mono text-[10px] uppercase tracking-widest text-muted">From</dt>
+                  <dt className="mono text-[10px] uppercase tracking-widest text-muted-foreground">From</dt>
                   <dd className="font-semibold">{selected.name}</dd>
                 </div>
                 <div>
-                  <dt className="mono text-[10px] uppercase tracking-widest text-muted">Email</dt>
+                  <dt className="mono text-[10px] uppercase tracking-widest text-muted-foreground">Email</dt>
                   <dd>
                     <a href={`mailto:${selected.email}`} className="text-neon-cyan hover:underline">
                       {selected.email}
@@ -133,16 +133,16 @@ export default function MessagesManager() {
                 </div>
                 {selected.subject && (
                   <div>
-                    <dt className="mono text-[10px] uppercase tracking-widest text-muted">Subject</dt>
+                    <dt className="mono text-[10px] uppercase tracking-widest text-muted-foreground">Subject</dt>
                     <dd>{selected.subject}</dd>
                   </div>
                 )}
                 <div>
-                  <dt className="mono text-[10px] uppercase tracking-widest text-muted">Received</dt>
+                  <dt className="mono text-[10px] uppercase tracking-widest text-muted-foreground">Received</dt>
                   <dd>{new Date(selected.createdAt).toLocaleString()}</dd>
                 </div>
                 <div>
-                  <dt className="mono text-[10px] uppercase tracking-widest text-muted">Message</dt>
+                  <dt className="mono text-[10px] uppercase tracking-widest text-muted-foreground">Message</dt>
                   <dd className="whitespace-pre-wrap bg-white/[0.02] rounded-lg p-4 mt-1">
                     {selected.message}
                   </dd>
@@ -150,7 +150,7 @@ export default function MessagesManager() {
               </dl>
             </>
           ) : (
-            <div className="text-center py-10 text-muted mono text-sm">
+            <div className="text-center py-10 text-muted-foreground mono text-sm">
               <FaEnvelope className="mx-auto mb-3 text-neon-cyan/40" size={28} />
               Select a message to view details
             </div>

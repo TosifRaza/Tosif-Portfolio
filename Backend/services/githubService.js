@@ -114,6 +114,36 @@ export async function fetchGitHubProfile(username, token) {
   };
 }
 
+/** Fetch public, owner-created repositories for the approval inbox. */
+export async function fetchGitHubRepositories(username, token) {
+  const headers = {
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+  };
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  const repositories = [];
+  for (let page = 1; page <= 10; page += 1) {
+    const url = new URL(`https://api.github.com/users/${encodeURIComponent(username)}/repos`);
+    url.search = new URLSearchParams({ type: 'owner', sort: 'created', direction: 'desc', per_page: '100', page: String(page) });
+    const response = await fetch(url, { headers });
+    const data = await response.json().catch(() => []);
+    if (response.status === 401 && token) {
+      // Repository discovery only publishes public repos, so an expired
+      // optional token can safely fall back to GitHub's anonymous API.
+      return fetchGitHubRepositories(username, '');
+    }
+    if (!response.ok) {
+      const reason = data?.message || `GitHub request failed (${response.status})`;
+      throw new Error(reason);
+    }
+    if (!Array.isArray(data)) throw new Error('GitHub returned an unexpected repository response.');
+    repositories.push(...data);
+    if (data.length < 100) break;
+  }
+  return repositories;
+}
+
 function aggregateLanguages(repos) {
   const counter = {};
   for (const r of repos) {

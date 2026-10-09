@@ -25,7 +25,7 @@ const COLUMNS = [
         <div className="w-20 h-1.5 rounded-full bg-muted/50 overflow-hidden">
           <div className="h-full bg-gradient-to-r from-neon-cyan to-neon-purple" style={{ width: `${i.level}%` }} />
         </div>
-        <span className="mono text-xs text-muted">{i.level}%</span>
+        <span className="mono text-xs text-muted-foreground">{i.level}%</span>
       </div>
     ),
   },

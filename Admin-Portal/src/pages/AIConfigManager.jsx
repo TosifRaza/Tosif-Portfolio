@@ -35,7 +35,7 @@ export default function AIConfigManager() {
     }
   };
 
-  if (loading) return <div className="mono text-sm text-muted">Loading…</div>;
+  if (loading) return <div className="mono text-sm text-muted-foreground">Loading…</div>;
   if (!doc) return <div className="mono text-sm text-neon-red">Failed to load.</div>;
 
   const set = (key, value) => setDoc({ ...doc, ai: { ...doc.ai, [key]: value } });
@@ -44,7 +44,7 @@ export default function AIConfigManager() {
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-extrabold">AI Configuration</h1>
-        <p className="text-sm text-muted mt-1 max-w-2xl">
+        <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
           The assistants are honest by design: public AI answers from your CMS content; private AI computes answers
           from your OS data. No fake AI claims are ever made.
         </p>
@@ -61,15 +61,15 @@ export default function AIConfigManager() {
         </label>
 
         <div>
-          <label className="mono text-[10px] uppercase tracking-widest text-muted mb-1.5 block">Public intro prompt</label>
+          <label className="mono text-[10px] uppercase tracking-widest text-muted-foreground mb-1.5 block">Public intro prompt</label>
           <textarea rows={2} className="input resize-none" value={doc.ai?.publicIntro || ''} onChange={(e) => set('publicIntro', e.target.value)} />
         </div>
         <div>
-          <label className="mono text-[10px] uppercase tracking-widest text-muted mb-1.5 block">Private intro prompt</label>
+          <label className="mono text-[10px] uppercase tracking-widest text-muted-foreground mb-1.5 block">Private intro prompt</label>
           <textarea rows={2} className="input resize-none" value={doc.ai?.privateIntro || ''} onChange={(e) => set('privateIntro', e.target.value)} />
         </div>
 
-        <div className="p-4 rounded-lg bg-white/[0.02] border border-border mono text-[11px] text-muted leading-relaxed">
+        <div className="p-4 rounded-lg bg-white/[0.02] border border-border mono text-[11px] text-muted-foreground leading-relaxed">
           Optional LLM enhancement (server-side): set <span className="text-neon-cyan">AI_BASE_URL</span>,{' '}
           <span className="text-neon-cyan">AI_API_KEY</span> and <span className="text-neon-cyan">AI_MODEL</span> in{' '}
           <span className="text-neon-cyan">Backend/.env</span> to any OpenAI-compatible endpoint. The computed data

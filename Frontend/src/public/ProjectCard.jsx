@@ -1,31 +1,119 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Github } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink, Github } from 'lucide-react';
+import { apiUrl } from '@/utils/api';
 
-/** Thumbnail — uses the project's own image when the admin uploaded one;
-    otherwise a clean branded placeholder (never a fake screenshot). */
-export function ProjectThumb({ project, className = 'h-40' }) {
+function projectImages(project) {
+  return [...new Set([project.image, ...(Array.isArray(project.images) ? project.images : [])]
+    .filter((image) => typeof image === 'string' && image.trim()))];
+}
+
+function ProjectImageCarousel({ project, className, controls = false, thumbnails = false, fit = 'cover', thumbnailMode = false }) {
+  const images = projectImages(project);
+  const [current, setCurrent] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const interval = Math.min(30, Math.max(2, Number(project.galleryInterval) || 5));
+  const imageKey = images.join('|');
+
+  useEffect(() => setCurrent(0), [imageKey]);
+  useEffect(() => {
+    if (!project.galleryAutoplay || paused || images.length < 2) return undefined;
+    const timer = window.setInterval(() => {
+      setCurrent((index) => (index + 1) % images.length);
+    }, interval * 1000);
+    return () => window.clearInterval(timer);
+  }, [project.galleryAutoplay, paused, images.length, interval]);
+
   const initial = (project.title || 'P').trim().charAt(0).toUpperCase();
-  if (project.image) {
+  const useThumbnailCrop = thumbnailMode && current === 0 && project.thumbnailCropEdited;
+  const thumbnailZoom = Math.min(3, Math.max(1, Number(project.thumbnailZoom) || 1));
+  const thumbnailX = Number.isFinite(Number(project.thumbnailPositionX)) ? Number(project.thumbnailPositionX) : 50;
+  const thumbnailY = Number.isFinite(Number(project.thumbnailPositionY)) ? Number(project.thumbnailPositionY) : 50;
+  if (!images.length) {
     return (
-      <div className={`${className} w-full overflow-hidden bg-muted`}>
-        <img
-          src={project.image.startsWith('/') ? project.image : `/${project.image}`}
-          alt={`${project.title} preview`}
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
+      <div className={`${className} relative w-full overflow-hidden bg-gradient-to-br from-primary/15 via-card to-card flex items-center justify-center`}>
+        <div className="absolute inset-0 grid-backdrop opacity-40" aria-hidden="true" />
+        <span className="relative font-mono text-3xl font-bold text-primary/70">{initial}</span>
+        <span className="absolute bottom-2 right-3 font-mono text-[9px] uppercase tracking-widest text-muted-foreground/60">
+          {(project.category || 'project').replace('-', ' ')}
+        </span>
       </div>
     );
   }
+
+  const selectImage = (index) => setCurrent((index + images.length) % images.length);
+
   return (
-    <div className={`${className} w-full relative overflow-hidden bg-gradient-to-br from-primary/15 via-card to-card flex items-center justify-center`}>
-      <div className="absolute inset-0 grid-backdrop opacity-40" aria-hidden="true" />
-      <span className="relative font-mono text-3xl font-bold text-primary/70">{initial}</span>
-      <span className="absolute bottom-2 right-3 font-mono text-[9px] uppercase tracking-widest text-muted-foreground/60">
-        {(project.category || 'project').replace('-', ' ')}
-      </span>
+    <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+      <div className={`${className} relative flex w-full items-center justify-center overflow-hidden ${fit === 'contain' ? 'bg-[#070b13]' : 'bg-muted'}`}>
+        <img
+          key={images[current]}
+          src={apiUrl(images[current])}
+          alt={`${project.title} preview ${current + 1}`}
+          className={`h-full w-full ${useThumbnailCrop || fit !== 'contain' ? 'object-cover' : 'object-contain'}`}
+          style={useThumbnailCrop ? {
+            objectPosition: `${thumbnailX}% ${thumbnailY}%`,
+            transform: `scale(${thumbnailZoom})`,
+            transformOrigin: 'center center',
+          } : undefined}
+          loading="lazy"
+        />
+        {images.length > 1 && (
+          <>
+            {controls && (
+              <>
+                <button
+                  type="button"
+                  onClick={(event) => { event.stopPropagation(); selectImage(current - 1); }}
+                  className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/20 bg-black/60 p-2 text-white hover:bg-black/80"
+                  aria-label="Previous project image"
+                >
+                  <ChevronLeft size={17} />
+                </button>
+                <button
+                  type="button"
+                  onClick={(event) => { event.stopPropagation(); selectImage(current + 1); }}
+                  className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/20 bg-black/60 p-2 text-white hover:bg-black/80"
+                  aria-label="Next project image"
+                >
+                  <ChevronRight size={17} />
+                </button>
+              </>
+            )}
+            {!thumbnails && (
+              <div className="absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 gap-1.5 rounded-full bg-black/50 px-2 py-1" aria-label={`Image ${current + 1} of ${images.length}`}>
+                {images.map((_, index) => (
+                  <span key={index} className={`h-1.5 w-1.5 rounded-full ${index === current ? 'bg-white' : 'bg-white/45'}`} />
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {thumbnails && images.length > 1 && (
+        <div className="flex gap-2 overflow-x-auto border-t border-border bg-card p-3">
+          {images.map((image, index) => (
+            <button
+              type="button"
+              key={`${image}-${index}`}
+              onClick={() => selectImage(index)}
+              className={`h-14 w-20 shrink-0 overflow-hidden rounded-md border-2 ${index === current ? 'border-primary' : 'border-transparent opacity-65 hover:opacity-100'}`}
+              aria-label={`Show project image ${index + 1}`}
+              aria-current={index === current ? 'true' : undefined}
+            >
+              <img src={apiUrl(image)} alt="" className="h-full w-full object-cover" loading="lazy" />
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
+}
+
+/** Thumbnail with a branded placeholder when the project has no uploaded media. */
+export function ProjectThumb({ project, className = 'aspect-video' }) {
+  return <ProjectImageCarousel project={project} className={className} fit="contain" thumbnailMode />;
 }
 
 export function TechChip({ children }) {
@@ -45,7 +133,7 @@ export default function ProjectCard({ project, index = 0, onOpen }) {
       transition={{ delay: Math.min(index * 0.06, 0.3), duration: 0.35 }}
       className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/40 hover:shadow-[0_8px_40px_hsl(var(--primary)/0.12)] transition-all flex flex-col"
     >
-      <button onClick={() => onOpen?.(project)} className="text-left" aria-label={`Open ${project.title}`}>
+      <button onClick={() => onOpen?.(project)} className="block w-full text-left" aria-label={`Open ${project.title}`}>
         <ProjectThumb project={project} />
       </button>
       <div className="p-5 flex flex-col flex-1">
@@ -92,7 +180,7 @@ export default function ProjectCard({ project, index = 0, onOpen }) {
             onClick={() => onOpen?.(project)}
             className="ml-auto text-xs text-primary hover:underline"
           >
-            Details →
+            Details â†’
           </button>
         </div>
       </div>
@@ -100,7 +188,7 @@ export default function ProjectCard({ project, index = 0, onOpen }) {
   );
 }
 
-/** Full-detail modal (problem / solution / role / stack). */
+/** Full-detail modal with manual controls and clickable gallery previews. */
 export function ProjectModal({ project, onClose }) {
   if (!project) return null;
   return (
@@ -119,7 +207,13 @@ export function ProjectModal({ project, onClose }) {
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl border border-border bg-card shadow-2xl"
       >
-        <ProjectThumb project={project} className="h-48" />
+        <ProjectImageCarousel
+          project={project}
+          className="h-[clamp(15rem,42vh,30rem)]"
+          controls
+          thumbnails
+          fit="contain"
+        />
         <div className="p-6 sm:p-8">
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -131,7 +225,7 @@ export function ProjectModal({ project, onClose }) {
               className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
               aria-label="Close"
             >
-              ✕
+              âœ•
             </button>
           </div>
 

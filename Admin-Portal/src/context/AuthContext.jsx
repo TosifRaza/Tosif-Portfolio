@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { api } from '../utils/api.js';
+import { api, AUTH_EXPIRED_EVENT } from '../utils/api.js';
 
 const AuthContext = createContext(null);
 
@@ -38,6 +38,17 @@ export function AuthProvider({ children }) {
       }
     })();
   }, [token]);
+
+  useEffect(() => {
+    const expireSession = () => {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(USER_KEY);
+      setToken(null);
+      setUser(null);
+    };
+    window.addEventListener(AUTH_EXPIRED_EVENT, expireSession);
+    return () => window.removeEventListener(AUTH_EXPIRED_EVENT, expireSession);
+  }, []);
 
   const login = async (email, password) => {
     const res = await api.login(email, password);

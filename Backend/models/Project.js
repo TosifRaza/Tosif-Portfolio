@@ -12,6 +12,12 @@ const projectSchema = new mongoose.Schema(
     caseStudy: { type: String, default: '' },
     image: { type: String, default: '' },
     images: [{ type: String }],
+    thumbnailCropEdited: { type: Boolean, default: false },
+    thumbnailZoom: { type: Number, min: 1, max: 3, default: 1 },
+    thumbnailPositionX: { type: Number, min: 0, max: 100, default: 50 },
+    thumbnailPositionY: { type: Number, min: 0, max: 100, default: 50 },
+    galleryAutoplay: { type: Boolean, default: false },
+    galleryInterval: { type: Number, min: 2, max: 30, default: 5 },
     stack: [{ type: String }],
     relatedSkills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Skill' }],
     category: {

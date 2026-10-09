@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlus, FaEdit, FaTrash, FaTimes, FaSave, FaSearch } from 'react-icons/fa';
-import { apiUrl } from '../utils/api.js';
+import { api } from '../utils/api.js';
+import ProjectMediaEditor from './ProjectMediaEditor.jsx';
 
 /**
  * Generic resource manager — handles list, create, edit, delete for any
@@ -17,8 +18,8 @@ import { apiUrl } from '../utils/api.js';
  *      { key, label, render?: (item) => ReactNode, mono?: bool }
  *  - searchKeys: array of keys to match against the search box
  */
-export default function ResourceManager({ title, resource, token, fields, columns, searchKeys = [], transformOut, transformIn }) {
-  const crud = crudFor(resource, token);
+export default function ResourceManager({ title, resource, token, fields, columns, searchKeys = [], transformOut, transformIn, initialValues = {} }) {
+  const crud = api.crud(resource, token);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -47,7 +48,7 @@ export default function ResourceManager({ title, resource, token, fields, column
     const blank = fields.reduce((acc, f) => {
       acc[f.name] = f.type === 'tags' ? [] : f.default ?? '';
       return acc;
-    }, {});
+    }, { ...initialValues });
     setEditing(blank);
   }
 
@@ -126,7 +127,7 @@ export default function ResourceManager({ title, resource, token, fields, column
 
       {/* Search */}
       <div className="relative mb-4 max-w-xs">
-        <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" size={11} />
+        <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={11} />
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -138,9 +139,9 @@ export default function ResourceManager({ title, resource, token, fields, column
       {/* Table */}
       <div className="glass rounded-2xl overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center mono text-sm text-muted">Loading…</div>
+          <div className="p-8 text-center mono text-sm text-muted-foreground">Loading…</div>
         ) : filtered.length === 0 ? (
-          <div className="p-8 text-center mono text-sm text-muted">No records yet.</div>
+          <div className="p-8 text-center mono text-sm text-muted-foreground">No records yet.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -149,12 +150,12 @@ export default function ResourceManager({ title, resource, token, fields, column
                   {columns.map((c) => (
                     <th
                       key={c.key}
-                      className="text-left mono text-[10px] uppercase tracking-widest text-muted px-4 py-3 font-medium"
+                      className="text-left mono text-[10px] uppercase tracking-widest text-muted-foreground px-4 py-3 font-medium"
                     >
                       {c.label}
                     </th>
                   ))}
-                  <th className="text-right mono text-[10px] uppercase tracking-widest text-muted px-4 py-3 font-medium">
+                  <th className="text-right mono text-[10px] uppercase tracking-widest text-muted-foreground px-4 py-3 font-medium">
                     Actions
                   </th>
                 </tr>
@@ -228,10 +229,16 @@ export default function ResourceManager({ title, resource, token, fields, column
               <div className="grid sm:grid-cols-2 gap-4">
                 {fields.map((f) => (
                   <div key={f.name} className={f.full ? 'sm:col-span-2' : ''}>
-                    <label className="mono text-[10px] uppercase tracking-widest text-muted mb-1.5 block">
+                    <label className="text-[11px] font-semibold uppercase tracking-wider text-foreground/75 mb-1.5 block">
                       {f.label}
                     </label>
-                    {f.type === 'textarea' ? (
+                    {f.type === 'projectMedia' ? (
+                      <ProjectMediaEditor
+                        value={editing}
+                        token={token}
+                        onChange={(patch) => setEditing((current) => ({ ...current, ...patch }))}
+                      />
+                    ) : f.type === 'textarea' ? (
                       <textarea
                         value={editing[f.name] || ''}
                         onChange={(e) => setEditing({ ...editing, [f.name]: e.target.value })}
@@ -318,30 +325,4 @@ export default function ResourceManager({ title, resource, token, fields, column
       </AnimatePresence>
     </div>
   );
-}
-
-// Helper: instantiate a crud helper bound to the resource + token
-function crudFor(resource, token) {
-  // Reuse the api.crud factory from utils/api.js
-  // We require api here lazily to avoid circular imports.
-  // (Re-implementing inline keeps this component self-contained.)
-  const BASE = '/api';
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
-  };
-  const req = async (path, opts = {}) => {
-    const res = await fetch(apiUrl(`${BASE}${path}`), { ...opts, headers: { ...headers, ...(opts.headers || {}) } });
-    if (!res.ok) {
-      const msg = await res.json().catch(() => ({ message: res.statusText }));
-      throw new Error(msg.message || `Request failed: ${res.status}`);
-    }
-    return res.json();
-  };
-  return {
-    list: () => req(`/${resource}`),
-    create: (data) => req(`/${resource}`, { method: 'POST', body: JSON.stringify(data) }),
-    update: (id, data) => req(`/${resource}/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-    remove: (id) => req(`/${resource}/${id}`, { method: 'DELETE' }),
-  };
 }

@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { NavLink, useNavigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { api } from '../utils/api.js';
 import {
   FaTachometerAlt, FaRocket, FaTerminal, FaStream, FaTrophy, FaFilePdf, FaEnvelope,
   FaSignOutAlt, FaUser, FaPalette, FaInfoCircle, FaBriefcase, FaCubes, FaBullseye,
@@ -52,8 +54,28 @@ const NAV_GROUPS = [
 ];
 
 export default function Layout() {
-  const { user, logout } = useAuth();
+  const { user, token, logout } = useAuth();
   const navigate = useNavigate();
+  const [pendingGitHubRepos, setPendingGitHubRepos] = useState(0);
+
+  useEffect(() => {
+    if (!token) return undefined;
+    let active = true;
+    const refreshCount = async () => {
+      try {
+        const result = await api.githubImports(token).count();
+        if (active) setPendingGitHubRepos(result.count || 0);
+      } catch { /* the auth provider handles expired sessions */ }
+    };
+    void refreshCount();
+    const timer = window.setInterval(refreshCount, 60 * 1000);
+    window.addEventListener('github-imports-updated', refreshCount);
+    return () => {
+      active = false;
+      window.clearInterval(timer);
+      window.removeEventListener('github-imports-updated', refreshCount);
+    };
+  }, [token]);
 
   const handleLogout = () => {
     logout();
@@ -74,14 +96,14 @@ export default function Layout() {
             <div className="font-bold text-sm leading-none">
               TOSIF OS <span className="text-neon-purple">CONTROL</span>
             </div>
-            <div className="mono text-[10px] text-muted mt-1">Admin Control Center</div>
+            <div className="mono text-[10px] text-muted-foreground mt-1">Admin Control Center</div>
           </div>
         </div>
 
         <nav className="flex flex-col gap-1 flex-1">
           {NAV_GROUPS.map((group) => (
             <div key={group.label} className="mb-2">
-              <div className="mono text-[9px] uppercase tracking-widest text-muted px-3 py-1.5">{group.label}</div>
+              <div className="mono text-[9px] uppercase tracking-widest text-muted-foreground px-3 py-1.5">{group.label}</div>
               {group.items.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -99,6 +121,11 @@ export default function Layout() {
                   >
                     <Icon size={13} />
                     {item.label}
+                    {item.to === '/projects' && pendingGitHubRepos > 0 && (
+                      <span className="ml-auto min-w-5 rounded-full bg-neon-cyan/15 px-1.5 py-0.5 text-center text-[10px] font-semibold text-neon-cyan">
+                        {pendingGitHubRepos > 99 ? '99+' : pendingGitHubRepos}
+                      </span>
+                    )}
                   </NavLink>
                 );
               })}
@@ -109,7 +136,7 @@ export default function Layout() {
         <div className="mt-auto pt-4 border-t border-border">
           <div className="text-xs text-foreground/70 mb-3 px-2">
             <div className="font-semibold">{user?.name}</div>
-            <div className="mono text-[10px] text-muted">{user?.email}</div>
+            <div className="mono text-[10px] text-muted-foreground">{user?.email}</div>
           </div>
           <button
             onClick={handleLogout}

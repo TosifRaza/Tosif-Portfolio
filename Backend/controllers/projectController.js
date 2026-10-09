@@ -7,7 +7,8 @@ const CATEGORIES = ['professional', 'personal', 'learning', 'open-source'];
 const PUBLISH = ['draft', 'published', 'archived'];
 const ALLOWED = [
   'missionId', 'title', 'tagline', 'description', 'problem', 'solution', 'role',
-  'caseStudy', 'image', 'images', 'stack', 'relatedSkills', 'category', 'status',
+  'caseStudy', 'image', 'images', 'thumbnailCropEdited', 'thumbnailZoom', 'thumbnailPositionX', 'thumbnailPositionY',
+  'galleryAutoplay', 'galleryInterval', 'stack', 'relatedSkills', 'category', 'status',
   'difficulty', 'githubUrl', 'liveUrl', 'featured', 'publishStatus', 'order',
 ];
 

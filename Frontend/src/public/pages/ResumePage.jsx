@@ -4,6 +4,7 @@ import { useApi } from '@/hooks/useApi';
 import { api, apiUrl } from '@/utils/api';
 import SectionHeader, { EmptyState, LoadingBlock } from '../SectionHeader';
 import { usePublicSite } from '../siteContext';
+import { useEffect, useState } from 'react';
 
 function ResumePreview({ resume, profile, experience, skills }) {
   const name = profile?.name || 'Tosif Raza';
@@ -60,9 +61,30 @@ export default function ResumePage() {
   const { data: resume, loading } = useApi(() => api.getResume());
   const { data: experience } = useApi(() => api.getExperience());
   const { data: skills } = useApi(() => api.getSkills());
+  const [fileStatus, setFileStatus] = useState('checking');
 
   const fileUrl = resume?.fileUrl ? apiUrl(resume.fileUrl) : ''; // /uploads/... (proxied in dev)
   const downloadUrl = fileUrl ? apiUrl('/api/resume/download') : '';
+  const isPdf = (resume?.fileName || resume?.fileUrl || '').toLowerCase().endsWith('.pdf');
+
+  useEffect(() => {
+    if (!fileUrl) {
+      setFileStatus('missing');
+      return undefined;
+    }
+
+    let cancelled = false;
+    setFileStatus('checking');
+    fetch(fileUrl, { method: 'HEAD', cache: 'no-store' })
+      .then((response) => {
+        if (!cancelled) setFileStatus(response.ok ? 'available' : 'missing');
+      })
+      .catch(() => {
+        if (!cancelled) setFileStatus('missing');
+      });
+
+    return () => { cancelled = true; };
+  }, [fileUrl]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14 w-full">
@@ -76,7 +98,7 @@ export default function ResumePage() {
           'A snapshot of my professional journey — experience, skills and achievements.'
         }
         actions={
-          fileUrl ? (
+          fileStatus === 'available' ? (
             <div className="flex flex-wrap items-center gap-2.5">
               <a
                 href={downloadUrl || fileUrl}
@@ -84,14 +106,16 @@ export default function ResumePage() {
               >
                 <Download size={13} /> Download Resume
               </a>
-              <a
-                href={fileUrl}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-xs font-medium text-foreground/80 hover:border-primary/40 hover:text-primary transition-colors"
-              >
-                View Online <ExternalLink size={12} />
-              </a>
+              {isPdf && (
+                <a
+                  href={fileUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-xs font-medium text-foreground/80 hover:border-primary/40 hover:text-primary transition-colors"
+                >
+                  View Online <ExternalLink size={12} />
+                </a>
+              )}
             </div>
           ) : null
         }
@@ -113,7 +137,7 @@ export default function ResumePage() {
         </div>
 
         {/* Uploaded PDF preview when available */}
-        {resume?.fileUrl && (
+        {resume?.fileUrl && fileStatus === 'available' && isPdf && (
           <div>
             <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-3">
               Uploaded resume — {resume.fileName} {resume.version ? `(${resume.version})` : ''}
@@ -124,6 +148,36 @@ export default function ResumePage() {
                 title="Resume PDF"
                 className="w-full h-[560px] bg-white"
               />
+            </div>
+          </div>
+        )}
+
+        {resume?.fileUrl && fileStatus === 'checking' && (
+          <div className="rounded-xl border border-border bg-card min-h-[420px] flex items-center justify-center p-8">
+            <p className="text-sm text-muted-foreground">Checking uploaded resume…</p>
+          </div>
+        )}
+
+        {resume?.fileUrl && fileStatus === 'missing' && (
+          <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 min-h-[420px] flex items-center justify-center p-8">
+            <div className="max-w-sm text-center">
+              <FileText size={28} className="mx-auto text-amber-400" />
+              <h2 className="mt-4 text-lg font-semibold text-foreground">Resume file unavailable</h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                The uploaded file is missing from server storage, so it can’t be previewed or downloaded. Re-upload the PDF from Admin Portal → Resume. Your live resume snapshot is still shown here.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {resume?.fileUrl && fileStatus === 'available' && !isPdf && (
+          <div className="rounded-xl border border-border bg-card min-h-[420px] flex items-center justify-center p-8">
+            <div className="max-w-sm text-center">
+              <FileText size={28} className="mx-auto text-primary" />
+              <h2 className="mt-4 text-lg font-semibold text-foreground">Resume is ready to download</h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                This {resume.fileName?.split('.').pop()?.toUpperCase() || 'document'} file type can’t be previewed in the browser.
+              </p>
             </div>
           </div>
         )}

@@ -73,15 +73,15 @@ export default function ResumeManager() {
         <div className="font-semibold mb-1">
           {uploading ? 'Uploading…' : 'Drop a new resume here or click to browse'}
         </div>
-        <div className="mono text-xs text-muted">PDF or DOC · Max 10MB</div>
+        <div className="mono text-xs text-muted-foreground">PDF or DOC · Max 10MB</div>
       </label>
 
       {/* Versions list */}
       <div className="space-y-3">
         {loading ? (
-          <div className="glass p-6 text-center mono text-sm text-muted">Loading…</div>
+          <div className="glass p-6 text-center mono text-sm text-muted-foreground">Loading…</div>
         ) : items.length === 0 ? (
-          <div className="glass p-6 text-center mono text-sm text-muted">No resume uploaded yet.</div>
+          <div className="glass p-6 text-center mono text-sm text-muted-foreground">No resume uploaded yet.</div>
         ) : (
           items.map((r, i) => (
             <motion.div
@@ -101,7 +101,7 @@ export default function ResumeManager() {
                     </span>
                   )}
                 </div>
-                <div className="mono text-xs text-muted">
+                <div className="mono text-xs text-muted-foreground">
                   {r.version} · Uploaded {new Date(r.createdAt).toLocaleString()}
                 </div>
               </div>

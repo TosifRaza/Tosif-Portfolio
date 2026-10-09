@@ -36,7 +36,7 @@ export default function AnalyticsAdmin() {
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-extrabold">Analytics</h1>
-        <p className="text-sm text-muted mt-1">Everything computed from real recorded data.</p>
+        <p className="text-sm text-muted-foreground mt-1">Everything computed from real recorded data.</p>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
@@ -89,7 +89,7 @@ export default function AnalyticsAdmin() {
                 <div key={r.category}>
                   <div className="flex justify-between text-xs mb-1">
                     <span className="capitalize">{r.category}</span>
-                    <span className="mono text-muted">
+                    <span className="mono text-muted-foreground">
                       {r.actualMinutes}m / {r.targetMinutes}m {r.execution !== null && <span className={r.execution >= 80 ? 'text-neon-green' : r.execution >= 40 ? 'text-neon-orange' : 'text-neon-red'}>{r.execution}%</span>}
                     </span>
                   </div>
@@ -111,7 +111,7 @@ export default function AnalyticsAdmin() {
                   {t.status === 'estimated' && t.estimate ? (
                     <span className="mono text-xs text-neon-purple">ETA ~{t.estimate.completionAround} ({t.currentProgress}%)</span>
                   ) : (
-                    <span className="mono text-xs text-muted">{t.status === 'complete' ? 'complete' : 'not enough data'}</span>
+                    <span className="mono text-xs text-muted-foreground">{t.status === 'complete' ? 'complete' : 'not enough data'}</span>
                   )}
                 </div>
               ))}
@@ -126,12 +126,12 @@ export default function AnalyticsAdmin() {
 function Card({ title, children, full = false }) {
   return (
     <div className={`glass rounded-2xl p-5 ${full ? 'lg:col-span-2' : ''}`}>
-      <h3 className="mono text-[11px] uppercase tracking-widest text-muted mb-4">{title}</h3>
+      <h3 className="mono text-[11px] uppercase tracking-widest text-muted-foreground mb-4">{title}</h3>
       {children}
     </div>
   );
 }
 
 function Empty({ label }) {
-  return <div className="text-center py-10 text-xs text-muted">{label}</div>;
+  return <div className="text-center py-10 text-xs text-muted-foreground">{label}</div>;
 }

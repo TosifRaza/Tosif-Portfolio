@@ -77,8 +77,8 @@ export default function HomePage() {
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 grid-backdrop opacity-30 pointer-events-none" aria-hidden="true" />
         <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-primary/10 blur-3xl pointer-events-none" aria-hidden="true" />
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 grid lg:grid-cols-[1.2fr_1fr] gap-8 lg:gap-12 items-center">
-          <div>
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 grid md:grid-cols-[1.2fr_1fr] gap-8 lg:gap-12 items-start">
+          <div className="min-w-0 md:col-start-1 md:row-start-1">
             <motion.p {...fadeUp} className="text-sm text-muted-foreground mb-3">
               {hero.badge || "Hello, I'm"}
             </motion.p>
@@ -124,7 +124,6 @@ export default function HomePage() {
                 ))}
               </motion.div>
             )}
-            <GitHubContributions githubUrl={profile?.socials?.github} />
           </div>
 
           {/* Right: avatar + code card */}
@@ -132,7 +131,7 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.15, duration: 0.45 }}
-            className="relative flex flex-col items-center gap-6"
+            className="relative flex min-w-0 flex-col items-center gap-6 md:col-start-2 md:row-start-1 md:row-span-2"
           >
             <div className="flex flex-col items-center gap-4">
               <ProfilePhoto
@@ -153,10 +152,14 @@ export default function HomePage() {
                 </div>
               )}
             </div>
-            <div className="w-full max-w-sm hidden sm:block">
+            <div className="w-full max-w-sm">
               <HeroCodeCard profile={profile} />
             </div>
           </motion.div>
+
+          <div className="min-w-0 md:col-start-1 md:row-start-2">
+            <GitHubContributions githubUrl={profile?.socials?.github} />
+          </div>
         </div>
 
         {/* Tech chips strip */}

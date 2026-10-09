@@ -45,7 +45,7 @@ const COLUMNS = [
     key: 'publishStatus',
     label: 'Publish',
     render: (i) => (
-      <span className={`badge ${i.publishStatus === 'published' ? 'text-neon-green' : 'text-muted'}`}>
+      <span className={`badge ${i.publishStatus === 'published' ? 'text-neon-green' : 'text-muted-foreground'}`}>
         {i.publishStatus || 'published'}
       </span>
     ),

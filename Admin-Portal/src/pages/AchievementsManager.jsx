@@ -24,7 +24,7 @@ const COLUMNS = [
     render: (i) => (
       <span className="inline-flex items-center gap-2">
         <span className="w-3 h-3 rounded-full" style={{ background: i.color }} />
-        <span className="mono text-xs text-muted">{i.color}</span>
+        <span className="mono text-xs text-muted-foreground">{i.color}</span>
       </span>
     ),
   },

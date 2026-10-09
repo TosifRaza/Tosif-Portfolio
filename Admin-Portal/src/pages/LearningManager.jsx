@@ -33,7 +33,7 @@ export default function LearningManager() {
         columns={COLUMNS}
         searchKeys={['date', 'notes', 'resource']}
       />
-      <div className="glass rounded-2xl p-4 mt-6 mono text-[11px] text-muted leading-relaxed">
+      <div className="glass rounded-2xl p-4 mt-6 mono text-[11px] text-muted-foreground leading-relaxed">
         Tip: open <span className="text-neon-cyan">/skills</span> in this portal to find skill IDs, or{' '}
         <span className="text-neon-cyan">/goals</span> for goal IDs. Topics per skill are managed inside
         the private OS (Skills page) for convenience.

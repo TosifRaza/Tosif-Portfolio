@@ -67,7 +67,7 @@ export default function SiteManager() {
     set('nav', nav.map((n, i) => ({ ...n, order: i + 1 })));
   };
 
-  if (loading) return <div className="mono text-sm text-muted">Loading site config…</div>;
+  if (loading) return <div className="mono text-sm text-muted-foreground">Loading site config…</div>;
   if (!doc) return <div className="mono text-sm text-neon-red">Failed to load site config.</div>;
 
   const sections = [...(doc.sections || [])].sort((a, b) => a.order - b.order);
@@ -78,7 +78,7 @@ export default function SiteManager() {
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-extrabold">Hero & Site Config</h1>
-        <p className="text-sm text-muted mt-1">Controls the public homepage content, section visibility/order, navigation and more.</p>
+        <p className="text-sm text-muted-foreground mt-1">Controls the public homepage content, section visibility/order, navigation and more.</p>
       </div>
 
       <div className="space-y-6 max-w-4xl">
@@ -110,21 +110,21 @@ export default function SiteManager() {
         {/* Sections */}
         <div className="glass rounded-2xl p-6">
           <h2 className="font-bold mb-1 text-sm text-neon-cyan mono uppercase tracking-widest">Sections — visibility & order</h2>
-          <p className="text-xs text-muted mb-4">Disabled sections disappear from the public website (rendering, not CSS hiding).</p>
+          <p className="text-xs text-muted-foreground mb-4">Disabled sections disappear from the public website (rendering, not CSS hiding).</p>
           <div className="space-y-2">
             {sections.map((s, i) => (
               <div key={s.key} className="flex items-center gap-3 p-2.5 rounded-lg bg-muted/40 border border-border">
                 <button
                   onClick={() => set('sections', sections.map((x) => (x.key === s.key ? { ...x, enabled: !x.enabled } : x)))}
-                  className={`p-1.5 rounded ${s.enabled ? 'text-neon-green' : 'text-muted'}`}
+                  className={`p-1.5 rounded ${s.enabled ? 'text-neon-green' : 'text-muted-foreground'}`}
                   title={s.enabled ? 'Disable section' : 'Enable section'}
                 >
                   {s.enabled ? <FaEye size={13} /> : <FaEyeSlash size={13} />}
                 </button>
-                <span className={`text-sm flex-1 ${s.enabled ? '' : 'text-muted line-through'}`}>{s.label}</span>
-                <span className="mono text-[10px] text-muted">{s.key}</span>
-                <button onClick={() => moveSection(i, -1)} className="p-1.5 text-muted hover:text-white"><FaArrowUp size={11} /></button>
-                <button onClick={() => moveSection(i, 1)} className="p-1.5 text-muted hover:text-white"><FaArrowDown size={11} /></button>
+                <span className={`text-sm flex-1 ${s.enabled ? '' : 'text-muted-foreground line-through'}`}>{s.label}</span>
+                <span className="mono text-[10px] text-muted-foreground">{s.key}</span>
+                <button onClick={() => moveSection(i, -1)} className="p-1.5 text-muted-foreground hover:text-white"><FaArrowUp size={11} /></button>
+                <button onClick={() => moveSection(i, 1)} className="p-1.5 text-muted-foreground hover:text-white"><FaArrowDown size={11} /></button>
               </div>
             ))}
           </div>
@@ -133,18 +133,18 @@ export default function SiteManager() {
         {/* Navigation */}
         <div className="glass rounded-2xl p-6">
           <h2 className="font-bold mb-1 text-sm text-neon-cyan mono uppercase tracking-widest">Top navigation</h2>
-          <p className="text-xs text-muted mb-4">Labels and order for the public top bar. Targets: section keys (home, projects, skills, experience, engineeringlab, resume, contact, about, products, achievements, journey, globalreach) or /os for the private OS.</p>
+          <p className="text-xs text-muted-foreground mb-4">Labels and order for the public top bar. Targets: section keys (home, projects, skills, experience, engineeringlab, resume, contact, about, products, achievements, journey, globalreach) or /os for the private OS.</p>
           <div className="space-y-2">
             {nav.map((n, i) => (
               <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg bg-muted/40 border border-border">
                 <button onClick={() => set('nav', nav.map((x, xi) => (xi === i ? { ...x, enabled: !x.enabled } : x)))}
-                  className={`p-1.5 rounded ${n.enabled ? 'text-neon-green' : 'text-muted'}`}>
+                  className={`p-1.5 rounded ${n.enabled ? 'text-neon-green' : 'text-muted-foreground'}`}>
                   {n.enabled ? <FaEye size={13} /> : <FaEyeSlash size={13} />}
                 </button>
                 <input className="input flex-1" value={n.label} onChange={(e) => set('nav', nav.map((x, xi) => (xi === i ? { ...x, label: e.target.value } : x)))} />
                 <input className="input w-32 mono text-xs" value={n.target} onChange={(e) => set('nav', nav.map((x, xi) => (xi === i ? { ...x, target: e.target.value } : x)))} />
-                <button onClick={() => moveNav(i, -1)} className="p-1.5 text-muted hover:text-white"><FaArrowUp size={11} /></button>
-                <button onClick={() => moveNav(i, 1)} className="p-1.5 text-muted hover:text-white"><FaArrowDown size={11} /></button>
+                <button onClick={() => moveNav(i, -1)} className="p-1.5 text-muted-foreground hover:text-white"><FaArrowUp size={11} /></button>
+                <button onClick={() => moveNav(i, 1)} className="p-1.5 text-muted-foreground hover:text-white"><FaArrowDown size={11} /></button>
                 <button onClick={() => set('nav', nav.filter((_, xi) => xi !== i))} className="p-1.5 text-neon-red"><FaTrash size={11} /></button>
               </div>
             ))}
@@ -171,7 +171,7 @@ export default function SiteManager() {
           </div>
           {doc.statsMode === 'manual' && (
             <div className="mb-4">
-              <label className="mono text-[10px] uppercase tracking-widest text-muted mb-1.5 block">Manual stats (label,value per line)</label>
+              <label className="mono text-[10px] uppercase tracking-widest text-muted-foreground mb-1.5 block">Manual stats (label,value per line)</label>
               <textarea
                 rows={4}
                 className={`${input} resize-none`}
@@ -180,7 +180,7 @@ export default function SiteManager() {
               />
             </div>
           )}
-          <label className="mono text-[10px] uppercase tracking-widest text-muted mb-1.5 block">
+          <label className="mono text-[10px] uppercase tracking-widest text-muted-foreground mb-1.5 block">
             Global reach (region,note per line) — only real regions; empty = section shows nothing
           </label>
           <textarea
@@ -210,7 +210,7 @@ export default function SiteManager() {
 function F({ label, children, full = false }) {
   return (
     <div className={full ? 'sm:col-span-2' : ''}>
-      <label className="mono text-[10px] uppercase tracking-widest text-muted mb-1.5 block">{label}</label>
+      <label className="mono text-[10px] uppercase tracking-widest text-muted-foreground mb-1.5 block">{label}</label>
       {children}
     </div>
   );

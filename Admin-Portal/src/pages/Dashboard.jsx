@@ -79,7 +79,7 @@ export default function Dashboard() {
                 )}
                 <Icon className={`text-${c.color} mb-3`} size={20} />
                 <div className="text-3xl font-bold">{c.value}</div>
-                <div className="mono text-[10px] text-muted uppercase tracking-widest mt-1">
+                <div className="mono text-[10px] text-muted-foreground uppercase tracking-widest mt-1">
                   {c.label}
                 </div>
               </Link>
@@ -95,25 +95,25 @@ export default function Dashboard() {
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
           <div>
-            <div className="mono text-[10px] text-muted uppercase mb-1">Backend</div>
+            <div className="mono text-[10px] text-muted-foreground uppercase mb-1">Backend</div>
             <div className="flex items-center gap-2 text-neon-green">
               <FaCircle size={6} /> Operational
             </div>
           </div>
           <div>
-            <div className="mono text-[10px] text-muted uppercase mb-1">MongoDB</div>
+            <div className="mono text-[10px] text-muted-foreground uppercase mb-1">MongoDB</div>
             <div className="flex items-center gap-2 text-neon-green">
               <FaCircle size={6} /> Connected
             </div>
           </div>
           <div>
-            <div className="mono text-[10px] text-muted uppercase mb-1">JWT Auth</div>
+            <div className="mono text-[10px] text-muted-foreground uppercase mb-1">JWT Auth</div>
             <div className="flex items-center gap-2 text-neon-green">
               <FaCircle size={6} /> Active
             </div>
           </div>
           <div>
-            <div className="mono text-[10px] text-muted uppercase mb-1">User Role</div>
+            <div className="mono text-[10px] text-muted-foreground uppercase mb-1">User Role</div>
             <div className="mono text-neon-purple uppercase">{user?.role || 'admin'}</div>
           </div>
         </div>
