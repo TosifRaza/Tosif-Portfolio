@@ -1,5 +1,5 @@
 /** Lightweight GitHub profile fetcher using the public REST API */
-export async function fetchGitHubContributions(username, token) {
+function contributionWindow() {
   const to = new Date();
   const targetDay = to.getUTCDate();
   const from = new Date(to);
@@ -7,6 +7,15 @@ export async function fetchGitHubContributions(username, token) {
   from.setUTCMonth(from.getUTCMonth() - 6);
   const lastDayOfStartMonth = new Date(Date.UTC(from.getUTCFullYear(), from.getUTCMonth() + 1, 0)).getUTCDate();
   from.setUTCDate(Math.min(targetDay, lastDayOfStartMonth));
+  return { from, to };
+}
+
+function contributionColors() {
+  return ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'];
+}
+
+export async function fetchGitHubContributions(username, token) {
+  const { from, to } = contributionWindow();
   const response = await fetch('https://api.github.com/graphql', {
     method: 'POST',
     headers: {
@@ -14,6 +23,7 @@ export async function fetchGitHubContributions(username, token) {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
+    signal: AbortSignal.timeout(15000),
     body: JSON.stringify({
       query: `query($login: String!, $from: DateTime!, $to: DateTime!) {
         user(login: $login) {
@@ -63,6 +73,47 @@ export async function fetchGitHubContributions(username, token) {
         color: day.color,
       }))
     ),
+  };
+}
+
+/**
+ * Public fallback for deployments without a GitHub token. It reads the same
+ * public contribution calendar GitHub renders on a profile, then trims it to
+ * the requested rolling six-month window.
+ */
+export async function fetchPublicGitHubContributions(username) {
+  const { from, to } = contributionWindow();
+  const fromDate = from.toISOString().slice(0, 10);
+  const toDate = to.toISOString().slice(0, 10);
+  const url = new URL(`https://github.com/users/${encodeURIComponent(username)}/contributions`);
+  url.search = new URLSearchParams({ from: fromDate, to: toDate });
+  const response = await fetch(url, {
+    headers: { Accept: 'text/html', 'User-Agent': 'TOSIF-OS-Portfolio/1.0' },
+    signal: AbortSignal.timeout(15000),
+  });
+  if (!response.ok) throw new Error(`Public contribution page request failed (${response.status})`);
+
+  const html = await response.text();
+  const dayPattern = /<td\b(?=[^>]*\bdata-date="(\d{4}-\d{2}-\d{2})")(?=[^>]*\bdata-level="(\d+)")(?=[^>]*\bid="([^"]+)")[^>]*>\s*<\/td>\s*<tool-tip\b(?=[^>]*\bfor="\3")[^>]*>([\s\S]*?)<\/tool-tip>/gi;
+  const colors = contributionColors();
+  const contributions = [];
+
+  for (const match of html.matchAll(dayPattern)) {
+    const [, date, rawLevel, , tooltipMarkup] = match;
+    if (date < fromDate || date > toDate) continue;
+    const tooltipText = tooltipMarkup.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').trim();
+    const number = tooltipText.match(/([\d,]+)\s+contributions?/i)?.[1];
+    const count = number ? Number(number.replace(/,/g, '')) : 0;
+    const level = Math.min(4, Math.max(0, Number(rawLevel) || 0));
+    contributions.push({ date, count, level, color: colors[level] });
+  }
+
+  if (!contributions.length) throw new Error(`No contribution days found for GitHub user ${username}`);
+  return {
+    username,
+    total: contributions.reduce((sum, day) => sum + day.count, 0),
+    contributions,
+    source: 'github-public-profile',
   };
 }
 

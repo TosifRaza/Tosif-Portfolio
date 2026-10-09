@@ -7,7 +7,8 @@ import Skill from '../models/Skill.js';
 import Experience from '../models/Experience.js';
 import Achievement from '../models/Achievement.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
-import { uploadDir } from '../config/uploads.js';
+import UploadedImage from '../models/UploadedImage.js';
+import multer from 'multer';
 
 // ── Profile (singleton) ─────────────────────────────────────────────
 // GET /api/profile — public
@@ -87,38 +88,39 @@ export const getStats = asyncHandler(async (_req, res) => {
 
 // ── Image upload (admin) — reuses the project's existing /uploads strategy ──
 const IMAGE_MAX = 5 * 1024 * 1024;
+const IMAGE_EXTENSIONS = {
+  'image/jpeg': '.jpg',
+  'image/png': '.png',
+  'image/gif': '.gif',
+  'image/webp': '.webp',
+  'image/avif': '.avif',
+};
+const imageUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: IMAGE_MAX },
+  fileFilter: (_req, file, cb) => {
+    if (IMAGE_EXTENSIONS[file.mimetype]) cb(null, true);
+    else cb(new Error('Only image files are allowed'));
+  },
+}).single('image');
 
 export const uploadImage = [
-  asyncHandler(async (req, res) => {
+  (req, res, next) => {
     if (!req.headers['content-type']?.startsWith('multipart/form-data')) {
-      const error = new Error('Send multipart/form-data with an "image" file field');
-      error.status = 400;
-      throw error;
+      return res.status(400).json({ message: 'Send multipart/form-data with an "image" file field' });
     }
-    const multer = (await import('multer')).default;
-    const storage = multer.diskStorage({
-      destination: (_q, _f, cb) => cb(null, uploadDir),
-      filename: (_q, file, cb) => {
-        const extensions = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/gif': '.gif', 'image/webp': '.webp', 'image/avif': '.avif' };
-        const ext = extensions[file.mimetype] || '.img';
-        cb(null, `img-${Date.now()}-${Math.round(Math.random() * 1e6)}${ext}`);
-      },
+    imageUpload(req, res, (error) => error ? res.status(400).json({ message: error.message }) : next());
+  },
+  asyncHandler(async (req, res) => {
+    if (!req.file) return res.status(400).json({ message: 'No image uploaded' });
+    const filename = `img-${Date.now()}-${Math.round(Math.random() * 1e6)}${IMAGE_EXTENSIONS[req.file.mimetype]}`;
+    await UploadedImage.create({
+      filename,
+      contentType: req.file.mimetype,
+      data: req.file.buffer,
+      size: req.file.size,
     });
-    const upload = multer({
-      storage,
-      limits: { fileSize: IMAGE_MAX },
-      fileFilter: (_q, file, cb) => {
-        const allowedTypes = new Set(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/avif']);
-        if (allowedTypes.has(file.mimetype)) cb(null, true);
-        else cb(new Error('Only image files are allowed'));
-      },
-    }).single('image');
-
-    upload(req, res, (err) => {
-      if (err) return res.status(400).json({ message: err.message });
-      if (!req.file) return res.status(400).json({ message: 'No image uploaded' });
-      res.status(201).json({ url: `/uploads/${req.file.filename}`, fileName: req.file.originalname });
-    });
+    res.status(201).json({ url: `/uploads/${filename}`, fileName: req.file.originalname });
   }),
 ];
 

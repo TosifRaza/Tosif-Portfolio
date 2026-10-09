@@ -85,7 +85,8 @@ For non-Docker Node.js hosting, deploy the `Backend` directory with Node 20 or n
 - `JWT_SECRET` with at least 32 random bytes.
 - `ADMIN_EMAIL` and a unique `ADMIN_PASSWORD` of at least 12 characters. The admin is created at first startup if the database has no users.
 - `CORS_ORIGINS` as comma-separated exact HTTPS origins for the public site and admin portal, with no paths or wildcard domains.
-- `UPLOAD_DIR` as the absolute path of a persistent mounted volume. Mount the volume at that path; image and resume uploads are stored there.
+- `UPLOAD_DIR` as the absolute path of a persistent mounted volume. Resume files and legacy disk uploads use this volume; new portfolio images are stored in MongoDB. On startup, referenced local images are migrated into MongoDB when their files are present.
+- `GITHUB_TOKEN` is optional for the contribution calendar. When it is missing or invalid, the backend falls back to the public GitHub contribution calendar and caches the result.
 
 For Docker Compose, set `UPLOAD_DIR` automatically to `/data/uploads`; the named volume persists it across container replacements. Set `HOST_PORT` only if the host should expose the API on a port other than 5000. Keep the environment file private; `.env.production` is Git-ignored.
 

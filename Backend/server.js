@@ -26,6 +26,8 @@ import Product from './models/Product.js';
 import PlanSetting from './models/PlanSetting.js';
 import { seedContent } from './utils/seedData.js';
 import { syncGitHubRepoSuggestions } from './services/githubRepoImportService.js';
+import { migrateReferencedUploadImages } from './services/uploadMigrationService.js';
+import { getUploadedImage } from './controllers/uploadedImageController.js';
 
 // ── Routes ──────────────────────────────────────────────────
 import authRoutes from './routes/authRoutes.js';
@@ -128,9 +130,10 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'tiny' : 'dev'));
 
-// Static folder for uploaded files (resumes, images)
+// Static files stay disk-backed for resumes and legacy uploads; new images fall back to MongoDB below.
 ensureUploadDir();
 app.use('/uploads', express.static(uploadDir));
+app.get('/uploads/:filename', getUploadedImage);
 
 // ── Health check ────────────────────────────────────────────
 app.get('/health', (_req, res) => {
@@ -240,6 +243,8 @@ let githubRepoSyncTimer;
 async function start() {
   await connectDB();
   await ensureBootstrapData();
+  const migratedImages = await migrateReferencedUploadImages();
+  if (migratedImages) console.log(`[uploads] Migrated ${migratedImages} referenced image(s) into shared storage`);
   const runGitHubRepoSync = () => syncGitHubRepoSuggestions().catch((error) => {
     console.warn('[github-imports] Automatic check failed:', error.message);
   });
