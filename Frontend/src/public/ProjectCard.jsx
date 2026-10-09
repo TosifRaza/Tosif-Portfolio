@@ -180,7 +180,7 @@ export default function ProjectCard({ project, index = 0, onOpen }) {
             onClick={() => onOpen?.(project)}
             className="ml-auto text-xs text-primary hover:underline"
           >
-            Details â†’
+            Details
           </button>
         </div>
       </div>
