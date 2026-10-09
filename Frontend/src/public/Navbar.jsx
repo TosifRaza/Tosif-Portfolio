@@ -65,6 +65,10 @@ export default function Navbar({ profile }) {
       isActive ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
     }`;
 
+  const handleNavigation = () => {
+    if (state.recruiterMode) toggleRecruiterMode();
+  };
+
   return (
     <motion.header
       initial={{ y: -56 }}
@@ -75,7 +79,7 @@ export default function Navbar({ profile }) {
       }`}
     >
       {/* Left: identity */}
-      <Link to="/" className="flex min-w-0 items-center gap-2.5" aria-label="Home">
+      <Link to="/" onClick={handleNavigation} className="flex min-w-0 items-center gap-2.5" aria-label="Home">
         <Logo name={profile?.name || site?.hero?.heading || 'Tosif Raza'} profile={profile} />
       </Link>
 
@@ -85,14 +89,14 @@ export default function Navbar({ profile }) {
           item.target === '/os' ? (
             <button
               key={item.label}
-              onClick={() => navigate('/os')}
+              onClick={() => { handleNavigation(); navigate('/os'); }}
               className="ml-2 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/40 text-primary text-xs font-semibold hover:bg-primary/20 transition-all"
             >
               <Zap size={12} />
               {item.label || 'Enter TOSIF OS'}
             </button>
           ) : (
-            <NavLink key={item.label} to={targetToPath(item.target)} end={targetToPath(item.target) === '/'} className={linkCls}>
+            <NavLink key={item.label} to={targetToPath(item.target)} end={targetToPath(item.target) === '/'} onClick={handleNavigation} className={linkCls}>
               {item.label}
             </NavLink>
           )
@@ -142,7 +146,7 @@ export default function Navbar({ profile }) {
               item.target === '/os' ? (
                 <button
                   key={item.label}
-                  onClick={() => { setMenuOpen(false); navigate('/os'); }}
+                  onClick={() => { setMenuOpen(false); handleNavigation(); navigate('/os'); }}
                   className="text-left px-4 py-2.5 rounded-lg text-sm font-semibold text-primary bg-primary/10 flex items-center gap-2"
                 >
                   <Zap size={13} /> {item.label || 'Enter TOSIF OS'}
@@ -152,6 +156,7 @@ export default function Navbar({ profile }) {
                   key={item.label}
                   to={targetToPath(item.target)}
                   end={targetToPath(item.target) === '/'}
+                  onClick={() => { setMenuOpen(false); handleNavigation(); }}
                   className={({ isActive }) =>
                     `text-left px-4 py-2.5 rounded-lg text-sm ${
                       isActive ? 'text-primary bg-primary/10 font-medium' : 'text-foreground/80 hover:bg-muted'

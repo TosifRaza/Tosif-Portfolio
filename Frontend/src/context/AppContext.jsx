@@ -66,11 +66,19 @@ function appReducer(state, action) {
     case "TOGGLE_RECRUITER_MODE":
       return { ...state, recruiterMode: !state.recruiterMode, terminalOpen: false, aiOpen: false };
     case "TOGGLE_TERMINAL":
-      if (state.recruiterMode) return state;
-      return { ...state, terminalOpen: !state.terminalOpen, aiOpen: false };
+      return {
+        ...state,
+        recruiterMode: false,
+        terminalOpen: !state.terminalOpen,
+        aiOpen: false,
+      };
     case "SET_TERMINAL":
-      if (state.recruiterMode && action.payload) return state;
-      return { ...state, terminalOpen: action.payload, aiOpen: action.payload ? false : state.aiOpen };
+      return {
+        ...state,
+        recruiterMode: action.payload ? false : state.recruiterMode,
+        terminalOpen: action.payload,
+        aiOpen: action.payload ? false : state.aiOpen,
+      };
     case "TOGGLE_AI":
       if (state.recruiterMode) return state;
       return { ...state, aiOpen: !state.aiOpen, terminalOpen: false };
