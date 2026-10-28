@@ -7,7 +7,6 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "seed": "node utils/seed.js",
     "reset-admin": "node reset-admin.js",
     "migrate:public-images": "node scripts/migratePublicImages.js"
   },

@@ -21,7 +21,7 @@ export default function Login() {
       navigate('/');
     } catch (err) {
       setError(
-        err.message || 'Login failed. Make sure the backend is running on :5000 with seeded admin user.'
+        err.message || 'Login failed. Make sure the backend is running and an admin account is configured.'
       );
     } finally {
       setLoading(false);

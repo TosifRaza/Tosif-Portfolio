@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 import { api } from "@/utils/api";
-import { commands, getCommandResponse } from "@/data/terminalCommands";
+import { commands, getCommandResponse } from "./terminalCommands";
 import MatrixRain from "@/components/Terminal/MatrixRain";
 import { applyTerminalTheme, readTerminalTheme, saveTerminalTheme } from "@/utils/terminalTheme";
 

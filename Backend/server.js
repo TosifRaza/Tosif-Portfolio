@@ -11,20 +11,7 @@ import { connectDB, closeDB } from './config/db.js';
 import { ensureUploadDir, uploadDir } from './config/uploads.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
-// ── Models needed by the bootstrap seeder ───────────────────
 import User from './models/User.js';
-import Project from './models/Project.js';
-import Skill from './models/Skill.js';
-import Timeline from './models/Timeline.js';
-import Achievement from './models/Achievement.js';
-import LearningTopic from './models/LearningTopic.js';
-import Profile from './models/Profile.js';
-import AboutContent from './models/AboutContent.js';
-import SiteConfig from './models/SiteConfig.js';
-import Experience from './models/Experience.js';
-import Product from './models/Product.js';
-import PlanSetting from './models/PlanSetting.js';
-import { seedContent } from './utils/seedData.js';
 import { syncGitHubRepoSuggestions } from './services/githubRepoImportService.js';
 import { migrateReferencedUploadImages } from './services/uploadMigrationService.js';
 import { getUploadedImage } from './controllers/uploadedImageController.js';
@@ -175,8 +162,8 @@ app.use('/api/journal', journalRoutes);
 app.use('/api', (req, res) => res.status(404).json({ message: `API route not found: ${req.method} ${req.originalUrl}` }));
 app.use(errorHandler);
 
-// ── Bootstrap: ensure an admin + seed content exist on first boot ──
-async function ensureBootstrapData() {
+// ── Bootstrap: create or verify the configured admin account ──
+async function ensureAdminAccount() {
   // Admin upsert — created whenever the configured ADMIN_EMAIL does not exist
   // yet (fixed: previously only ran when the users collection was completely
   // empty, which silently skipped the admin on non-empty databases).
@@ -199,41 +186,6 @@ async function ensureBootstrapData() {
     console.log('[bootstrap] No ADMIN_EMAIL/ADMIN_PASSWORD configured; create the first user through /api/auth/register');
   }
 
-  await ensureSiteConfigDefaults();
-
-  const projectCount = await Project.countDocuments();
-  if (projectCount === 0) {
-    await seedContent({
-      Project, Skill, Timeline, Achievement, LearningTopic,
-      Profile, AboutContent, SiteConfig, Experience, Product, PlanSetting,
-    });
-    console.log('[bootstrap] ✓ Seed content inserted (profile, site, projects, skills, products, experience, timeline, achievements)');
-  }
-}
-
-// v6.0: make sure newly-introduced sections/nav entries exist on databases
-// seeded by earlier versions, without touching the admin's own edits.
-async function ensureSiteConfigDefaults() {
-  const { DEFAULT_SECTIONS, DEFAULT_NAV } = await import('./models/SiteConfig.js');
-  const site = await SiteConfig.getSingleton();
-  let changed = false;
-
-  for (const section of DEFAULT_SECTIONS) {
-    if (!site.sections.some((s) => s.key === section.key)) {
-      site.sections.push({ ...section });
-      changed = true;
-    }
-  }
-  for (const item of DEFAULT_NAV) {
-    if (!site.nav.some((n) => n.target === item.target && n.label === item.label)) {
-      site.nav.push({ ...item, order: (site.nav.reduce((m, n) => Math.max(m, n.order || 0), 0) || 0) + 1 });
-      changed = true;
-    }
-  }
-  if (changed) {
-    await site.save();
-    console.log('[bootstrap] ✓ SiteConfig updated with new v6 sections/nav entries');
-  }
 }
 
 // ── Start ────────────────────────────────────────────────────
@@ -242,7 +194,7 @@ let githubRepoSyncTimer;
 
 async function start() {
   await connectDB();
-  await ensureBootstrapData();
+  await ensureAdminAccount();
   const migratedImages = await migrateReferencedUploadImages();
   if (migratedImages) console.log(`[uploads] Migrated ${migratedImages} referenced image(s) into shared storage`);
   const runGitHubRepoSync = () => syncGitHubRepoSuggestions().catch((error) => {

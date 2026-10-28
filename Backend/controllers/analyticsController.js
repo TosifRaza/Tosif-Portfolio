@@ -41,12 +41,7 @@ export const planVsActualView = asyncHandler(async (req, res) => {
 // ── Plan settings (weekly targets) ──────────────────────────────────
 // GET /api/analytics/plan
 export const getPlan = asyncHandler(async (_req, res) => {
-  let plans = await PlanSetting.find().sort({ category: 1 });
-  if (plans.length === 0) {
-    // Seed the default categories with zero targets — admin sets real numbers.
-    await PlanSetting.insertMany(TIME_CATEGORIES.map((c) => ({ category: c, weeklyTargetMinutes: 0 })));
-    plans = await PlanSetting.find().sort({ category: 1 });
-  }
+  const plans = await PlanSetting.find().sort({ category: 1 });
   res.json(plans);
 });
 

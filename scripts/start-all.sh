@@ -30,9 +30,8 @@ disown
 echo "   Backend PID: $!"
 
 for i in {1..60}; do
-  COUNT=$(curl -s http://localhost:5000/api/projects 2>/dev/null | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d))" 2>/dev/null || echo "0")
-  if [ "$COUNT" -ge "6" ]; then
-    echo "   ✓ Backend ready with seed data after ${i}s"
+  if curl -fsS http://localhost:5000/health 2>/dev/null | grep -q '"status":"ok"'; then
+    echo "   ✓ Backend ready after ${i}s"
     break
   fi
   sleep 1

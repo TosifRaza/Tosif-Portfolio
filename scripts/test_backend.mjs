@@ -62,12 +62,10 @@ await t('stats endpoint computes real counts', async () => {
   assert.ok(Array.isArray(r.data.stats) && r.data.stats.length >= 4);
 });
 
-await t('projects list is public and seeded', async () => {
+await t('projects list is public', async () => {
   const r = await req('GET', '/api/projects');
   assert.equal(r.status, 200);
-  assert.ok(r.data.length >= 3);
-  const titles = r.data.map((p) => p.title);
-  assert.ok(titles.includes('SkillBridge'));
+  assert.ok(Array.isArray(r.data));
 });
 
 // ── 2. Security ──

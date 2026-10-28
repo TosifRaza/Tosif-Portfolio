@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import { MapPin, Sparkles, Globe2, Clock3 } from 'lucide-react';
 import { useApi } from '@/hooks/useApi';
 import { api } from '@/utils/api';
-import { profile as fallbackProfile } from '@/data/profile';
 import { staggerContainer, staggerItem } from '@/utils/animations';
 
 /**
@@ -14,8 +13,8 @@ export default function AboutSection({ site }) {
   const { data: profile } = useApi(() => api.getProfile());
   const { data: about, loading } = useApi(() => api.getAbout());
 
-  const p = profile || fallbackProfile;
-  const paragraphs = about?.paragraphs?.length ? about.paragraphs : [p.shortBio];
+  const p = profile || {};
+  const paragraphs = about?.paragraphs?.length ? about.paragraphs : (p.shortBio ? [p.shortBio] : []);
   const highlights = about?.highlights || [];
   const values = about?.values || [];
   const globalReach = site?.globalReach || [];

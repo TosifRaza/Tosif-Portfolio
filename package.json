@@ -13,7 +13,6 @@
     "build:frontend": "npm --prefix Frontend run build",
     "build:admin": "npm --prefix Admin-Portal run build",
     "build": "npm run build:frontend && npm run build:admin",
-    "seed": "npm --prefix Backend run seed",
     "start": "npm --prefix Backend start"
   },
   "devDependencies": {
