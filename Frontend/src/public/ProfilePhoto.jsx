@@ -1,21 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { apiUrl } from '@/utils/api';
+import bundledAvatar from '@/assets/tosif-avatar.jpg';
 
 export function getProfilePhotoSources(profile) {
   const githubUrl = profile?.socials?.github || '';
   const githubUsername = githubUrl.match(/github\.com\/([^/?#]+)/i)?.[1];
   const githubPhoto = githubUsername ? `https://github.com/${githubUsername}.png?size=384` : '';
   const avatarUrl = profile?.avatarUrl?.trim();
-  const uploadedPhoto = avatarUrl ? apiUrl(avatarUrl) : '';
+  // Serve this known profile's GitHub photo with the site; CMS uploads still win.
+  const isBundledAvatar = /^https:\/\/avatars\.githubusercontent\.com\/u\/160727165(?:\?|$)/i.test(avatarUrl || '');
+  const uploadedPhoto = isBundledAvatar ? bundledAvatar : avatarUrl ? apiUrl(avatarUrl) : '';
+  const accountPhoto = githubUsername?.toLowerCase() === 'tosifraza' ? bundledAvatar : githubPhoto;
 
   return {
-    primary: uploadedPhoto || githubPhoto,
-    fallback: uploadedPhoto && githubPhoto && uploadedPhoto !== githubPhoto ? githubPhoto : '',
+    primary: uploadedPhoto || accountPhoto,
+    fallback: uploadedPhoto && accountPhoto && uploadedPhoto !== accountPhoto ? accountPhoto : '',
   };
 }
 
 export default function ProfilePhoto({ profile, name, alt = '', className = '' }) {
   const sources = getProfilePhotoSources(profile);
+  return <Photo key={`${sources.primary}|${sources.fallback}`} sources={sources} name={name} alt={alt} className={className} />;
+}
+
+function Photo({ sources, name, alt, className }) {
   const [failedSource, setFailedSource] = useState('');
   const [loaded, setLoaded] = useState(false);
   const initials = (name || '')
@@ -25,11 +33,6 @@ export default function ProfilePhoto({ profile, name, alt = '', className = '' }
     .map((part) => part[0])
     .join('')
     .toUpperCase();
-
-  useEffect(() => {
-    setFailedSource('');
-    setLoaded(false);
-  }, [sources.primary, sources.fallback]);
 
   const imageSrc = !failedSource
     ? sources.primary
@@ -51,7 +54,7 @@ export default function ProfilePhoto({ profile, name, alt = '', className = '' }
           decoding="async"
           className={`absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-200 ${loaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={() => setLoaded(true)}
-          onError={() => setFailedSource(imageSrc)}
+          onError={() => { setLoaded(false); setFailedSource(imageSrc); }}
         />
       )}
     </div>
