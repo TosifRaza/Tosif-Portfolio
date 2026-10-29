@@ -42,7 +42,10 @@ export const planVsActualView = asyncHandler(async (req, res) => {
 // GET /api/analytics/plan
 export const getPlan = asyncHandler(async (_req, res) => {
   const plans = await PlanSetting.find().sort({ category: 1 });
-  res.json(plans);
+  res.json(TIME_CATEGORIES.map((category) =>
+    plans.find((plan) => plan.category === category)
+      || { category, weeklyTargetMinutes: 0, enabled: true }
+  ));
 });
 
 // PUT /api/analytics/plan/:category

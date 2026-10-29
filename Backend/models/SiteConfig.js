@@ -33,8 +33,8 @@ const siteConfigSchema = new mongoose.Schema(
   {
     hero: {
       badge: { type: String, default: 'SYSTEM ONLINE' },
-      heading: { type: String, default: 'Tosif Raza' },
-      subtitle: { type: String, default: 'Software Engineer & Founder' },
+      heading: { type: String, default: '' },
+      subtitle: { type: String, default: '' },
       description: { type: String, default: '' },
       primaryCta: { type: ctaSchema, default: () => ({}) },
       secondaryCta: { type: ctaSchema, default: () => ({}) },

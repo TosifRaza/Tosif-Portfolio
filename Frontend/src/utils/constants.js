@@ -22,7 +22,7 @@ export const BOOT_LINES = [
   "Rendering Dashboard....................... OK",
   "",
   "SYSTEM ONLINE",
-  "LAST LOGIN: Today, 2 hours ago",
+  "WELCOME TO MY PORTFOLIO",
   "STATUS: BUILDING",
   "",
   "ACCESS GRANTED",

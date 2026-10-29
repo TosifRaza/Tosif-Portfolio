@@ -22,18 +22,14 @@ export const ask = asyncHandler(async (req, res) => {
 
   const profile = await Profile.getSingleton();
   const site = await SiteConfig.getSingleton();
-  const first = (profile.name || 'Tosif').split(' ')[0];
+  const first = profile.name ? profile.name.split(' ')[0] : 'the portfolio owner';
 
   // ── "why hire" ────────────────────────────────────────────
   if (q.includes('why') && q.includes('hire')) {
     return res.json({
       intent: 'why_hire',
-      reply: profile.pitch || `${profile.name} is a ${profile.title} who ships complete products end-to-end — from schema design and REST APIs to responsive React UI and deployment.`,
-      bullets: [
-        'Full-stack ownership across the MERN stack',
-        'Production patterns: JWT auth, validated APIs, error middleware',
-        'Founder mindset — ships, measures, iterates',
-      ],
+      reply: profile.pitch || profile.shortBio || 'A professional introduction has not been added yet.',
+      bullets: [],
     });
   }
 
@@ -65,7 +61,7 @@ export const ask = asyncHandler(async (req, res) => {
     }, {});
     return res.json({
       intent: 'skills',
-      reply: `${first}'s current stack, grouped by category. Levels are self-assessed against real production use.`,
+      reply: `${first}'s published technologies, grouped by category. Project examples are described on the skills page.`,
       skills: grouped,
     });
   }
@@ -120,7 +116,7 @@ export const ask = asyncHandler(async (req, res) => {
     reply: site.ai?.publicIntro ||
       'I can help with: Why hire? • Projects • Skills • Experience • Achievements • Contact info.',
     suggestions: [
-      'Why hire Tosif?',
+      'Why hire?',
       'Show projects',
       'Show skills',
       'Show experience',

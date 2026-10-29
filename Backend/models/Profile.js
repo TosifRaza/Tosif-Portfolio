@@ -3,8 +3,8 @@ import mongoose from 'mongoose';
 // Public identity — single source of truth for the whole portfolio.
 const profileSchema = new mongoose.Schema(
   {
-    name: { type: String, default: 'Tosif Raza' },
-    title: { type: String, default: 'Software Engineer & Founder' },
+    name: { type: String, default: '' },
+    title: { type: String, default: '' },
     roles: [{ type: String }],
     tagline: { type: String, default: '' },
     shortBio: { type: String, default: '' },
@@ -15,10 +15,10 @@ const profileSchema = new mongoose.Schema(
     email: { type: String, default: '' },
     phone: { type: String, default: '' },
     availability: {
-      status: { type: String, default: 'Open to opportunities' },
-      type: { type: String, default: 'Full-time / Contract' },
-      location: { type: String, default: 'Remote' },
-      notice: { type: String, default: 'Immediate' },
+      status: { type: String, default: '' },
+      type: { type: String, default: '' },
+      location: { type: String, default: '' },
+      notice: { type: String, default: '' },
     },
     socials: {
       github: { type: String, default: '' },

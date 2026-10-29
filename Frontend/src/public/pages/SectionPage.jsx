@@ -1,10 +1,11 @@
+import { lazy } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { usePublicSite, sectionEnabled } from '../siteContext';
-import AboutSection from '@/components/AboutSection/AboutSection';
-import TrophyRoom from '@/components/TrophyRoom/TrophyRoom';
-import ChronoScroll from '@/components/ChronoScroll/ChronoScroll';
-import LaunchControl from '@/components/LaunchControl/LaunchControl';
-import GlobalMap from '@/components/GlobalMap/GlobalMap';
+const AboutSection = lazy(() => import('@/components/AboutSection/AboutSection'));
+const TrophyRoom = lazy(() => import('@/components/TrophyRoom/TrophyRoom'));
+const ChronoScroll = lazy(() => import('@/components/ChronoScroll/ChronoScroll'));
+const LaunchControl = lazy(() => import('@/components/LaunchControl/LaunchControl'));
+const GlobalMap = lazy(() => import('@/components/GlobalMap/GlobalMap'));
 
 // Legacy single-page sections rendered as standalone pages. They keep
 // working (now theme-aware after the token migration) and remain fully

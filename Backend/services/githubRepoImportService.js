@@ -15,7 +15,7 @@ export function syncGitHubRepoSuggestions() {
 async function runSync() {
   const profile = await Profile.getSingleton();
   const profileUsername = profile.socials?.github?.match(/github\.com\/([^/?#]+)/i)?.[1];
-  const username = (profileUsername || process.env.GITHUB_USERNAME || '').trim();
+  const username = (profileUsername || '').trim();
   if (!username) return { enabled: false, added: 0, pending: 0, username: '' };
 
   const repos = await fetchGitHubRepositories(username, process.env.GITHUB_TOKEN);

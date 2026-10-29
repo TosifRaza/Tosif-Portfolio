@@ -82,7 +82,7 @@ export default function SkillsOS() {
 
               <div className="grid grid-cols-3 gap-3 mb-3 text-center">
                 <div>
-                  <div className="text-lg font-bold text-primary">{(s.level / 10).toFixed(1)}<span className="text-[10px] text-muted-foreground">/10</span></div>
+                  <div className="text-lg font-bold text-primary">{typeof s.level === 'number' ? `${(s.level / 10).toFixed(1)}/10` : 'Not rated'}</div>
                   <div className="text-[9px] text-muted-foreground mono uppercase">current</div>
                 </div>
                 <div>
@@ -96,7 +96,7 @@ export default function SkillsOS() {
               </div>
 
               <div className="relative">
-                <ProgressBar value={s.level} color="hsl(var(--primary))" />
+                {typeof s.level === 'number' && <ProgressBar value={s.level} color="hsl(var(--primary))" />}
                 {s.targetLevel > 0 && (
                   <div
                     className="absolute -top-1 w-0.5 h-3 rounded bg-amber-500"

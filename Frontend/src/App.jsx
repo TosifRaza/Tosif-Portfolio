@@ -5,13 +5,13 @@ import { AppProvider } from '@/context/AppContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import PublicShell from '@/public/PublicShell';
 import HomePage from '@/public/pages/HomePage';
-import ProjectsPage from '@/public/pages/ProjectsPage';
-import SkillsPage from '@/public/pages/SkillsPage';
-import ExperiencePage from '@/public/pages/ExperiencePage';
-import EngineeringLabPage from '@/public/pages/EngineeringLabPage';
-import ResumePage from '@/public/pages/ResumePage';
-import ContactPage from '@/public/pages/ContactPage';
-import SectionPage from '@/public/pages/SectionPage';
+const ProjectsPage = lazy(() => import('@/public/pages/ProjectsPage'));
+const SkillsPage = lazy(() => import('@/public/pages/SkillsPage'));
+const ExperiencePage = lazy(() => import('@/public/pages/ExperiencePage'));
+const EngineeringLabPage = lazy(() => import('@/public/pages/EngineeringLabPage'));
+const ResumePage = lazy(() => import('@/public/pages/ResumePage'));
+const ContactPage = lazy(() => import('@/public/pages/ContactPage'));
+const SectionPage = lazy(() => import('@/public/pages/SectionPage'));
 
 // Private OS bundle — lazy loaded so public visitors never download it.
 const OSApp = lazy(() => import('@/os/OSApp.jsx'));

@@ -1,0 +1,208 @@
+{
+  "experience": [
+    {
+      "company": "RIZ Software Consultancy",
+      "role": "Jr. Web Developer (Backend)",
+      "location": "Kolkata",
+      "startDate": "2026-09-16",
+      "endDate": "",
+      "current": true,
+      "description": "Working as a Junior Web Developer focused on backend development.",
+      "technologies": [],
+      "achievements": [],
+      "publishStatus": "published",
+      "order": 0
+    },
+    {
+      "company": "AICT Pvt. Ltd. (Anovatech Institute of Crystalline Technology Pvt. Ltd.)",
+      "role": "Data Science with Python Intern",
+      "location": "",
+      "startDate": "2026-06-08",
+      "endDate": "2026-07-08",
+      "current": false,
+      "description": "Completed a 60-hour internship in Data Science with Python, covering data preprocessing, exploratory data analysis, visualisation, feature engineering and machine learning model evaluation.",
+      "technologies": [
+        "Python",
+        "NumPy",
+        "Pandas",
+        "Matplotlib",
+        "Seaborn",
+        "Scikit-learn",
+        "NLP",
+        "TF-IDF"
+      ],
+      "achievements": [
+        "Built a Fake News Detection training project using natural language processing, TF-IDF and a trained classifier.",
+        "Completed the associated industrial training course with O grade (above 90%, as defined on the certificate)."
+      ],
+      "publishStatus": "published",
+      "order": 1
+    },
+    {
+      "company": "Web Guru Infosystem",
+      "role": "Web Development Intern",
+      "location": "Kolkata",
+      "startDate": "2024-09",
+      "endDate": "2024-11",
+      "current": false,
+      "description": "Completed a two-month internship with MERN-stack training and hands-on full-stack web development.",
+      "technologies": [
+        "MongoDB",
+        "Express",
+        "React",
+        "Node.js"
+      ],
+      "achievements": [
+        "Worked on dynamic web applications across frontend and backend technologies."
+      ],
+      "publishStatus": "published",
+      "order": 2
+    }
+  ],
+  "achievements": [
+    {
+      "title": "Data Science with Python - Industrial Training & Internship",
+      "issuer": "AICT Pvt. Ltd. (Anovatech Institute of Crystalline Technology Pvt. Ltd.)",
+      "date": "2026-07-08",
+      "description": "Completed industrial training and a 60-hour internship from 8 June to 8 July 2026. Awarded O grade (above 90% on the certificate scale). Training included a Fake News Detection project using NLP and TF-IDF. Credential ID: AICTDS221427. Issued while affiliated with Brainware University, CS (MCA).",
+      "icon": "??",
+      "category": "professional",
+      "featured": true,
+      "visible": true,
+      "order": 0
+    }
+  ],
+  "skills": [
+    {
+      "name": "Python",
+      "category": "Backend",
+      "level": null,
+      "targetLevel": 0,
+      "description": "Practised during the 60-hour AICT Data Science with Python internship (June-July 2026), including data analysis and machine learning training.",
+      "visible": true,
+      "order": 30
+    },
+    {
+      "name": "NumPy",
+      "category": "Tools",
+      "level": null,
+      "targetLevel": 0,
+      "description": "Practised during the 60-hour AICT Data Science with Python internship (June-July 2026), including data analysis and machine learning training.",
+      "visible": true,
+      "order": 31
+    },
+    {
+      "name": "Pandas",
+      "category": "Tools",
+      "level": null,
+      "targetLevel": 0,
+      "description": "Practised during the 60-hour AICT Data Science with Python internship (June-July 2026), including data analysis and machine learning training.",
+      "visible": true,
+      "order": 32
+    },
+    {
+      "name": "Matplotlib",
+      "category": "Tools",
+      "level": null,
+      "targetLevel": 0,
+      "description": "Practised during the 60-hour AICT Data Science with Python internship (June-July 2026), including data analysis and machine learning training.",
+      "visible": true,
+      "order": 33
+    },
+    {
+      "name": "Seaborn",
+      "category": "Tools",
+      "level": null,
+      "targetLevel": 0,
+      "description": "Practised during the 60-hour AICT Data Science with Python internship (June-July 2026), including data analysis and machine learning training.",
+      "visible": true,
+      "order": 34
+    },
+    {
+      "name": "Scikit-learn",
+      "category": "Tools",
+      "level": null,
+      "targetLevel": 0,
+      "description": "Practised during the 60-hour AICT Data Science with Python internship (June-July 2026), including data analysis and machine learning training.",
+      "visible": true,
+      "order": 35
+    }
+  ],
+  "timeline": [
+    {
+      "title": "Completed MERN-stack internship at Web Guru Infosystem",
+      "description": "Two-month web development internship in Kolkata, September-November 2024, with frontend and backend project work.",
+      "year": "2024",
+      "date": "2024-11",
+      "phase": "developer",
+      "category": "career",
+      "visible": true,
+      "order": 20
+    },
+    {
+      "title": "Completed AICT Data Science with Python internship",
+      "description": "Completed 60 hours of training (8 June-8 July 2026), earned O grade and built a Fake News Detection training project using NLP and TF-IDF.",
+      "year": "2026",
+      "date": "2026-07-08",
+      "phase": "learning",
+      "category": "learning",
+      "visible": true,
+      "order": 21
+    },
+    {
+      "title": "Joined RIZ Software Consultancy",
+      "description": "Joined as Jr. Web Developer (Backend) on 16 September 2026. Current employment confirmed by Tosif Raza.",
+      "year": "2026",
+      "date": "2026-09-16",
+      "phase": "developer",
+      "category": "career",
+      "visible": true,
+      "order": 22
+    }
+  ],
+  "profile": {
+    "longBio": "I'm a full-stack JavaScript developer based in Kolkata, India. I work across React interfaces, Express APIs and MongoDB data models to build practical web applications.\n\nMy GitHub projects include StoreX for inventory and business operations, KING'S TEA for e-commerce, SkillBridge for customer and worker workflows, and TOSIF OS for portfolio content and personal productivity. KING'S TUTOR explores tutoring workflows as a frontend prototype.\n\nI focus on clear user experiences and maintainable code, and continue learning through hands-on projects.\n\nMy practical training includes a MERN-stack internship at Web Guru Infosystem in Kolkata (September-November 2024) and a 60-hour Data Science with Python internship at AICT (June-July 2026). At AICT, I built a Fake News Detection training project using NLP and TF-IDF and earned O grade in the associated industrial training course.\n\nI currently work as a Jr. Web Developer (Backend) at RIZ Software Consultancy in Kolkata, having joined on 16 September 2026."
+  },
+  "about": {
+    "paragraphs": [
+      "I'm a full-stack JavaScript developer based in Kolkata, India. I work across React interfaces, Express APIs and MongoDB data models to build practical web applications.",
+      "My projects cover business operations in StoreX, e-commerce in KING'S TEA, customer and worker workflows in SkillBridge, and content management in TOSIF OS. KING'S TUTOR is a frontend prototype for tutoring workflows.",
+      "I enjoy working from a clear interface through backend routes and data models. My public repositories document both the implementation and its scope.",
+      "My practical training includes a MERN-stack internship at Web Guru Infosystem in Kolkata (September-November 2024) and a 60-hour Data Science with Python internship at AICT (June-July 2026). At AICT, I built a Fake News Detection training project using NLP and TF-IDF and earned O grade in the associated industrial training course.",
+      "I currently work as a Jr. Web Developer (Backend) at RIZ Software Consultancy in Kolkata, having joined on 16 September 2026."
+    ],
+    "highlights": [
+      {
+        "title": "Frontend and backend in one workflow",
+        "description": "React interfaces connected to Express APIs and MongoDB models across StoreX, KING'S TEA, SkillBridge and TOSIF OS."
+      },
+      {
+        "title": "Business application patterns",
+        "description": "Inventory and sales workflows, tenant-scoped access, checkout logic and editable site content."
+      },
+      {
+        "title": "Interactive client experiences",
+        "description": "Role-specific navigation, Redux-managed state and Socket.IO messaging in SkillBridge."
+      },
+      {
+        "title": "Code you can review",
+        "description": "Each selected project links to its source repository, with prototype and integration limitations stated."
+      }
+    ],
+    "values": [
+      {
+        "title": "Clear interfaces",
+        "description": "A focus on understandable user journeys and reusable UI components."
+      },
+      {
+        "title": "Maintainable structure",
+        "description": "Projects organise routes, service logic and data models into separate modules."
+      },
+      {
+        "title": "Learning through building",
+        "description": "Practical projects are the centre of my ongoing development."
+      }
+    ],
+    "visible": true
+  }
+}

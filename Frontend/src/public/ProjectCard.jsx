@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ExternalLink, Github, X } from 'lucide-react';
 import { apiUrl } from '@/utils/api';
+const ReactMarkdown = lazy(() => import('react-markdown'));
 
 function projectImages(project) {
   return [...new Set([project.image, ...(Array.isArray(project.images) ? project.images : [])]
@@ -265,6 +266,16 @@ export function ProjectModal({ project, onClose }) {
                 ))}
               </div>
             </div>
+          )}
+
+          {project.caseStudy && (
+            <section className="mt-5 rounded-xl border border-border bg-muted/20 p-4">
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-primary">Implementation & Scope</h3>
+              <Suspense fallback={<p>Loading project details?</p>}><ReactMarkdown components={{
+                p: ({ children }) => <p className="mb-3 text-[13px] leading-relaxed text-foreground/80 last:mb-0">{children}</p>,
+                a: ({ href, children }) => <a href={href} target="_blank" rel="noreferrer noopener" className="text-primary underline break-all">{children}</a>,
+              }}>{project.caseStudy}</ReactMarkdown></Suspense>
+            </section>
           )}
 
           <div className="mt-6 flex items-center gap-2.5">

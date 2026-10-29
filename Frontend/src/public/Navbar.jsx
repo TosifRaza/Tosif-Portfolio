@@ -11,7 +11,7 @@ function Logo({ name, profile }) {
   return (
     <>
       <ProfilePhoto profile={profile} name={name} className="w-8 h-8 rounded-lg shadow-[0_0_16px_hsl(var(--primary)/0.4)] text-[10px]" />
-      <span className="min-w-0 max-w-[38vw] truncate font-semibold text-[15px] text-foreground sm:max-w-none">{name || 'Tosif Raza'}</span>
+      <span className="min-w-0 max-w-[38vw] truncate font-semibold text-[15px] text-foreground sm:max-w-none">{name || 'Portfolio'}</span>
     </>
   );
 }
@@ -44,6 +44,9 @@ export default function Navbar({ profile }) {
     .filter((n) => targetToPath(n.target).toLowerCase() !== '/about')
     .filter((n) => String(n.label || '').trim().toLowerCase() !== 'home')
     .filter((n) => targetToPath(n.target) !== '/')
+    // Temporarily hidden — Products nav item
+    .filter((n) => String(n.label || '').trim().toLowerCase() !== 'products')
+    .filter((n) => targetToPath(n.target).toLowerCase() !== '/products')
     .filter((n) => n.target === '/os' || sectionEnabled(site, n.target))
     .sort((a, b) => a.order - b.order);
 
@@ -80,11 +83,11 @@ export default function Navbar({ profile }) {
     >
       {/* Left: identity */}
       <Link to="/" onClick={handleNavigation} className="flex min-w-0 items-center gap-2.5" aria-label="Home">
-        <Logo name={profile?.name || site?.hero?.heading || 'Tosif Raza'} profile={profile} />
+        <Logo name={profile?.name || site?.hero?.heading || 'Portfolio'} profile={profile} />
       </Link>
 
       {/* Center: CMS-driven links (desktop) */}
-      <nav className="hidden lg:flex items-center gap-0.5" aria-label="Main navigation">
+      <nav className="hidden xl:flex items-center gap-0.5" aria-label="Main navigation">
         {navItems.map((item) =>
           item.target === '/os' ? (
             <button
@@ -124,7 +127,7 @@ export default function Navbar({ profile }) {
         <ThemeToggle />
         <button
           onClick={() => setMenuOpen((v) => !v)}
-          className="lg:hidden p-2 rounded-lg text-muted-foreground hover:bg-muted"
+          className="xl:hidden p-2 rounded-lg text-muted-foreground hover:bg-muted"
           aria-label="Toggle menu"
         >
           {menuOpen ? <X size={18} /> : <Menu size={18} />}
@@ -139,7 +142,7 @@ export default function Navbar({ profile }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.18 }}
-            className="absolute top-14 left-0 right-0 max-h-[calc(100dvh-3.5rem)] overflow-y-auto overscroll-contain bg-background/98 backdrop-blur-xl border-b border-border p-4 flex flex-col gap-1 lg:hidden shadow-xl"
+            className="absolute top-14 left-0 right-0 max-h-[calc(100dvh-3.5rem)] overflow-y-auto overscroll-contain bg-background/98 backdrop-blur-xl border-b border-border p-4 flex flex-col gap-1 xl:hidden shadow-xl"
             aria-label="Mobile navigation"
           >
             {navItems.map((item) =>

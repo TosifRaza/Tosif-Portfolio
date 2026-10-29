@@ -6,8 +6,8 @@ const CATEGORIES = ['Frontend', 'Backend', 'Database', 'Tools', 'DevOps', 'Soft'
 const FIELDS = [
   { name: 'name', label: 'Skill Name', type: 'text' },
   { name: 'category', label: 'Category', type: 'select', options: CATEGORIES },
-  { name: 'level', label: 'Current level (0-100)', type: 'number', default: 80 },
-  { name: 'targetLevel', label: 'Target level (0-100)', type: 'number', default: 90 },
+  { name: 'level', label: 'Self-assessed level (optional, 0-100)', type: 'number', nullable: true },
+  { name: 'targetLevel', label: 'Target level (0-100)', type: 'number', default: 0 },
   { name: 'description', label: 'Description (public note)', type: 'text', full: true },
   { name: 'visible', label: 'Visible on public site', type: 'checkbox', default: true },
   { name: 'icon', label: 'Icon (emoji or URL)', type: 'text', default: '⚙️' },
@@ -20,7 +20,7 @@ const COLUMNS = [
   {
     key: 'level',
     label: 'Level',
-    render: (i) => (
+    render: (i) => typeof i.level !== 'number' ? <span className="text-xs text-muted-foreground">Not rated</span> : (
       <div className="flex items-center gap-2">
         <div className="w-20 h-1.5 rounded-full bg-muted/50 overflow-hidden">
           <div className="h-full bg-gradient-to-r from-neon-cyan to-neon-purple" style={{ width: `${i.level}%` }} />

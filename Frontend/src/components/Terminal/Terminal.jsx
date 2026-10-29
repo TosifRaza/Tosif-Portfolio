@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 import { api } from "@/utils/api";
@@ -147,17 +147,6 @@ export default function Terminal() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [history]);
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.ctrlKey && event.key === "`") {
-        event.preventDefault();
-        dispatch({ type: "TOGGLE_TERMINAL" });
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [dispatch]);
-
   const executeCommand = async (command) => {
     const normalized = command.trim().toLowerCase();
     setInput("");
@@ -167,7 +156,7 @@ export default function Terminal() {
     const knownCommand = HELP_COMMANDS.some((item) => item.name === normalized);
 
     if (knownCommand) {
-      const response = getCommandResponse(command);
+      const response = await getCommandResponse(command);
       if (response === "__CLEAR__") {
         setHistory([]);
         return;
@@ -332,7 +321,7 @@ export default function Terminal() {
   return (
     <>
       {matrixActive && <MatrixRain onClose={closeMatrix} />}
-      {state.terminalOpen && <AnimatePresence>
+      {state.terminalOpen && (
       <motion.div
         ref={panelRef}
         className={`fixed z-[60] flex max-h-[min(65dvh,440px)] flex-col overflow-hidden rounded-xl ${position ? "" : "inset-x-3 bottom-3 sm:inset-x-auto sm:bottom-4 sm:left-4 lg:left-20"}`}
@@ -580,7 +569,7 @@ export default function Terminal() {
           />
         </div>
       </motion.div>
-      </AnimatePresence>}
+      )}
     </>
   );
 }

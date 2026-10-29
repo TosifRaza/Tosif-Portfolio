@@ -13,10 +13,23 @@ export function apiUrl(path) {
   return `${API_ORIGIN}${path.startsWith('/') ? path : `/${path}`}`;
 }
 
-async function request(path, opts = {}) {
+// Share simultaneous public reads (including React StrictMode's second effect).
+// Do not cache authenticated data, failures or writes.
+const pendingReads = new Map();
+function request(path, opts = {}) {
+  const share = (!opts.method || opts.method === 'GET') && !opts.signal && !opts.headers;
+  if (share && pendingReads.has(path)) return pendingReads.get(path);
+  const promise = fetchJson(path, opts);
+  if (!share) return promise;
+  const pending = promise.finally(() => pendingReads.delete(path));
+  pendingReads.set(path, pending);
+  return pending;
+}
+
+async function fetchJson(path, opts = {}) {
   const res = await fetch(apiUrl(`${BASE}${path}`), {
-    headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) },
     ...opts,
+    headers: { ...(opts.body ? { 'Content-Type': 'application/json' } : {}), ...(opts.headers || {}) },
   });
   if (!res.ok) {
     let msg = `Request failed: ${res.status}`;

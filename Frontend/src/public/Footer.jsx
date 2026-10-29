@@ -5,7 +5,7 @@ import { usePublicSite, targetToPath } from './siteContext';
 export default function Footer({ profile }) {
   const { site } = usePublicSite();
   const year = new Date().getFullYear();
-  const name = profile?.name || site?.hero?.heading || 'Tosif Raza';
+  const name = profile?.name || site?.hero?.heading || 'Portfolio';
 
   const navItems = (site?.nav || [])
     .filter((n) => n.enabled && n.scope !== 'os' && n.target !== '/os')

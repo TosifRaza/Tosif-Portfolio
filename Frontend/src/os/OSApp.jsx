@@ -1,25 +1,25 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { Routes, Route, NavLink, Navigate, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Target, ListChecks, NotebookPen, Clock3, GraduationCap,
   Cpu, BarChart3, History, Rocket, Trophy, Bot, Settings as SettingsIcon, Zap, LogOut, ArrowLeft,
 } from 'lucide-react';
 import { getToken, getUser, clearSession } from './osAuth.js';
-import OSLogin from './pages/OSLogin.jsx';
-import Dashboard from './pages/Dashboard.jsx';
-import Goals from './pages/Goals.jsx';
-import GoalDetail from './pages/GoalDetail.jsx';
-import Tasks from './pages/Tasks.jsx';
-import DailyLog from './pages/DailyLog.jsx';
-import TimePage from './pages/TimePage.jsx';
-import Learning from './pages/Learning.jsx';
-import SkillsOS from './pages/SkillsOS.jsx';
-import Analytics from './pages/Analytics.jsx';
-import TimelineOS from './pages/TimelineOS.jsx';
-import FounderLab from './pages/FounderLab.jsx';
-import AchievementsOS from './pages/AchievementsOS.jsx';
-import PersonalAI from './pages/PersonalAI.jsx';
-import Settings from './pages/Settings.jsx';
+const OSLogin = lazy(() => import('./pages/OSLogin.jsx'));
+const Dashboard = lazy(() => import('./pages/Dashboard.jsx'));
+const Goals = lazy(() => import('./pages/Goals.jsx'));
+const GoalDetail = lazy(() => import('./pages/GoalDetail.jsx'));
+const Tasks = lazy(() => import('./pages/Tasks.jsx'));
+const DailyLog = lazy(() => import('./pages/DailyLog.jsx'));
+const TimePage = lazy(() => import('./pages/TimePage.jsx'));
+const Learning = lazy(() => import('./pages/Learning.jsx'));
+const SkillsOS = lazy(() => import('./pages/SkillsOS.jsx'));
+const Analytics = lazy(() => import('./pages/Analytics.jsx'));
+const TimelineOS = lazy(() => import('./pages/TimelineOS.jsx'));
+const FounderLab = lazy(() => import('./pages/FounderLab.jsx'));
+const AchievementsOS = lazy(() => import('./pages/AchievementsOS.jsx'));
+const PersonalAI = lazy(() => import('./pages/PersonalAI.jsx'));
+const Settings = lazy(() => import('./pages/Settings.jsx'));
 
 const NAV = [
   { to: '/os', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -148,6 +148,7 @@ export default function OSApp() {
   const [authed, setAuthed] = useState(() => !!getToken());
 
   return (
+    <Suspense fallback={<p className="p-6 text-muted-foreground" role="status">Loading workspace?</p>}>
     <Routes>
       <Route
         path="login"
@@ -172,6 +173,7 @@ export default function OSApp() {
         }
       />
     </Routes>
+    </Suspense>
   );
 }
 

@@ -46,7 +46,7 @@ export default function ResourceManager({ title, resource, token, fields, column
 
   function openCreate() {
     const blank = fields.reduce((acc, f) => {
-      acc[f.name] = f.type === 'tags' ? [] : f.default ?? '';
+      acc[f.name] = f.type === 'tags' ? [] : f.default ?? (f.nullable ? null : '');
       return acc;
     }, { ...initialValues });
     setEditing(blank);
@@ -295,7 +295,7 @@ export default function ResourceManager({ title, resource, token, fields, column
                         type="number"
                         value={editing[f.name] ?? ''}
                         onChange={(e) =>
-                          setEditing({ ...editing, [f.name]: Number(e.target.value) })
+                          setEditing({ ...editing, [f.name]: f.nullable && e.target.value === '' ? null : Number(e.target.value) })
                         }
                         className="input"
                       />

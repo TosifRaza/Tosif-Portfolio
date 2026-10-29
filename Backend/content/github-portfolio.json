@@ -1,0 +1,743 @@
+{
+  "verifiedOn": "2026-10-29",
+  "githubAccount": "TosifRaza",
+  "profile": {
+    "name": "Tosif Raza",
+    "title": "Full-Stack JavaScript Developer",
+    "roles": [
+      "Full-Stack JavaScript Developer",
+      "React & Node.js"
+    ],
+    "tagline": "Practical web applications, from interface to API.",
+    "shortBio": "I build web applications with React, Node.js, Express and MongoDB. My projects explore inventory management, e-commerce, service marketplaces and content-managed portfolios.",
+    "longBio": "I'm a full-stack JavaScript developer based in Kolkata, India. I work across React interfaces, Express APIs and MongoDB data models to build practical web applications.\n\nMy GitHub projects include StoreX for inventory and business operations, KING'S TEA for e-commerce, SkillBridge for customer and worker workflows, and TOSIF OS for portfolio content and personal productivity. KING'S TUTOR explores tutoring workflows as a frontend prototype.\n\nI focus on clear user experiences and maintainable code, and continue learning through hands-on projects.\n\nMy practical training includes a MERN-stack internship at Web Guru Infosystem in Kolkata (September-November 2024) and a 60-hour Data Science with Python internship at AICT (June-July 2026). At AICT, I built a Fake News Detection training project using NLP and TF-IDF and earned O grade in the associated industrial training course.\n\nI currently work as a Jr. Web Developer (Backend) at RIZ Software Consultancy in Kolkata, having joined on 16 September 2026.",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/160727165?v=4",
+    "coverUrl": "",
+    "location": "Kolkata, India",
+    "email": "razatosif206@gmail.com",
+    "phone": "",
+    "availability": {
+      "status": "",
+      "type": "",
+      "location": "",
+      "notice": ""
+    },
+    "socials": {
+      "github": "https://github.com/TosifRaza",
+      "linkedin": "",
+      "twitter": "",
+      "website": "https://tosif.site/"
+    },
+    "pitch": "My work spans React interfaces, Node.js APIs and MongoDB data models. StoreX demonstrates business workflows and tenant-scoped data access; KING'S TEA includes storefront, checkout and content-management code; SkillBridge connects customer and worker workflows with Socket.IO messaging. The repositories show how I approach complete web applications, with project scope and limitations described alongside each build."
+  },
+  "about": {
+    "paragraphs": [
+      "I'm a full-stack JavaScript developer based in Kolkata, India. I work across React interfaces, Express APIs and MongoDB data models to build practical web applications.",
+      "My projects cover business operations in StoreX, e-commerce in KING'S TEA, customer and worker workflows in SkillBridge, and content management in TOSIF OS. KING'S TUTOR is a frontend prototype for tutoring workflows.",
+      "I enjoy working from a clear interface through backend routes and data models. My public repositories document both the implementation and its scope.",
+      "My practical training includes a MERN-stack internship at Web Guru Infosystem in Kolkata (September-November 2024) and a 60-hour Data Science with Python internship at AICT (June-July 2026). At AICT, I built a Fake News Detection training project using NLP and TF-IDF and earned O grade in the associated industrial training course.",
+      "I currently work as a Jr. Web Developer (Backend) at RIZ Software Consultancy in Kolkata, having joined on 16 September 2026."
+    ],
+    "highlights": [
+      {
+        "title": "Frontend and backend in one workflow",
+        "description": "React interfaces connected to Express APIs and MongoDB models across StoreX, KING'S TEA, SkillBridge and TOSIF OS."
+      },
+      {
+        "title": "Business application patterns",
+        "description": "Inventory and sales workflows, tenant-scoped access, checkout logic and editable site content."
+      },
+      {
+        "title": "Interactive client experiences",
+        "description": "Role-specific navigation, Redux-managed state and Socket.IO messaging in SkillBridge."
+      },
+      {
+        "title": "Code you can review",
+        "description": "Each selected project links to its source repository, with prototype and integration limitations stated."
+      }
+    ],
+    "values": [
+      {
+        "title": "Clear interfaces",
+        "description": "A focus on understandable user journeys and reusable UI components."
+      },
+      {
+        "title": "Maintainable structure",
+        "description": "Projects organise routes, service logic and data models into separate modules."
+      },
+      {
+        "title": "Learning through building",
+        "description": "Practical projects are the centre of my ongoing development."
+      }
+    ],
+    "visible": true
+  },
+  "site": {
+    "hero": {
+      "badge": "FULL-STACK JAVASCRIPT DEVELOPER",
+      "heading": "Tosif Raza",
+      "subtitle": "Full-Stack JavaScript Developer",
+      "description": "From business dashboards to customer-facing applications, I build with React, Node.js, Express and MongoDB. Explore the projects and the code behind them.",
+      "primaryCta": {
+        "label": "Explore Projects",
+        "target": "/projects"
+      },
+      "secondaryCta": {
+        "label": "View Resume",
+        "target": "/resume"
+      },
+      "showStats": true,
+      "showCurrentMission": false
+    },
+    "currentMission": {
+      "title": "",
+      "description": "",
+      "progressLabel": ""
+    },
+    "sections": [
+      {
+        "key": "home",
+        "label": "Home",
+        "enabled": true,
+        "order": 1
+      },
+      {
+        "key": "about",
+        "label": "About",
+        "enabled": true,
+        "order": 2
+      },
+      {
+        "key": "experience",
+        "label": "Experience",
+        "enabled": true,
+        "order": 3
+      },
+      {
+        "key": "skills",
+        "label": "Skills",
+        "enabled": true,
+        "order": 4
+      },
+      {
+        "key": "projects",
+        "label": "Projects",
+        "enabled": true,
+        "order": 5
+      },
+      {
+        "key": "products",
+        "label": "Products",
+        "enabled": true,
+        "order": 6
+      },
+      {
+        "key": "achievements",
+        "label": "Achievements",
+        "enabled": true,
+        "order": 7
+      },
+      {
+        "key": "journey",
+        "label": "Journey",
+        "enabled": true,
+        "order": 8
+      },
+      {
+        "key": "resume",
+        "label": "Resume",
+        "enabled": true,
+        "order": 9
+      },
+      {
+        "key": "contact",
+        "label": "Contact",
+        "enabled": true,
+        "order": 10
+      },
+      {
+        "key": "globalreach",
+        "label": "Global Reach",
+        "enabled": false,
+        "order": 11
+      },
+      {
+        "key": "engineeringlab",
+        "label": "Engineering Lab",
+        "enabled": true,
+        "order": 5
+      }
+    ],
+    "nav": [
+      {
+        "label": "About",
+        "target": "about",
+        "enabled": true,
+        "order": 1,
+        "scope": "public"
+      },
+      {
+        "label": "Experience",
+        "target": "experience",
+        "enabled": true,
+        "order": 2,
+        "scope": "public"
+      },
+      {
+        "label": "Projects",
+        "target": "projects",
+        "enabled": true,
+        "order": 3,
+        "scope": "public"
+      },
+      {
+        "label": "Products",
+        "target": "products",
+        "enabled": true,
+        "order": 4,
+        "scope": "public"
+      },
+      {
+        "label": "Skills",
+        "target": "skills",
+        "enabled": true,
+        "order": 5,
+        "scope": "public"
+      },
+      {
+        "label": "Achievements",
+        "target": "achievements",
+        "enabled": true,
+        "order": 6,
+        "scope": "public"
+      },
+      {
+        "label": "Journey",
+        "target": "journey",
+        "enabled": true,
+        "order": 7,
+        "scope": "public"
+      },
+      {
+        "label": "Resume",
+        "target": "resume",
+        "enabled": true,
+        "order": 8,
+        "scope": "public"
+      },
+      {
+        "label": "Contact",
+        "target": "contact",
+        "enabled": true,
+        "order": 9,
+        "scope": "public"
+      },
+      {
+        "label": "Enter TOSIF OS",
+        "target": "/os",
+        "enabled": true,
+        "order": 10,
+        "scope": "public"
+      },
+      {
+        "label": "Home",
+        "target": "home",
+        "enabled": true,
+        "order": 11,
+        "scope": "public"
+      },
+      {
+        "label": "Engineering Lab",
+        "target": "engineeringlab",
+        "enabled": true,
+        "order": 12,
+        "scope": "public"
+      }
+    ],
+    "globalReach": [],
+    "statsMode": "auto",
+    "manualStats": [],
+    "footer": {
+      "text": "Tosif Raza · Full-Stack JavaScript Developer · Kolkata, India"
+    },
+    "ai": {
+      "publicEnabled": true,
+      "privateEnabled": true,
+      "publicIntro": "Ask about my published projects, technologies and contact details.",
+      "privateIntro": "Ask about your goals, learning, time and progress."
+    }
+  },
+  "projects": [
+    {
+      "repo": "StoreX",
+      "title": "StoreX",
+      "tagline": "Inventory, point of sale and business operations.",
+      "description": "A full-stack business management application with inventory, point-of-sale, sales, purchasing and customer workflows. React dashboards connect to an Express API with business-scoped MongoDB data and role-based access.",
+      "problem": "Bring product stock, sales, customer balances and purchasing into a shared business workspace.",
+      "solution": "The code separates React pages, API services and Mongoose models. Tenant middleware derives the business context from the authenticated user, while sales services coordinate sale items, inventory changes and customer records.",
+      "role": "Full-stack JavaScript development",
+      "stack": [
+        "React",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "Mongoose",
+        "Tailwind CSS",
+        "React Router",
+        "Recharts",
+        "JWT Authentication"
+      ],
+      "caseStudy": "The React POS page loads products and customers through API services. The backend sale service checks stock, calculates line totals and uses a MongoDB session to write related records. Tenant middleware restricts business data access to the authenticated business context.\n\nThis is a source-code portfolio project. No customer, revenue or deployment figures are claimed.",
+      "category": "personal",
+      "missionId": "GITHUB-001",
+      "githubUrl": "https://github.com/TosifRaza/StoreX",
+      "liveUrl": "",
+      "status": null,
+      "difficulty": null,
+      "featured": true,
+      "publishStatus": "published",
+      "order": 1,
+      "images": []
+    },
+    {
+      "repo": "kings-tea",
+      "title": "KING'S TEA",
+      "tagline": "A tea storefront with checkout and an admin CMS.",
+      "description": "A MERN e-commerce application with a customer storefront, product catalogue, cart, checkout and a separate admin portal. Backend code includes cash-on-delivery ordering, Razorpay integration and MongoDB-backed site content.",
+      "problem": "Connect a tea storefront with product, order and content management in one application.",
+      "solution": "Separate storefront and admin React apps share an Express API. The checkout controller calculates prices on the server and uses database transactions, while admin editors manage products, homepage content, media and order workflows.",
+      "role": "Full-stack JavaScript development",
+      "stack": [
+        "React",
+        "Redux Toolkit",
+        "Tailwind CSS",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "Mongoose",
+        "Razorpay Integration"
+      ],
+      "caseStudy": "The payment controller implements server-priced checkout, idempotency keys, cash-on-delivery orders and Razorpay verification paths. Published site-content endpoints serve stored homepage and policy content.\n\nOnline payments depend on configured Razorpay credentials and merchant settings. Recurring subscription enrolment is documented as disabled without a recurring-payment integration. No live sales or customer counts are claimed.",
+      "category": "personal",
+      "missionId": "GITHUB-002",
+      "githubUrl": "https://github.com/TosifRaza/kings-tea",
+      "liveUrl": "",
+      "status": null,
+      "difficulty": null,
+      "featured": true,
+      "publishStatus": "published",
+      "order": 2,
+      "images": []
+    },
+    {
+      "repo": "skillbridge-client",
+      "title": "SkillBridge",
+      "tagline": "A service marketplace with customer and worker portals.",
+      "description": "A full-stack service marketplace with customer, worker and admin interfaces. The React client uses Redux Toolkit, while the Express backend supports job applications, worker profiles, reviews and Socket.IO messaging.",
+      "problem": "Organise service requests, worker applications and conversations between customers and service providers.",
+      "solution": "Role-specific React routes share a Redux store for authentication, jobs, applications and chat. Backend services manage application status changes, and Socket.IO handlers deliver messages, typing indicators and read receipts.",
+      "role": "Full-stack JavaScript development",
+      "stack": [
+        "React",
+        "Redux Toolkit",
+        "React Router",
+        "Tailwind CSS",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "Mongoose",
+        "Socket.IO",
+        "JWT Authentication"
+      ],
+      "caseStudy": "The client and server are maintained in separate repositories. The application service handles proposals and application state changes; the socket handler connects conversation events with persisted chat messages.\n\n[Frontend source](https://github.com/TosifRaza/skillbridge-client) · [Backend source](https://github.com/TosifRaza/skillbridge-server)\n\nThis describes the implementation in the repositories; no user adoption or marketplace revenue is asserted.",
+      "category": "personal",
+      "missionId": "GITHUB-003",
+      "githubUrl": "https://github.com/TosifRaza/skillbridge-client",
+      "liveUrl": "",
+      "status": null,
+      "difficulty": null,
+      "featured": true,
+      "publishStatus": "published",
+      "order": 3,
+      "images": []
+    },
+    {
+      "repo": "Tosif-Portfolio",
+      "title": "TOSIF OS",
+      "tagline": "A portfolio, admin CMS and private productivity workspace.",
+      "description": "A database-driven portfolio paired with an admin control centre and a private personal workspace. The MERN application manages public content alongside goals, tasks, time entries, learning sessions and analytics.",
+      "problem": "Keep portfolio content editable while organising personal development work in the same application.",
+      "solution": "A public React site and an admin React app share an Express API. JWT-protected routes support the private workspace, while MongoDB stores project content, skills and activity records.",
+      "role": "Full-stack JavaScript development",
+      "stack": [
+        "React",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "Mongoose",
+        "Tailwind CSS",
+        "Vite",
+        "React Router",
+        "Recharts",
+        "JWT Authentication"
+      ],
+      "caseStudy": "The repository contains separate Frontend, Admin-Portal and Backend applications. Public content has publish controls; the private workspace links goals, milestones and tasks and aggregates time and learning records. GitHub repository suggestions require admin review before becoming portfolio projects.\n\nThe public portfolio is linked from the GitHub profile at https://tosif.site/.",
+      "category": "personal",
+      "liveUrl": "https://tosif.site/",
+      "missionId": "GITHUB-004",
+      "githubUrl": "https://github.com/TosifRaza/Tosif-Portfolio",
+      "status": null,
+      "difficulty": null,
+      "featured": true,
+      "publishStatus": "published",
+      "order": 4,
+      "images": []
+    },
+    {
+      "repo": "kings-tutor",
+      "title": "KING'S TUTOR",
+      "tagline": "A tutoring-platform frontend prototype.",
+      "description": "A React frontend prototype for student enrolment, tutor discovery and administrative lead workflows. It includes student, teacher and admin screens, with simulated service responses stored in the browser.",
+      "problem": "Explore the interfaces and navigation required to connect tutoring enquiries, teacher profiles and admin lead management.",
+      "solution": "Reusable UI components, React Router routes and service modules organise the prototype. The service layer provides a boundary where a real backend could replace the current mock handlers.",
+      "role": "Frontend development — prototype",
+      "stack": [
+        "React",
+        "JavaScript",
+        "Tailwind CSS",
+        "React Router",
+        "Vite",
+        "HTML & CSS"
+      ],
+      "caseStudy": "The repository explicitly defines this as frontend-only. Its apiClient dispatches to mock handlers, and localStorage persists demo interactions. OTP, SMS, email and payment flows are simulated; there is no connected production backend.\n\nThe project demonstrates interface design, component organisation, routing and service-layer structure.",
+      "category": "learning",
+      "missionId": "GITHUB-005",
+      "githubUrl": "https://github.com/TosifRaza/kings-tutor",
+      "liveUrl": "",
+      "status": null,
+      "difficulty": null,
+      "featured": true,
+      "publishStatus": "published",
+      "order": 5,
+      "images": []
+    }
+  ],
+  "skills": [
+    {
+      "name": "JavaScript",
+      "category": "Frontend",
+      "description": "Used across the React interfaces and Node.js services in StoreX, KING'S TEA, SkillBridge and TOSIF OS.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 1
+    },
+    {
+      "name": "React",
+      "category": "Frontend",
+      "description": "Component-based storefronts, dashboards and forms across all five selected projects.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 2
+    },
+    {
+      "name": "Node.js",
+      "category": "Backend",
+      "description": "Runs the API servers for StoreX, KING'S TEA, SkillBridge and TOSIF OS.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 3
+    },
+    {
+      "name": "Express",
+      "category": "Backend",
+      "description": "Organises HTTP routes, middleware and controllers in the four full-stack projects.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 4
+    },
+    {
+      "name": "MongoDB",
+      "category": "Database",
+      "description": "Stores application records in StoreX, KING'S TEA, SkillBridge and TOSIF OS.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 5
+    },
+    {
+      "name": "Mongoose",
+      "category": "Database",
+      "description": "Defines application schemas and queries; StoreX and KING'S TEA also use database sessions in sales and checkout code.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 6
+    },
+    {
+      "name": "Tailwind CSS",
+      "category": "Frontend",
+      "description": "Styles reusable components and responsive layouts across the selected React projects.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 7
+    },
+    {
+      "name": "Redux Toolkit",
+      "category": "Frontend",
+      "description": "Organises authentication, application and chat state in SkillBridge and storefront/admin state in KING'S TEA.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 8
+    },
+    {
+      "name": "React Router",
+      "category": "Frontend",
+      "description": "Connects public, authenticated and role-specific pages in the selected React applications.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 9
+    },
+    {
+      "name": "Socket.IO",
+      "category": "Backend",
+      "description": "Implements message delivery, typing indicators, online status and read receipts in SkillBridge.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 10
+    },
+    {
+      "name": "REST APIs",
+      "category": "Backend",
+      "description": "Connects React clients to Express resource endpoints for products, jobs, profiles and portfolio content.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 11
+    },
+    {
+      "name": "JWT Authentication",
+      "category": "Backend",
+      "description": "Used for authenticated APIs and role checks in StoreX, SkillBridge, KING'S TEA and TOSIF OS.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 12
+    },
+    {
+      "name": "Recharts",
+      "category": "Frontend",
+      "description": "Used for dashboard and reporting visualisations in StoreX and TOSIF OS.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 13
+    },
+    {
+      "name": "Vite",
+      "category": "Tools",
+      "description": "Provides the development server and frontend build pipeline for the selected React projects.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 14
+    },
+    {
+      "name": "Git & GitHub",
+      "category": "Tools",
+      "description": "Repository history records project changes across the selected public repositories under TosifRaza.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 15
+    },
+    {
+      "name": "HTML & CSS",
+      "category": "Frontend",
+      "description": "Used through JSX markup and stylesheets for forms, page layouts and responsive UI.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 16
+    },
+    {
+      "name": "Razorpay Integration",
+      "category": "Backend",
+      "description": "KING'S TEA contains checkout creation, payment verification and webhook handling; operation requires merchant credentials.",
+      "level": null,
+      "targetLevel": 0,
+      "visible": true,
+      "icon": "",
+      "order": 17
+    },
+    {
+      "name": "Python",
+      "category": "Backend",
+      "level": null,
+      "targetLevel": 0,
+      "description": "Practised during the 60-hour AICT Data Science with Python internship (June-July 2026), including data analysis and machine learning training.",
+      "visible": true,
+      "order": 30
+    },
+    {
+      "name": "NumPy",
+      "category": "Tools",
+      "level": null,
+      "targetLevel": 0,
+      "description": "Practised during the 60-hour AICT Data Science with Python internship (June-July 2026), including data analysis and machine learning training.",
+      "visible": true,
+      "order": 31
+    },
+    {
+      "name": "Pandas",
+      "category": "Tools",
+      "level": null,
+      "targetLevel": 0,
+      "description": "Practised during the 60-hour AICT Data Science with Python internship (June-July 2026), including data analysis and machine learning training.",
+      "visible": true,
+      "order": 32
+    },
+    {
+      "name": "Matplotlib",
+      "category": "Tools",
+      "level": null,
+      "targetLevel": 0,
+      "description": "Practised during the 60-hour AICT Data Science with Python internship (June-July 2026), including data analysis and machine learning training.",
+      "visible": true,
+      "order": 33
+    },
+    {
+      "name": "Seaborn",
+      "category": "Tools",
+      "level": null,
+      "targetLevel": 0,
+      "description": "Practised during the 60-hour AICT Data Science with Python internship (June-July 2026), including data analysis and machine learning training.",
+      "visible": true,
+      "order": 34
+    },
+    {
+      "name": "Scikit-learn",
+      "category": "Tools",
+      "level": null,
+      "targetLevel": 0,
+      "description": "Practised during the 60-hour AICT Data Science with Python internship (June-July 2026), including data analysis and machine learning training.",
+      "visible": true,
+      "order": 35
+    }
+  ],
+  "timeline": [
+    {
+      "title": "SkillBridge repository created",
+      "description": "The skillbridge-client GitHub repository was created on 2026-06-01. A service marketplace with customer and worker portals. This date records repository creation, not a production launch or employment start.",
+      "date": "2026-06-01",
+      "year": "2026",
+      "phase": "developer",
+      "category": "project",
+      "visible": true,
+      "icon": "",
+      "projectMissionId": "GITHUB-003",
+      "order": 1
+    },
+    {
+      "title": "KING'S TEA repository created",
+      "description": "The kings-tea GitHub repository was created on 2026-06-11. A tea storefront with checkout and an admin CMS. This date records repository creation, not a production launch or employment start.",
+      "date": "2026-06-11",
+      "year": "2026",
+      "phase": "developer",
+      "category": "project",
+      "visible": true,
+      "icon": "",
+      "projectMissionId": "GITHUB-002",
+      "order": 2
+    },
+    {
+      "title": "StoreX repository created",
+      "description": "The StoreX GitHub repository was created on 2026-08-18. Inventory, point of sale and business operations. This date records repository creation, not a production launch or employment start.",
+      "date": "2026-08-18",
+      "year": "2026",
+      "phase": "developer",
+      "category": "project",
+      "visible": true,
+      "icon": "",
+      "projectMissionId": "GITHUB-001",
+      "order": 3
+    },
+    {
+      "title": "KING'S TUTOR repository created",
+      "description": "The kings-tutor GitHub repository was created on 2026-10-04. A tutoring-platform frontend prototype. This date records repository creation, not a production launch or employment start.",
+      "date": "2026-10-04",
+      "year": "2026",
+      "phase": "learning",
+      "category": "project",
+      "visible": true,
+      "icon": "",
+      "projectMissionId": "GITHUB-005",
+      "order": 4
+    },
+    {
+      "title": "TOSIF OS repository created",
+      "description": "The Tosif-Portfolio GitHub repository was created on 2026-10-06. A portfolio, admin CMS and private productivity workspace. This date records repository creation, not a production launch or employment start.",
+      "date": "2026-10-06",
+      "year": "2026",
+      "phase": "developer",
+      "category": "project",
+      "visible": true,
+      "icon": "",
+      "projectMissionId": "GITHUB-004",
+      "order": 5
+    },
+    {
+      "title": "Completed MERN-stack internship at Web Guru Infosystem",
+      "description": "Two-month web development internship in Kolkata, September-November 2024, with frontend and backend project work.",
+      "year": "2024",
+      "date": "2024-11",
+      "phase": "developer",
+      "category": "career",
+      "visible": true,
+      "order": 20
+    },
+    {
+      "title": "Completed AICT Data Science with Python internship",
+      "description": "Completed 60 hours of training (8 June-8 July 2026), earned O grade and built a Fake News Detection training project using NLP and TF-IDF.",
+      "year": "2026",
+      "date": "2026-07-08",
+      "phase": "learning",
+      "category": "learning",
+      "visible": true,
+      "order": 21
+    },
+    {
+      "title": "Joined RIZ Software Consultancy",
+      "description": "Joined as Jr. Web Developer (Backend) on 16 September 2026. Current employment confirmed by Tosif Raza.",
+      "year": "2026",
+      "date": "2026-09-16",
+      "phase": "developer",
+      "category": "career",
+      "visible": true,
+      "order": 22
+    }
+  ]
+}

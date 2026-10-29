@@ -20,27 +20,12 @@ export default function RecruiterMode() {
   const { data: resume, error: resumeError } = useApi(() => api.getResume());
   const { data: experience } = useApi(() => api.getExperience());
 
-  const matchWeights = useMemo(() => {
-    const w = {};
-    for (const s of skills || []) w[s.name.toLowerCase()] = s.level || 60;
-    return w;
-  }, [skills]);
-
-  const matchScore = useMemo(() => {
-    if (!matchInput.trim() || Object.keys(matchWeights).length === 0) return null;
-    const tokens = matchInput.toLowerCase().split(/[\s,./+]+/).filter((t) => t.length > 1);
-    const matched = tokens
-      .filter((t) => Object.keys(matchWeights).some((k) => k.includes(t) || t.includes(k)))
-      .map((t) => {
-        const key = Object.keys(matchWeights).find((k) => k.includes(t) || t.includes(k));
-        return { skill: key, weight: matchWeights[key] };
-      });
-    if (!tokens.length) return null;
-    const score = Math.round(
-      matched.reduce((sum, m) => sum + m.weight, 0) / Math.max(1, tokens.length)
-    );
-    return { score, matched };
-  }, [matchInput, matchWeights]);
+  const matchedSkills = useMemo(() => {
+    if (!matchInput.trim()) return null;
+    const normalize = (value) => value.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const terms = matchInput.split(/[,;\n]+/).map(normalize).filter(Boolean);
+    return (skills || []).filter((skill) => terms.includes(normalize(skill.name)));
+  }, [matchInput, skills]);
 
   const p = profile || {};
   const highlights = (about?.highlights || []).slice(0, 5);
@@ -67,7 +52,7 @@ export default function RecruiterMode() {
         <motion.div variants={staggerItem} className="glass rounded-xl p-4 sm:p-5 mb-5 sm:mb-6">
           <h3 className="text-xs text-text-muted uppercase tracking-wider mb-3">Candidate Summary</h3>
           <div className="text-sm text-text-secondary leading-relaxed break-words">
-            <strong className="text-text-primary">{p.name || "Tosif Raza"}</strong> — {p.title || "Software Engineer & Founder"}
+            <strong className="text-text-primary">{p.name || "Profile not added yet"}</strong>{p.title ? ` — ${p.title}` : ''}
             {p.location ? `, based in ${p.location}.` : "."} {p.shortBio}
           </div>
           <div className="flex flex-wrap gap-x-4 gap-y-2 mt-3 text-xs">
@@ -95,54 +80,28 @@ export default function RecruiterMode() {
           )}
         </motion.div>
 
-        {/* Skill Match — weights = real self-assessed levels from the DB */}
+        {/* Find technologies in the published project stack without inventing a proficiency score. */}
         <motion.div variants={staggerItem} className="glass rounded-xl p-4 sm:p-5 mb-5 sm:mb-6">
-          <h3 className="text-xs text-text-muted uppercase tracking-wider mb-3">Skill Match</h3>
+          <h3 className="text-xs text-text-muted uppercase tracking-wider mb-3">Find Relevant Skills</h3>
           <p className="text-xs text-text-secondary mb-3">
-            Paste your job requirements — the match is computed against my actual self-assessed skill levels.
+            Enter comma-separated technologies to find examples in my project stack.
           </p>
           <input
             type="text"
             value={matchInput}
-            onChange={(e) => setMatchInput(e.target.value)}
-            placeholder="e.g. React Developer, Node.js, MongoDB"
-            className="w-full px-4 py-3 rounded-lg bg-muted/50 border border-border text-text-primary placeholder:text-text-muted text-sm focus:outline-none focus:border-purple-500/50 transition-all"
+            onChange={(event) => setMatchInput(event.target.value)}
+            placeholder="React, Node.js, MongoDB"
+            className="w-full px-4 py-3 rounded-lg bg-muted/50 border border-border text-text-primary placeholder:text-text-muted text-sm focus:outline-none focus:border-primary/50"
           />
-
-          {matchScore && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-text-secondary">Alignment with your requirements</span>
-                <span className={`text-lg font-bold ${matchScore.score >= 70 ? "text-green-400" : matchScore.score >= 40 ? "text-amber-400" : "text-red-400"}`}>
-                  {matchScore.score}%
-                </span>
-              </div>
-              <div className="w-full h-2 rounded-full bg-muted/60 overflow-hidden">
-                <motion.div
-                  className="h-full rounded-full"
-                  style={{ background: matchScore.score >= 70 ? "#10B981" : matchScore.score >= 40 ? "#F59E0B" : "#EF4444" }}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${matchScore.score}%` }}
-                  transition={{ duration: 1 }}
-                />
-              </div>
-
-              {matchScore.matched.length > 0 && (
-                <div className="mt-3 space-y-2">
-                  {matchScore.matched.map(({ skill, weight }) => (
-                    <div key={skill} className="flex items-center justify-between">
-                      <span className="text-xs text-text-secondary capitalize">{skill}</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-20 h-1 rounded-full bg-muted/60 overflow-hidden">
-                          <div className="h-full rounded-full bg-purple-500" style={{ width: `${weight}%` }} />
-                        </div>
-                        <span className="text-xs text-text-muted w-8">{weight}%</span>
-                      </div>
-                    </div>
-                  ))}
+          {matchedSkills && (
+            <div className="mt-4 space-y-3">
+              {matchedSkills.length ? matchedSkills.map((skill) => (
+                <div key={skill._id || skill.name}>
+                  <p className="text-sm font-medium text-primary">{skill.name}</p>
+                  {skill.description && <p className="mt-1 text-xs leading-relaxed text-text-secondary">{skill.description}</p>}
                 </div>
-              )}
-            </motion.div>
+              )) : <p className="text-xs text-text-muted">No matching technologies in the published skills yet.</p>}
+            </div>
           )}
         </motion.div>
 

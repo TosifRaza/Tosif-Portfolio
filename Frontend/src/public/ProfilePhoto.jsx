@@ -18,7 +18,7 @@ export default function ProfilePhoto({ profile, name, alt = '', className = '' }
   const sources = getProfilePhotoSources(profile);
   const [failedSource, setFailedSource] = useState('');
   const [loaded, setLoaded] = useState(false);
-  const initials = (name || 'Tosif Raza')
+  const initials = (name || '')
     .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)
@@ -47,7 +47,7 @@ export default function ProfilePhoto({ profile, name, alt = '', className = '' }
           src={imageSrc}
           alt={alt}
           loading="eager"
-          fetchPriority="high"
+          fetchpriority="high"
           decoding="async"
           className={`absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-200 ${loaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={() => setLoaded(true)}

@@ -19,10 +19,11 @@ const fadeUp = {
 };
 
 function HeroCodeCard({ profile }) {
-  const dev = profile?.name || 'Tosif Raza';
-  const role = (profile?.roles && profile.roles[0]) || profile?.title || 'Software Engineer';
-  const focus = profile?.roles?.[1] || 'Full-Stack Developer';
-  const location = profile?.location || 'India';
+  const dev = profile?.name || '';
+  const role = (profile?.roles && profile.roles[0]) || profile?.title || '';
+  const focus = profile?.roles?.[1] || '';
+  const location = profile?.location || '';
+  if (!dev && !role && !focus && !location) return null;
   return (
     <div className="rounded-xl border border-border bg-card/90 backdrop-blur font-mono text-[11px] leading-relaxed shadow-xl overflow-hidden">
       <div className="flex items-center gap-1.5 px-3.5 py-2 border-b border-border bg-muted/40">
@@ -37,7 +38,7 @@ function HeroCodeCard({ profile }) {
         <p className="pl-4">role: <span className="text-emerald-500">'{role}'</span>,</p>
         <p className="pl-4">focus: <span className="text-emerald-500">'{focus}'</span>,</p>
         <p className="pl-4">location: <span className="text-emerald-500">'{location}'</span>,</p>
-        <p className="pl-4">openToWork: <span className="text-primary">true</span>,</p>
+        <p className="pl-4">availability: <span className="text-emerald-500">'{profile?.availability?.status || ''}'</span>,</p>
         <p>{'};'}</p>
       </div>
     </div>
@@ -52,14 +53,14 @@ export default function HomePage() {
   const [selected, setSelected] = useState(null);
 
   const hero = site?.hero || {};
-  const name = profile?.name || hero.heading || 'Tosif Raza';
+  const name = profile?.name || hero.heading || 'Portfolio';
   const nameParts = name.split(' ');
-  const role = (profile?.roles && profile.roles[0]) || hero.subtitle || 'Software Engineer';
+  const role = (profile?.roles && profile.roles[0]) || profile?.title || hero.subtitle || '';
   const description = hero.description || profile?.shortBio || '';
   const featured = (projects || []).filter((p) => p.featured).slice(0, 3);
   const featuredList = featured.length ? featured : (projects || []).slice(0, 3);
-  const techChips = (skills || []).slice(0, 6);
-  const stats = (statsRes?.stats || []).slice(0, 4);
+  const techChips = [...(skills || [])].sort((a, b) => a.order - b.order).slice(0, 6);
+  const stats = (statsRes?.stats || []).filter((stat) => Number(stat.value) > 0).slice(0, 4);
 
   const socials = [
     { icon: Github, url: profile?.socials?.github, label: 'GitHub' },
@@ -110,7 +111,7 @@ export default function HomePage() {
                 to={secondaryCta.target?.startsWith('/') ? secondaryCta.target : '/resume'}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border bg-card text-sm font-medium text-foreground hover:border-primary/40 hover:text-primary transition-all"
               >
-                <Download size={14} /> {secondaryCta.label}
+                {secondaryCta.label}
               </Link>
             </motion.div>
 

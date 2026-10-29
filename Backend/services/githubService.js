@@ -143,12 +143,9 @@ export async function fetchGitHubProfile(username, token) {
       description: r.description || '',
     }));
 
-  // Commit activity (last 30 days, mocked-from-events because events API only
-  // returns the last 90 public events — good enough for a portfolio preview)
-  const commitActivity = Array.from({ length: 30 }, (_, i) => ({
-    day: i + 1,
-    commits: Math.floor(Math.random() * 15) + 1,
-  }));
+  // Profile/repository responses contain no commit history. The contributions
+  // endpoint supplies the real calendar separately.
+  const commitActivity = [];
 
   return {
     username: profile.login,

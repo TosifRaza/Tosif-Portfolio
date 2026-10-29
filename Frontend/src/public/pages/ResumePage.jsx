@@ -7,8 +7,8 @@ import { usePublicSite } from '../siteContext';
 import { useEffect, useState } from 'react';
 
 function ResumePreview({ resume, profile, experience, skills }) {
-  const name = profile?.name || 'Tosif Raza';
-  const role = (profile?.roles && profile.roles[0]) || profile?.title || 'Software Engineer';
+  const name = profile?.name || '';
+  const role = (profile?.roles && profile.roles[0]) || profile?.title || '';
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}

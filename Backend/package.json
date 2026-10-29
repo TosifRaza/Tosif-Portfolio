@@ -8,6 +8,8 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "reset-admin": "node reset-admin.js",
+    "reset:content": "node scripts/resetContent.js",
+    "import:github-profile": "node scripts/importGithubProfile.js",
     "migrate:public-images": "node scripts/migratePublicImages.js"
   },
   "dependencies": {

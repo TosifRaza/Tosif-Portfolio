@@ -17,7 +17,7 @@ export default function FounderAI() {
   const [messages, setMessages] = useState([
     {
       role: "ai",
-      text: "Hey! I'm Founder AI — your guide to Tosif's portfolio. Ask me anything about his skills, projects, or startup journey.",
+      text: "Hi! I can help you explore Tosif's published projects, technologies and contact details.",
       followUp: defaultSuggestions,
     },
   ]);
