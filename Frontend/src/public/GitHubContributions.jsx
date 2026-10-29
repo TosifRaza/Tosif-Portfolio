@@ -66,7 +66,7 @@ export default function GitHubContributions({ githubUrl }) {
   if (!username) return null;
 
   return (
-    <section className="mt-7 w-fit max-w-full min-w-0 justify-self-start rounded-xl border border-border bg-card/60 p-4 sm:p-5" aria-label="GitHub contributions">
+    <section className="w-fit max-w-full min-w-0 justify-self-start rounded-xl border border-border bg-card/60 p-4 sm:p-5" aria-label="GitHub contributions">
       <div className="flex items-center justify-between gap-3">
         <div>
           <h2 className="text-sm font-semibold text-foreground">GitHub Activity</h2>

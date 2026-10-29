@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   ArrowRight, ArrowUpRight, FolderKanban, User, Github, Linkedin, Twitter, Mail,
-  MapPin, Download, Rocket,
+  MapPin, Download, Rocket, Globe,
 } from 'lucide-react';
 import { useApi } from '@/hooks/useApi';
 import { api } from '@/utils/api';
@@ -17,6 +17,14 @@ const fadeUp = {
   initial: { opacity: 0, y: 18 },
   animate: { opacity: 1, y: 0 },
 };
+
+function LeetCodeIcon({ className = 'h-4 w-4' }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z" />
+    </svg>
+  );
+}
 
 function HeroCodeCard({ profile }) {
   const dev = profile?.name || '';
@@ -62,12 +70,44 @@ export default function HomePage() {
   const techChips = [...(skills || [])].sort((a, b) => a.order - b.order).slice(0, 6);
   const stats = (statsRes?.stats || []).filter((stat) => Number(stat.value) > 0).slice(0, 4);
 
-  const socials = [
-    { icon: Github, url: profile?.socials?.github, label: 'GitHub' },
-    { icon: Linkedin, url: profile?.socials?.linkedin, label: 'LinkedIn' },
-    { icon: Twitter, url: profile?.socials?.twitter, label: 'Twitter' },
-    { icon: Mail, url: profile?.email ? `mailto:${profile.email}` : '', label: 'Email' },
-  ].filter((s) => s.url);
+  const professionalLinks = [
+    {
+      icon: Github,
+      url: profile?.socials?.github || 'https://github.com/TosifRaza',
+      label: 'GitHub',
+      hoverColor: 'hover:text-foreground hover:border-foreground/40 hover:bg-foreground/5',
+    },
+    {
+      icon: Linkedin,
+      url: profile?.socials?.linkedin || 'https://linkedin.com/in/tosifraza',
+      label: 'LinkedIn',
+      hoverColor: 'hover:text-[#0a66c2] hover:border-[#0a66c2]/40 hover:bg-[#0a66c2]/10',
+    },
+    {
+      icon: LeetCodeIcon,
+      url: 'https://leetcode.com/u/TosifRaza',
+      label: 'LeetCode',
+      hoverColor: 'hover:text-[#ffa116] hover:border-[#ffa116]/40 hover:bg-[#ffa116]/10',
+    },
+    {
+      icon: Twitter,
+      url: profile?.socials?.twitter || 'https://twitter.com/tosifraza',
+      label: 'Twitter / X',
+      hoverColor: 'hover:text-[#1d9bf0] hover:border-[#1d9bf0]/40 hover:bg-[#1d9bf0]/10',
+    },
+    {
+      icon: Mail,
+      url: profile?.email ? `mailto:${profile.email}` : 'mailto:razatosif206@gmail.com',
+      label: 'Email',
+      hoverColor: 'hover:text-[#ea4335] hover:border-[#ea4335]/40 hover:bg-[#ea4335]/10',
+    },
+    {
+      icon: Globe,
+      url: profile?.socials?.website || 'https://tosif.site/',
+      label: 'Portfolio Website',
+      hoverColor: 'hover:text-primary hover:border-primary/40 hover:bg-primary/10',
+    },
+  ];
 
   const primaryCta = hero.primaryCta?.label ? hero.primaryCta : { label: 'View Projects', target: '/projects' };
   const secondaryCta = hero.secondaryCta?.label ? hero.secondaryCta : { label: 'Download Resume', target: '/resume' };
@@ -78,7 +118,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 grid-backdrop opacity-30 pointer-events-none" aria-hidden="true" />
         <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-primary/10 blur-3xl pointer-events-none" aria-hidden="true" />
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 grid md:grid-cols-[1.2fr_1fr] gap-8 lg:gap-12 items-start">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 pb-4 grid md:grid-cols-[1.2fr_1fr] gap-8 lg:gap-12 items-start">
           <div className="min-w-0 md:col-start-1 md:row-start-1">
             <motion.p {...fadeUp} className="text-sm text-muted-foreground mb-3">
               {hero.badge || "Hello, I'm"}
@@ -115,16 +155,9 @@ export default function HomePage() {
               </Link>
             </motion.div>
 
-            {socials.length > 0 && (
-              <motion.div {...fadeUp} transition={{ delay: 0.25 }} className="mt-6 flex items-center gap-4">
-                {socials.map(({ icon: Icon, url, label }) => (
-                  <a key={label} href={url} target="_blank" rel="noreferrer noopener" aria-label={label}
-                    className="text-muted-foreground hover:text-primary transition-colors">
-                    <Icon size={18} />
-                  </a>
-                ))}
-              </motion.div>
-            )}
+            <motion.div {...fadeUp} transition={{ delay: 0.25 }} className="mt-6">
+              <GitHubContributions githubUrl={profile?.socials?.github} />
+            </motion.div>
           </div>
 
           {/* Right: avatar + code card */}
@@ -132,7 +165,7 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.15, duration: 0.45 }}
-            className="relative flex min-w-0 flex-col items-center gap-6 md:col-start-2 md:row-start-1 md:row-span-2"
+            className="relative flex min-w-0 flex-col items-center gap-6 md:col-start-2"
           >
             <div className="flex flex-col items-center gap-4">
               <ProfilePhoto
@@ -155,27 +188,31 @@ export default function HomePage() {
             </div>
             <div className="w-full max-w-sm">
               <HeroCodeCard profile={profile} />
+
+              {/* Professional Engineer Quick Links */}
+              <motion.div
+                {...fadeUp}
+                transition={{ delay: 0.25 }}
+                className="mt-3 flex items-center justify-center gap-2"
+                aria-label="Professional profiles and contact"
+              >
+                {professionalLinks.map(({ icon: Icon, url, label, hoverColor }) => (
+                  <a
+                    key={label}
+                    href={url}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label={label}
+                    title={label}
+                    className={`flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card/85 text-muted-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${hoverColor}`}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                ))}
+              </motion.div>
             </div>
           </motion.div>
-
-          <div className="min-w-0 md:col-start-1 md:row-start-2">
-            <GitHubContributions githubUrl={profile?.socials?.github} />
-          </div>
         </div>
-
-        {/* Tech chips strip */}
-        {techChips.length > 0 && (
-          <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pb-10">
-            <motion.div {...fadeUp} transition={{ delay: 0.3 }} className="flex flex-wrap gap-2.5">
-              {techChips.map((s) => (
-                <span key={s._id || s.name} className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-border bg-card text-xs font-medium text-foreground/85">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                  {s.name}
-                </span>
-              ))}
-            </motion.div>
-          </div>
-        )}
       </section>
 
       {/* ── Current mission (CMS-controlled) ─────────────── */}
@@ -201,7 +238,7 @@ export default function HomePage() {
       )}
 
       {/* ── Featured Projects ────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-16 w-full">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 w-full">
         <div className="flex flex-col items-start gap-3 mb-7 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="flex items-center gap-2 text-xl sm:text-2xl font-bold text-foreground">
             <FolderKanban size={20} className="text-primary" /> Featured Projects
@@ -225,7 +262,7 @@ export default function HomePage() {
 
       {/* ── About strip + stats ──────────────────────────── */}
       <section className="border-t border-border bg-card/30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 grid lg:grid-cols-[1.3fr_1fr] gap-8 items-center">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 grid lg:grid-cols-[1.3fr_1fr] gap-8 items-center">
           <div>
             <h2 className="flex items-center gap-2 text-xl font-bold text-foreground mb-3">
               <User size={18} className="text-primary" /> About Me
