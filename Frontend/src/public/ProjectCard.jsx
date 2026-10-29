@@ -45,8 +45,8 @@ function ProjectImageCarousel({ project, className, controls = false, thumbnails
   const selectImage = (index) => setCurrent((index + images.length) % images.length);
 
   return (
-    <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-      <div className={`${className} relative flex w-full items-center justify-center overflow-hidden ${fit === 'contain' ? 'bg-[#070b13]' : 'bg-muted'}`}>
+    <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} className="h-full w-full">
+      <div className={`${className} relative flex w-full h-full items-center justify-center overflow-hidden ${fit === 'contain' ? 'bg-[#070b13]' : 'bg-muted'}`}>
         <img
           key={images[current]}
           src={apiUrl(images[current])}
@@ -125,64 +125,98 @@ export function TechChip({ children }) {
   );
 }
 
-/** Reference-style project card. */
+/** Responsive Project Card — clean horizontal layout on mobile, full card on desktop */
 export default function ProjectCard({ project, index = 0, onOpen }) {
+  const categoryLabel = project.role || (project.category ? `${project.category.replace('-', ' ').replace(/\b\w/g, (c) => c.toUpperCase())} Application` : 'Full-Stack Web Application');
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(index * 0.06, 0.3), duration: 0.35 }}
-      className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/40 hover:shadow-[0_8px_40px_hsl(var(--primary)/0.12)] transition-all flex flex-col"
+      onClick={() => onOpen?.(project)}
+      className="group rounded-2xl border border-border bg-card overflow-hidden hover:border-primary/40 hover:shadow-[0_8px_40px_hsl(var(--primary)/0.12)] transition-all flex flex-col cursor-pointer"
     >
-      <button onClick={() => onOpen?.(project)} className="block w-full text-left" aria-label={`Open ${project.title}`}>
-        <ProjectThumb project={project} />
-      </button>
-      <div className="p-5 flex flex-col flex-1">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="font-semibold text-foreground">{project.title}</h3>
-          {project.status && (
-            <span className="shrink-0 text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded border border-border text-muted-foreground">
-              {project.status}
+      {/* ── Mobile Layout (< md) ─────────────────────────── */}
+      <div className="md:hidden p-3.5 flex gap-3.5 items-start">
+        <div className="w-28 sm:w-36 h-28 shrink-0 rounded-xl overflow-hidden border border-border/80 bg-muted">
+          <ProjectThumb project={project} className="h-full w-full object-cover" />
+        </div>
+        <div className="min-w-0 flex-1 flex flex-col justify-between self-stretch">
+          <div>
+            <div className="flex items-center justify-between gap-1.5">
+              <h3 className="font-bold text-sm text-foreground truncate">{project.title}</h3>
+              <ExternalLink size={13} className="text-muted-foreground/70 shrink-0" />
+            </div>
+            <span className="inline-flex mt-1 text-[9px] font-medium text-primary bg-primary/10 border border-primary/20 rounded-full px-2 py-0.5">
+              {categoryLabel}
             </span>
-          )}
+            <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground line-clamp-2">
+              {project.description || project.tagline}
+            </p>
+          </div>
+          <div className="mt-2 flex flex-wrap gap-1">
+            {(project.stack || []).slice(0, 3).map((t) => (
+              <span key={t} className="px-1.5 py-0.5 rounded text-[9px] font-medium bg-muted text-muted-foreground">
+                {t}
+              </span>
+            ))}
+          </div>
         </div>
-        <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground line-clamp-2 flex-1">
-          {project.description || project.tagline}
-        </p>
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {(project.stack || []).slice(0, 4).map((t) => (
-            <TechChip key={t}>{t}</TechChip>
-          ))}
+      </div>
+
+      {/* ── Desktop Layout (>= md) ───────────────────────── */}
+      <div className="hidden md:flex flex-col flex-1">
+        <div className="block w-full text-left" aria-label={`Open ${project.title}`}>
+          <ProjectThumb project={project} />
         </div>
-        <div className="mt-4 flex items-center gap-2">
-          {project.liveUrl && (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noreferrer noopener"
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors"
+        <div className="p-5 flex flex-col flex-1">
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="font-semibold text-foreground">{project.title}</h3>
+            {project.status && (
+              <span className="shrink-0 text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded border border-border text-muted-foreground">
+                {project.status}
+              </span>
+            )}
+          </div>
+          <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground line-clamp-2 flex-1">
+            {project.description || project.tagline}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {(project.stack || []).slice(0, 4).map((t) => (
+              <TechChip key={t}>{t}</TechChip>
+            ))}
+          </div>
+          <div className="mt-4 flex items-center gap-2">
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors"
+              >
+                Live Demo <ExternalLink size={11} />
+              </a>
+            )}
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
+              >
+                <Github size={12} /> GitHub
+              </a>
+            )}
+            <button
+              onClick={() => onOpen?.(project)}
+              className="ml-auto text-xs text-primary hover:underline"
             >
-              Live Demo <ExternalLink size={11} />
-            </a>
-          )}
-          {project.githubUrl && (
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noreferrer noopener"
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
-            >
-              <Github size={12} /> GitHub
-            </a>
-          )}
-          <button
-            onClick={() => onOpen?.(project)}
-            className="ml-auto text-xs text-primary hover:underline"
-          >
-            Details
-          </button>
+              Details
+            </button>
+          </div>
         </div>
       </div>
     </motion.article>
@@ -249,47 +283,32 @@ export function ProjectModal({ project, onClose }) {
                 </div>
               )}
               {project.solution && (
-                <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
-                  <p className="text-[10px] font-mono uppercase tracking-widest text-primary mb-1.5">Solution</p>
+                <div className="rounded-xl border border-border bg-muted/30 p-4">
+                  <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-1.5">Solution</p>
                   <p className="text-[13px] text-foreground/80 leading-relaxed">{project.solution}</p>
                 </div>
               )}
             </div>
           )}
 
-          {project.stack?.length > 0 && (
+          {Array.isArray(project.highlights) && project.highlights.length > 0 && (
             <div className="mt-5">
-              <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-2">Tech Stack</p>
-              <div className="flex flex-wrap gap-1.5">
-                {project.stack.map((t) => (
-                  <TechChip key={t}>{t}</TechChip>
+              <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-2">Highlights</p>
+              <ul className="space-y-1.5 text-xs text-muted-foreground list-disc list-inside">
+                {project.highlights.map((h, i) => (
+                  <li key={i}>{h}</li>
                 ))}
-              </div>
+              </ul>
             </div>
           )}
 
-          {project.caseStudy && (
-            <section className="mt-5 rounded-xl border border-border bg-muted/20 p-4">
-              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-primary">Implementation & Scope</h3>
-              <Suspense fallback={<p>Loading project details?</p>}><ReactMarkdown components={{
-                p: ({ children }) => <p className="mb-3 text-[13px] leading-relaxed text-foreground/80 last:mb-0">{children}</p>,
-                a: ({ href, children }) => <a href={href} target="_blank" rel="noreferrer noopener" className="text-primary underline break-all">{children}</a>,
-              }}>{project.caseStudy}</ReactMarkdown></Suspense>
-            </section>
+          {project.caseStudyMarkdown && (
+            <div className="mt-6 border-t border-border pt-6 prose prose-invert prose-sm max-w-none">
+              <Suspense fallback={null}>
+                <ReactMarkdown>{project.caseStudyMarkdown}</ReactMarkdown>
+              </Suspense>
+            </div>
           )}
-
-          <div className="mt-6 flex items-center gap-2.5">
-            {project.liveUrl && (
-              <a href={project.liveUrl} target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors">
-                View Project <ExternalLink size={12} />
-              </a>
-            )}
-            {project.githubUrl && (
-              <a href={project.githubUrl} target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-border text-xs font-medium text-foreground/80 hover:border-primary/40 transition-colors">
-                <Github size={12} /> Source Code
-              </a>
-            )}
-          </div>
         </div>
       </motion.div>
     </motion.div>

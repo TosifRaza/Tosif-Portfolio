@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Github } from 'lucide-react';
+import { Github, ArrowRight } from 'lucide-react';
 import { api } from '@/utils/api';
 
 const CONTRIBUTION_COLORS = ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'];
@@ -66,32 +66,35 @@ export default function GitHubContributions({ githubUrl }) {
   if (!username) return null;
 
   return (
-    <section className="w-fit max-w-full min-w-0 justify-self-start rounded-xl border border-border bg-card/60 p-4 sm:p-5" aria-label="GitHub contributions">
+    <section className="w-full max-w-full min-w-0 rounded-2xl border border-border bg-card/70 p-4 sm:p-5 shadow-xs" aria-label="GitHub contributions">
       <div className="flex items-center justify-between gap-3">
-        <div>
-          <h2 className="text-sm font-semibold text-foreground">GitHub Activity</h2>
-          <p className="mt-0.5 text-[11px] text-muted-foreground">
-            {calendar ? `${total} contributions in the last 6 months` : unavailable ? 'Contribution graph is temporarily unavailable' : 'Loading contribution activity…'}
-          </p>
+        <div className="flex items-center gap-2.5">
+          <Github className="w-5 h-5 text-foreground shrink-0" />
+          <div>
+            <h2 className="text-sm font-semibold text-foreground">GitHub Activity</h2>
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
+              {calendar ? `${total} contributions in the last 6 months` : unavailable ? 'Contribution graph is temporarily unavailable' : 'Loading contribution activity…'}
+            </p>
+          </div>
         </div>
         <a
           href={`https://github.com/${username}`}
           target="_blank"
           rel="noreferrer noopener"
-          className="inline-flex shrink-0 items-center gap-1.5 text-[11px] font-medium text-primary hover:text-primary/80"
+          className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-primary hover:underline"
         >
-          <Github size={14} /> View profile
+          View Profile <ArrowRight size={12} />
         </a>
       </div>
 
       {weeks.length > 0 && (
-        <div className="mt-3 overflow-x-auto pb-1">
+        <div className="mt-3.5 overflow-x-auto pb-1">
           <div className="w-max">
             <div className="ml-[26px] flex gap-1" aria-hidden="true">
               {weeks.map((week, index) => {
                 const monthStart = week.find((day) => day.date.endsWith('-01')) || (index === 0 ? week[0] : null);
                 return (
-                <span key={index} className="h-3 w-3 text-[9px] leading-3 text-muted-foreground">
+                  <span key={index} className="h-3 w-3 text-[9px] leading-3 text-muted-foreground">
                     {monthStart ? new Date(`${monthStart.date}T00:00:00Z`).toLocaleString('en', { month: 'short', timeZone: 'UTC' }) : ''}
                   </span>
                 );
