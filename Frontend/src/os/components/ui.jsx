@@ -1,5 +1,5 @@
 // Shared UI primitives for the private OS — OS-styled, dark, responsive.
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { X } from 'lucide-react';
 
 export const fmtMinutes = (min) => {
@@ -156,11 +156,38 @@ export const btnGhost =
 /** Tiny confirm-then-delete button */
 export function DeleteButton({ onConfirm, label = 'Delete' }) {
   const [arming, setArming] = useState(false);
+  const timerRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
+  const handleClick = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (arming) {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      setArming(false);
+      onConfirm();
+    } else {
+      setArming(true);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        setArming(false);
+      }, 4000);
+    }
+  };
+
   return (
     <button
-      onClick={() => (arming ? onConfirm() : setArming(true))}
-      onBlur={() => setArming(false)}
-      className={`text-[11px] px-2 py-1 rounded transition-colors ${arming ? 'bg-red-500/20 text-red-500' : 'text-muted-foreground hover:text-red-500'}`}
+      type="button"
+      onClick={handleClick}
+      onMouseDown={(e) => e.stopPropagation()}
+      className={`text-[11px] px-2 py-1 rounded transition-colors ${
+        arming ? 'bg-red-500/20 text-red-500 font-semibold ring-1 ring-red-500/40' : 'text-muted-foreground hover:text-red-500'
+      }`}
     >
       {arming ? 'Confirm?' : label}
     </button>
