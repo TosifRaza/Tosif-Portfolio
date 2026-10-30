@@ -99,9 +99,10 @@ export default function ResourceManager({ title, resource, token, fields, column
 
   const filtered = search.trim()
     ? items.filter((item) =>
-        searchKeys.some((k) =>
-          String(item[k] || '').toLowerCase().includes(search.toLowerCase())
-        )
+        searchKeys.some((k) => {
+          const val = typeof k === 'function' ? k(item) : item[k];
+          return String(val || '').toLowerCase().includes(search.toLowerCase());
+        })
       )
     : items;
 
@@ -232,7 +233,18 @@ export default function ResourceManager({ title, resource, token, fields, column
                     <label className="text-[11px] font-semibold uppercase tracking-wider text-foreground/75 mb-1.5 block">
                       {f.label}
                     </label>
-                    {f.type === 'projectMedia' ? (
+                    {f.helperText && (
+                      <p className="text-[10px] text-muted-foreground mb-1.5 -mt-0.5">{f.helperText}</p>
+                    )}
+                    {f.renderField ? (
+                      f.renderField({
+                        field: f,
+                        value: editing[f.name],
+                        editing,
+                        setEditing,
+                        token,
+                      })
+                    ) : f.type === 'projectMedia' ? (
                       <ProjectMediaEditor
                         value={editing}
                         token={token}
@@ -247,15 +259,36 @@ export default function ResourceManager({ title, resource, token, fields, column
                       />
                     ) : f.type === 'select' ? (
                       <select
-                        value={editing[f.name] || ''}
-                        onChange={(e) => setEditing({ ...editing, [f.name]: e.target.value })}
+                        value={editing[f.name] ?? ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (typeof f.onChange === 'function') {
+                            f.onChange(val, editing, setEditing);
+                          } else {
+                            setEditing({ ...editing, [f.name]: val });
+                          }
+                        }}
+                        disabled={typeof f.disabled === 'function' ? f.disabled(editing) : !!f.disabled}
                         className="input"
                       >
-                        {f.options.map((o) => (
-                          <option key={o} value={o} className="bg-bg-card">
-                            {o}
+                        {f.placeholder && (
+                          <option value="" className="bg-bg-card">
+                            {f.placeholder}
                           </option>
-                        ))}
+                        )}
+                        {(typeof f.options === 'function' ? f.options(editing) : f.options || []).map((o, idx) => {
+                          const val = typeof o === 'object' && o !== null ? o.value : o;
+                          const lbl = typeof o === 'object' && o !== null ? o.label : o;
+                          return (
+                            <option
+                              key={val !== undefined && val !== null && val !== '' ? val : `opt-${idx}`}
+                              value={val ?? ''}
+                              className="bg-bg-card"
+                            >
+                              {lbl}
+                            </option>
+                          );
+                        })}
                       </select>
                     ) : f.type === 'tags' ? (
                       <input

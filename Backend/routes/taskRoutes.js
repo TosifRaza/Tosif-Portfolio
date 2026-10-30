@@ -6,6 +6,7 @@ const router = Router();
 router.use(protect);
 
 router.get('/', listTasks);
+router.get('/:id', taskCrud.get);
 router.post('/', createTask);
 router.put('/:id', updateTask);
 router.patch('/:id/complete', toggleTask);

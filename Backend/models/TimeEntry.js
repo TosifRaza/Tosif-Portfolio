@@ -22,6 +22,7 @@ const timeEntrySchema = new mongoose.Schema(
     startedAt: { type: Date, default: null },
     endedAt: { type: Date, default: null },
     source: { type: String, enum: ['manual', 'timer'], default: 'manual' },
+    taskId: { type: mongoose.Schema.Types.ObjectId, ref: 'Task', default: null },
     goalId: { type: mongoose.Schema.Types.ObjectId, ref: 'Goal', default: null },
     projectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', default: null },
     notes: { type: String, default: '' },
@@ -32,4 +33,3 @@ const timeEntrySchema = new mongoose.Schema(
 timeEntrySchema.index({ date: -1, category: 1 });
 
 export default mongoose.model('TimeEntry', timeEntrySchema);
-

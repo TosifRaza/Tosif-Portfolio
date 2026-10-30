@@ -17,8 +17,9 @@ const SKILL_CATEGORIES = [
     id: 'backend',
     title: 'Backend',
     icon: Server,
-    iconBoxStyle: 'bg-[#0e1d38] border-blue-500/25 text-[#60a5fa]',
-    borderHover: 'hover:border-blue-500/35',
+    iconBoxStyle:
+      'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:bg-[#0e1d38] dark:border-blue-500/25 dark:text-[#60a5fa]',
+    borderHover: 'hover:border-blue-500/40',
     description: 'Build and manage server-side logic, APIs and middleware for my full-stack projects.',
     skills: ['Node.js', 'Express.js', 'Socket.IO', 'REST APIs', 'JWT Auth', 'Razorpay'],
   },
@@ -26,8 +27,9 @@ const SKILL_CATEGORIES = [
     id: 'database',
     title: 'Database',
     icon: Database,
-    iconBoxStyle: 'bg-[#24133b] border-purple-500/25 text-[#c084fc]',
-    borderHover: 'hover:border-purple-500/35',
+    iconBoxStyle:
+      'bg-purple-500/10 border-purple-500/20 text-purple-600 dark:bg-[#24133b] dark:border-purple-500/25 dark:text-[#c084fc]',
+    borderHover: 'hover:border-purple-500/40',
     description: 'Store and manage application data with efficient schemas and queries.',
     skills: ['MongoDB', 'Mongoose'],
   },
@@ -35,8 +37,9 @@ const SKILL_CATEGORIES = [
     id: 'frontend',
     title: 'Frontend',
     icon: Code2,
-    iconBoxStyle: 'bg-[#072720] border-emerald-500/25 text-[#34d399]',
-    borderHover: 'hover:border-emerald-500/35',
+    iconBoxStyle:
+      'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:bg-[#072720] dark:border-emerald-500/25 dark:text-[#34d399]',
+    borderHover: 'hover:border-emerald-500/40',
     description: 'Develop responsive and dynamic user interfaces.',
     skills: ['React', 'JavaScript', 'Tailwind CSS', 'Redux Toolkit', 'React Router', 'HTML & CSS'],
   },
@@ -44,8 +47,9 @@ const SKILL_CATEGORIES = [
     id: 'tools-devops',
     title: 'Tools & DevOps',
     icon: Wrench,
-    iconBoxStyle: 'bg-[#2c1d09] border-amber-500/25 text-[#fbbf24]',
-    borderHover: 'hover:border-amber-500/35',
+    iconBoxStyle:
+      'bg-amber-500/10 border-amber-500/20 text-amber-600 dark:bg-[#2c1d09] dark:border-amber-500/25 dark:text-[#fbbf24]',
+    borderHover: 'hover:border-amber-500/40',
     description: 'Tools for development, version control and deployment.',
     skills: ['Git', 'GitHub', 'VS Code', 'Vite', 'Render', 'Cloudinary'],
   },
@@ -53,8 +57,9 @@ const SKILL_CATEGORIES = [
     id: 'programming-apis',
     title: 'Programming & APIs',
     icon: Terminal,
-    iconBoxStyle: 'bg-[#2e0e24] border-rose-500/25 text-[#fb7185]',
-    borderHover: 'hover:border-rose-500/35',
+    iconBoxStyle:
+      'bg-rose-500/10 border-rose-500/20 text-rose-600 dark:bg-[#2e0e24] dark:border-rose-500/25 dark:text-[#fb7185]',
+    borderHover: 'hover:border-rose-500/40',
     description: 'Languages and APIs used for problem solving and building features.',
     skills: ['JavaScript', 'Python', 'REST APIs', 'Socket.IO', 'JWT', 'Razorpay'],
   },
@@ -62,8 +67,9 @@ const SKILL_CATEGORIES = [
     id: 'others',
     title: 'Others',
     icon: BarChart3,
-    iconBoxStyle: 'bg-[#082729] border-teal-500/25 text-[#2dd4bf]',
-    borderHover: 'hover:border-teal-500/35',
+    iconBoxStyle:
+      'bg-teal-500/10 border-teal-500/20 text-teal-600 dark:bg-[#082729] dark:border-teal-500/25 dark:text-[#2dd4bf]',
+    borderHover: 'hover:border-teal-500/40',
     description: 'Additional tools and libraries for analytics, visualisations and UI enhancements.',
     skills: ['Recharts', 'Axios', 'ESLint', 'Postman', 'Figma'],
   },
@@ -165,8 +171,8 @@ export default function SkillsPage() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-2.5 mb-3.5"
         >
-          <span className="w-6 h-[2.5px] rounded-full bg-[#a855f7] inline-block" />
-          <span className="text-xs font-semibold tracking-[0.25em] text-[#c084fc] uppercase">
+          <span className="w-6 h-[2.5px] rounded-full bg-purple-600 dark:bg-[#a855f7] inline-block" />
+          <span className="text-xs font-semibold tracking-[0.25em] text-purple-600 dark:text-[#c084fc] uppercase">
             SKILLS
           </span>
         </motion.div>
@@ -176,10 +182,10 @@ export default function SkillsPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
-          className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-3"
+          className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground dark:text-white mb-3"
         >
           Technical{' '}
-          <span className="bg-gradient-to-r from-[#38bdf8] via-[#60a5fa] to-[#a855f7] bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-sky-500 via-blue-600 to-purple-600 dark:from-[#38bdf8] dark:via-[#60a5fa] dark:to-[#a855f7] bg-clip-text text-transparent">
             Skills
           </span>
         </motion.h1>
@@ -189,7 +195,7 @@ export default function SkillsPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-sm sm:text-base text-slate-400 max-w-2xl font-normal leading-relaxed"
+          className="text-sm sm:text-base text-muted-foreground dark:text-slate-400 max-w-2xl font-normal leading-relaxed"
         >
           Technologies used in my projects, with examples of where I applied them.
         </motion.p>
@@ -205,7 +211,7 @@ export default function SkillsPage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05, duration: 0.35 }}
-              className={`group relative rounded-2xl bg-[#0b1120]/90 border border-slate-800/80 p-6 sm:p-7 flex flex-col backdrop-blur-sm transition-all duration-300 hover:border-slate-700 hover:bg-[#0c1426]/90 hover:-translate-y-0.5 ${cat.borderHover}`}
+              className={`group relative rounded-2xl bg-card border border-border/80 p-6 sm:p-7 flex flex-col backdrop-blur-sm transition-all duration-300 shadow-xs hover:shadow-lg hover:border-border dark:shadow-none dark:bg-[#0b1120]/90 dark:border-slate-800/80 dark:hover:border-slate-700 dark:hover:bg-[#0c1426]/90 hover:-translate-y-0.5 ${cat.borderHover}`}
             >
               {/* Top part: Icon + Title + Arrow */}
               <div className="flex items-center justify-between mb-4">
@@ -215,18 +221,18 @@ export default function SkillsPage() {
                   >
                     <Icon className="w-6 h-6" strokeWidth={1.85} />
                   </div>
-                  <h2 className="text-lg font-bold text-white tracking-tight">
+                  <h2 className="text-lg font-bold text-foreground dark:text-white tracking-tight">
                     {cat.title}
                   </h2>
                 </div>
 
-                <div className="text-slate-500 group-hover:text-slate-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200">
+                <div className="text-muted-foreground group-hover:text-foreground dark:text-slate-500 dark:group-hover:text-slate-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200">
                   <ArrowUpRight className="w-5 h-5" />
                 </div>
               </div>
 
               {/* Description */}
-              <p className="text-slate-400 text-sm leading-relaxed mb-6 font-normal min-h-[42px]">
+              <p className="text-muted-foreground dark:text-slate-400 text-sm leading-relaxed mb-6 font-normal min-h-[42px]">
                 {cat.description}
               </p>
 
@@ -236,7 +242,7 @@ export default function SkillsPage() {
                   <span
                     key={skill.name}
                     title={skill.description ? `${skill.name}: ${skill.description}` : skill.name}
-                    className="px-3.5 py-1.5 rounded-xl bg-[#101726] border border-slate-800 text-[13px] font-medium text-slate-300 hover:text-white hover:border-slate-700 hover:bg-[#141f33] transition-colors shadow-sm select-none cursor-default"
+                    className="px-3.5 py-1.5 rounded-xl bg-slate-100/90 border border-slate-200/90 text-[13px] font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-200/80 hover:border-slate-300 dark:bg-[#101726] dark:border-slate-800 dark:text-slate-300 dark:hover:text-white dark:hover:border-slate-700 dark:hover:bg-[#141f33] transition-colors shadow-xs select-none cursor-default"
                   >
                     {skill.name}
                   </span>

@@ -37,7 +37,9 @@ export const goalCrud = makeCrud(Goal, 'Goal', {
 // POST /api/goals
 export const createGoal = asyncHandler(async (req, res) => {
   validateGoal(req.body);
-  const goal = await Goal.create(goalCrud.clean(req.body));
+  const payload = { ...req.body };
+  if (!payload.targetDate) payload.targetDate = null;
+  const goal = await Goal.create(goalCrud.clean(payload));
   await snapshotGoal(goal);
   res.status(201).json(goal);
 });
@@ -45,7 +47,9 @@ export const createGoal = asyncHandler(async (req, res) => {
 // PUT /api/goals/:id
 export const updateGoal = asyncHandler(async (req, res) => {
   validateGoal(req.body);
-  const goal = await Goal.findByIdAndUpdate(req.params.id, goalCrud.clean(req.body), {
+  const payload = { ...req.body };
+  if (payload.targetDate !== undefined && !payload.targetDate) payload.targetDate = null;
+  const goal = await Goal.findByIdAndUpdate(req.params.id, goalCrud.clean(payload), {
     new: true,
     runValidators: true,
   });
@@ -89,7 +93,9 @@ export const createMilestone = asyncHandler(async (req, res) => {
   validateMilestone(req.body);
   const goal = await Goal.findById(req.body.goalId);
   if (!goal) return res.status(404).json({ message: 'Goal not found' });
-  const milestone = await Milestone.create({ ...req.body, progress: bodyProgress(req.body) });
+  const payload = { ...req.body, progress: bodyProgress(req.body) };
+  if (!payload.dueDate) payload.dueDate = null;
+  const milestone = await Milestone.create(payload);
   await recomputeGoal(milestone.goalId);
   res.status(201).json(milestone);
 });
@@ -99,17 +105,19 @@ export const updateMilestone = asyncHandler(async (req, res) => {
   isValidDate(req.body.dueDate, 'dueDate');
   const milestone = await Milestone.findById(req.params.id);
   if (!milestone) return res.status(404).json({ message: 'Milestone not found' });
-  Object.assign(milestone, req.body);
+  const payload = { ...req.body };
+  if (payload.dueDate !== undefined && !payload.dueDate) payload.dueDate = null;
+  Object.assign(milestone, payload);
   // Recompute from tasks if the milestone has any (keeps numbers honest).
   const taskCount = await Task.countDocuments({ milestoneId: milestone._id });
-  if (taskCount > 0 && req.body.status) {
-    if (req.body.status === 'done') {
+  if (taskCount > 0 && payload.status) {
+    if (payload.status === 'done') {
       await Task.updateMany({ milestoneId: milestone._id, status: { $ne: 'done' } }, { $set: { status: 'done', completedAt: new Date() } });
-    } else if (milestone.progress === 100 && req.body.status !== 'done') {
-      await Task.updateMany({ milestoneId: milestone._id }, { $set: { status: req.body.status, completedAt: null } });
+    } else if (milestone.progress === 100 && payload.status !== 'done') {
+      await Task.updateMany({ milestoneId: milestone._id }, { $set: { status: payload.status, completedAt: null } });
     }
   }
-  if (req.body.status === 'done' && taskCount === 0) {
+  if (payload.status === 'done' && taskCount === 0) {
     milestone.progress = 100;
     milestone.completedAt = milestone.completedAt || new Date();
   }
@@ -131,29 +139,59 @@ function validateTask(body) {
   oneOf(body.priority, PRIORITIES, 'priority');
   isNumberInRange(body.estimateMinutes, 0, 100000, 'estimateMinutes');
   isValidDate(body.dueDate, 'dueDate');
-  if (body.milestoneId) ensureObjectId(String(body.milestoneId));
+  if (body.milestoneId && String(body.milestoneId).trim()) {
+    ensureObjectId(String(body.milestoneId).trim());
+  }
+  if (body.goalId && String(body.goalId).trim()) {
+    ensureObjectId(String(body.goalId).trim());
+  }
 }
 
 export const createTask = asyncHandler(async (req, res) => {
   validateTask(req.body);
-  let goalId = req.body.goalId || null;
-  if (req.body.milestoneId) {
-    const milestone = await Milestone.findById(req.body.milestoneId);
+  const payload = { ...req.body };
+  payload.milestoneId = payload.milestoneId && String(payload.milestoneId).trim() ? String(payload.milestoneId).trim() : null;
+  payload.goalId = payload.goalId && String(payload.goalId).trim() ? String(payload.goalId).trim() : null;
+  if (!payload.dueDate) payload.dueDate = null;
+
+  let goalId = payload.goalId;
+  if (payload.milestoneId) {
+    const milestone = await Milestone.findById(payload.milestoneId);
     if (!milestone) return res.status(404).json({ message: 'Milestone not found' });
     goalId = milestone.goalId;
   } else if (goalId) {
-    ensureObjectId(String(goalId));
     const goal = await Goal.findById(goalId);
     if (!goal) return res.status(404).json({ message: 'Goal not found' });
   }
-  const task = await Task.create({ ...req.body, goalId });
+  payload.goalId = goalId;
+  const task = await Task.create(payload);
   await cascadeFromTask(task);
   res.status(201).json(task);
 });
 
 export const updateTask = asyncHandler(async (req, res) => {
   validateTask(req.body);
-  const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+  const payload = { ...req.body };
+  if (payload.milestoneId !== undefined) {
+    payload.milestoneId = payload.milestoneId && String(payload.milestoneId).trim() ? String(payload.milestoneId).trim() : null;
+  }
+  if (payload.goalId !== undefined) {
+    payload.goalId = payload.goalId && String(payload.goalId).trim() ? String(payload.goalId).trim() : null;
+  }
+  if (payload.dueDate !== undefined && !payload.dueDate) {
+    payload.dueDate = null;
+  }
+
+  if (payload.milestoneId) {
+    const milestone = await Milestone.findById(payload.milestoneId);
+    if (!milestone) return res.status(404).json({ message: 'Milestone not found' });
+    payload.goalId = milestone.goalId;
+  } else if (payload.goalId) {
+    const goal = await Goal.findById(payload.goalId);
+    if (!goal) return res.status(404).json({ message: 'Goal not found' });
+  }
+
+  const task = await Task.findByIdAndUpdate(req.params.id, payload, { new: true, runValidators: true });
   if (!task) return res.status(404).json({ message: 'Task not found' });
   await cascadeFromTask(task);
   res.json(task);

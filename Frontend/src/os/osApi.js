@@ -1,5 +1,6 @@
 // TOSIF OS — private OS API client (all routes require auth)
-import { osFetch } from './osAuth.js';
+import { osFetch, getToken } from './osAuth.js';
+import { apiUrl } from '../utils/api.js';
 
 export const osApi = {
   // Goals → Milestones → Tasks
@@ -19,6 +20,7 @@ export const osApi = {
   },
   tasks: {
     list: (params = '') => osFetch(`/tasks${params}`),
+    get: (id) => osFetch(`/tasks/${id}`),
     create: (data) => osFetch('/tasks', { method: 'POST', body: JSON.stringify(data) }),
     update: (id, data) => osFetch(`/tasks/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     toggle: (id) => osFetch(`/tasks/${id}/complete`, { method: 'PATCH' }),
@@ -59,23 +61,20 @@ export const osApi = {
     removeTopic: (id) => osFetch(`/learning/topics/${id}`, { method: 'DELETE' }),
   },
 
-  // Analytics + plan + predictions + dashboard + AI
-  analytics: {
-    daily: (date) => osFetch(`/analytics/daily${date ? `?date=${date}` : ''}`),
-    weekly: (date) => osFetch(`/analytics/weekly${date ? `?date=${date}` : ''}`),
-    monthly: (date) => osFetch(`/analytics/monthly${date ? `?date=${date}` : ''}`),
-    yearly: (year) => osFetch(`/analytics/yearly${year ? `?year=${year}` : ''}`),
-    planVsActual: () => osFetch('/analytics/plan-vs-actual'),
-    plan: () => osFetch('/analytics/plan'),
-    updatePlan: (category, data) => osFetch(`/analytics/plan/${category}`, { method: 'PUT', body: JSON.stringify(data) }),
-  },
-  predictions: {
-    trajectory: (goalId) => osFetch(`/predictions/trajectory/${goalId}`),
-    all: () => osFetch('/predictions/trajectory'),
-  },
+  // Dashboard & analytics
   dashboard: () => osFetch('/dashboard'),
-  insights: {
-    ask: (question) => osFetch('/insights/ask', { method: 'POST', body: JSON.stringify({ question }) }),
+  analytics: (params = '') => osFetch(`/analytics${params}`),
+  plan: () => osFetch('/analytics/plan'),
+  updatePlan: (data) => osFetch('/analytics/plan', { method: 'PUT', body: JSON.stringify(data) }),
+  trajectories: () => osFetch('/analytics/trajectories'),
+
+  // Products (founder lab)
+  products: {
+    list: () => osFetch('/products'),
+    get: (id) => osFetch(`/products/${id}`),
+    create: (data) => osFetch('/products', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id, data) => osFetch(`/products/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    remove: (id) => osFetch(`/products/${id}`, { method: 'DELETE' }),
   },
 
   // Skills (shared with public)
@@ -96,6 +95,25 @@ export const osApi = {
     create: (data) => osFetch('/journal', { method: 'POST', body: JSON.stringify(data) }),
     update: (id, data) => osFetch(`/journal/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     remove: (id) => osFetch(`/journal/${id}`, { method: 'DELETE' }),
+  },
+
+  // Upload
+  uploadImage: async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    const token = getToken();
+    const headers = {};
+    if (token) headers.Authorization = `Bearer ${token}`;
+    const res = await fetch(apiUrl('/api/upload'), {
+      method: 'POST',
+      headers,
+      body: formData,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ message: 'Image upload failed' }));
+      throw new Error(err.message || 'Image upload failed');
+    }
+    return res.json();
   },
 
   // Auth

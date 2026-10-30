@@ -21,6 +21,47 @@ const goalSchema = new mongoose.Schema(
     metrics: [{ label: { type: String }, value: { type: String } }],
     relatedSkills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Skill' }],
     relatedProjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
+
+    // ── Knowledge & Resource Vault ─────────────────────────────────
+    notes: { type: String, default: '' },
+    notesList: [
+      {
+        title: { type: String, default: 'Untitled Note', trim: true },
+        content: { type: String, default: '' },
+        updatedAt: { type: Date, default: Date.now },
+      },
+    ],
+    resources: [
+      {
+        title: { type: String, default: '' },
+        url: { type: String, default: '' },
+        type: { type: String, default: 'link' }, // doc, repo, design, tool, article, link
+      },
+    ],
+    contacts: [
+      {
+        name: { type: String, default: '' },
+        role: { type: String, default: '' },
+        email: { type: String, default: '' },
+        phone: { type: String, default: '' },
+        link: { type: String, default: '' },
+        notes: { type: String, default: '' },
+      },
+    ],
+    attachments: [
+      {
+        title: { type: String, default: '' },
+        url: { type: String, default: '' },
+        type: { type: String, default: 'image' },
+      },
+    ],
+    checklist: [
+      {
+        text: { type: String, default: '' },
+        done: { type: Boolean, default: false },
+      },
+    ],
+
     completedAt: { type: Date, default: null },
     order: { type: Number, default: 0 },
   },

@@ -26,7 +26,8 @@ export async function buildDashboard() {
     todayStats,
     todayActivities,
     todayLearning,
-    todayTasks,
+    allOpenTasks,
+    completedTodayTasks,
     runningTimer,
     activeGoals,
     plan,
@@ -36,11 +37,21 @@ export async function buildDashboard() {
     DailyActivity.find({ date: day }).sort({ createdAt: -1 }).populate('skillId', 'name').lean(),
     LearningSession.find({ date: day }).populate('skillId', 'name').lean(),
     Task.find({ status: { $ne: 'done' } })
-      .sort({ priority: 1, dueDate: 1, createdAt: 1 })
-      .limit(10)
+      .sort({ dueDate: 1, priority: 1, createdAt: 1 })
+      .populate('goalId', 'title category')
+      .populate('milestoneId', 'title')
+      .lean(),
+    Task.find({
+      status: 'done',
+      completedAt: { $gte: new Date(`${day}T00:00:00.000Z`), $lte: new Date(`${day}T23:59:59.999Z`) },
+    })
+      .sort({ completedAt: -1 })
       .populate('goalId', 'title category')
       .lean(),
-    TimeEntry.findOne({ endedAt: null, source: 'timer' }).lean(),
+    TimeEntry.findOne({ endedAt: null, source: 'timer' })
+      .populate('goalId', 'title')
+      .populate('taskId', 'title')
+      .lean(),
     Goal.find({ status: 'active' }).sort({ priority: 1, targetDate: 1 }).lean(),
     planVsActual(weekStart(today), today),
     learningStreak(),
@@ -73,25 +84,62 @@ export async function buildDashboard() {
   const behindGoals = goalStatus.filter((g) => g.health === 'behind');
 
   // ── Suggested focus (rule-based, transparent) ────────────────────
-  // 1) tasks due today/overdue  2) critical/high priority tasks
+  // 1) tasks due today/overdue
+  // 2) critical/high priority tasks
   // 3) first open task of the most behind goal
-  const dueToday = todayTasks.filter((t) => t.dueDate && new Date(t.dueDate) <= new Date(`${day}T23:59:59`));
-  const byPriority = todayTasks.filter((t) => ['critical', 'high'].includes(t.priority));
+  const dueToday = allOpenTasks.filter((t) => t.dueDate && new Date(t.dueDate) <= new Date(`${day}T23:59:59.999Z`));
+  const byPriority = allOpenTasks.filter((t) => ['critical', 'high'].includes(t.priority));
   const focus = [];
-  for (const t of dueToday.slice(0, 3)) {
-    focus.push({ taskId: t._id, title: t.title, reason: t.dueDate < day ? 'Overdue' : 'Due today', goal: t.goalId?.title || null });
+
+  for (const t of dueToday) {
+    focus.push({
+      taskId: t._id,
+      title: t.title,
+      status: t.status,
+      priority: t.priority,
+      estimateMinutes: t.estimateMinutes || 0,
+      dueDate: t.dueDate,
+      goalId: t.goalId?._id || t.goalId || null,
+      goal: t.goalId?.title || null,
+      milestone: t.milestoneId?.title || null,
+      reason: t.dueDate && String(t.dueDate).slice(0, 10) < day ? 'Overdue' : 'Due today',
+    });
   }
-  for (const t of byPriority.slice(0, 2)) {
+
+  for (const t of byPriority) {
     if (!focus.find((f) => String(f.taskId) === String(t._id))) {
-      focus.push({ taskId: t._id, title: t.title, reason: `${t.priority} priority`, goal: t.goalId?.title || null });
+      focus.push({
+        taskId: t._id,
+        title: t.title,
+        status: t.status,
+        priority: t.priority,
+        estimateMinutes: t.estimateMinutes || 0,
+        dueDate: t.dueDate,
+        goalId: t.goalId?._id || t.goalId || null,
+        goal: t.goalId?.title || null,
+        milestone: t.milestoneId?.title || null,
+        reason: `${t.priority} priority`,
+      });
     }
   }
+
   if (behindGoals[0]) {
-    const nextTask = await Task.findOne({ goalId: behindGoals[0].id, status: { $ne: 'done' } })
-      .sort({ order: 1, createdAt: 1 })
-      .lean();
+    const nextTask = allOpenTasks.find(
+      (t) => String(t.goalId?._id || t.goalId) === String(behindGoals[0].id)
+    );
     if (nextTask && !focus.find((f) => String(f.taskId) === String(nextTask._id))) {
-      focus.push({ taskId: nextTask._id, title: nextTask.title, reason: `Goal behind: ${behindGoals[0].title}`, goal: behindGoals[0].title });
+      focus.push({
+        taskId: nextTask._id,
+        title: nextTask.title,
+        status: nextTask.status,
+        priority: nextTask.priority,
+        estimateMinutes: nextTask.estimateMinutes || 0,
+        dueDate: nextTask.dueDate,
+        goalId: nextTask.goalId?._id || nextTask.goalId || null,
+        goal: behindGoals[0].title,
+        milestone: nextTask.milestoneId?.title || null,
+        reason: `Goal behind: ${behindGoals[0].title}`,
+      });
     }
   }
 
@@ -117,7 +165,8 @@ export async function buildDashboard() {
       tasksCompleted: todayStats.tasksCompleted,
     },
     focus,
-    openTasks: todayTasks,
+    openTasks: allOpenTasks,
+    completedToday: completedTodayTasks,
     runningTimer,
     goals: goalStatus,
     behindGoals,

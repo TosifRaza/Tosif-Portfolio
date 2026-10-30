@@ -45,11 +45,12 @@ export const listTimeEntries = asyncHandler(async (req, res) => {
   const items = await TimeEntry.find(filter)
     .sort({ date: -1, createdAt: -1 })
     .populate('goalId', 'title')
+    .populate('taskId', 'title')
     .populate('projectId', 'title missionId');
   res.json(items);
 });
 
-// POST /api/time/start { category, goalId?, projectId?, notes? } → starts a timer
+// POST /api/time/start { category, taskId?, goalId?, projectId?, notes? } → starts a timer
 export const startTimer = asyncHandler(async (req, res) => {
   const running = await TimeEntry.findOne({ endedAt: null, source: 'timer' });
   if (running) {
@@ -66,6 +67,7 @@ export const startTimer = asyncHandler(async (req, res) => {
     startedAt: new Date(),
     endedAt: null,
     source: 'timer',
+    taskId: req.body.taskId || null,
     goalId: req.body.goalId || null,
     projectId: req.body.projectId || null,
     notes: req.body.notes || '',
@@ -87,7 +89,10 @@ export const stopTimer = asyncHandler(async (req, res) => {
 
 // GET /api/time/running → current running timer
 export const runningTimer = asyncHandler(async (_req, res) => {
-  const entry = await TimeEntry.findOne({ endedAt: null, source: 'timer' }).lean();
+  const entry = await TimeEntry.findOne({ endedAt: null, source: 'timer' })
+    .populate('goalId', 'title')
+    .populate('taskId', 'title')
+    .lean();
   res.json(entry || null);
 });
 

@@ -5,16 +5,19 @@ import { osApi } from '../osApi.js';
 import {
   Panel, ProgressBar, Spinner, ErrorState, Badge, Modal, Field, inputCls, btnPrimary, btnGhost, DeleteButton, fmtMinutes,
 } from '../components/ui.jsx';
-import { ArrowLeft, Plus, CheckCircle2, Circle, Trash2 } from 'lucide-react';
+import { ArrowLeft, Plus, CheckCircle2, Circle, FileText, Link as LinkIcon, Users, ImageIcon } from 'lucide-react';
+import KnowledgeVault from '../components/KnowledgeVault.jsx';
+import TaskDetailModal from '../components/TaskDetailModal.jsx';
 
 const PRIORITIES = ['low', 'medium', 'high', 'critical'];
 
-/** Goal detail: milestones with nested tasks — completing a task rolls up progress automatically. */
+/** Goal detail: milestones with nested tasks and Knowledge & Resource Vault. */
 export default function GoalDetail() {
   const { id } = useParams();
   const { data: goal, loading, error, refetch } = useApi(() => osApi.goals.get(id));
   const [msModal, setMsModal] = useState(false);
   const [taskFor, setTaskFor] = useState(null); // milestoneId | 'orphan'
+  const [selectedTask, setSelectedTask] = useState(null);
   const [msForm, setMsForm] = useState({ title: '', description: '', dueDate: '' });
   const [taskForm, setTaskForm] = useState({ title: '', estimateMinutes: '', priority: 'medium', dueDate: '' });
   const [busy, setBusy] = useState(false);
@@ -95,30 +98,62 @@ export default function GoalDetail() {
     }
   };
 
-  const TaskRow = ({ t }) => (
-    <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-muted/30 border border-border">
-      <button onClick={() => toggleTask(t)} className="flex-shrink-0" aria-label="Toggle task">
-        {t.status === 'done' ? <CheckCircle2 size={15} className="text-emerald-500" /> : <Circle size={15} className="text-muted-foreground hover:text-primary" />}
-      </button>
-      <div className="flex-1 min-w-0">
-        <div className={`text-[13px] truncate ${t.status === 'done' ? 'text-muted-foreground line-through' : 'text-foreground'}`}>{t.title}</div>
-        <div className="text-[9px] text-muted-foreground mono">
-          {t.priority}{t.estimateMinutes ? ` · ~${fmtMinutes(t.estimateMinutes)}` : ''}{t.dueDate ? ` · due ${new Date(t.dueDate).toLocaleDateString()}` : ''}
+  const TaskRow = ({ t }) => {
+    const hasExtras = !!(t.notes || t.resources?.length || t.contacts?.length || t.attachments?.length || t.checklist?.length);
+
+    return (
+      <div
+        onClick={() => setSelectedTask(t)}
+        className="flex items-center gap-2.5 p-2.5 rounded-xl bg-muted/30 border border-border hover:border-primary/40 hover:bg-muted/50 cursor-pointer transition-all group"
+      >
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleTask(t);
+          }}
+          className="flex-shrink-0"
+          aria-label="Toggle task"
+        >
+          {t.status === 'done' ? (
+            <CheckCircle2 size={15} className="text-emerald-500" />
+          ) : (
+            <Circle size={15} className="text-muted-foreground group-hover:text-primary" />
+          )}
+        </button>
+        <div className="flex-1 min-w-0">
+          <div className={`text-[13px] truncate font-medium ${t.status === 'done' ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
+            {t.title}
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5 text-[9px] text-muted-foreground mono mt-0.5">
+            <span>{t.priority}</span>
+            {t.estimateMinutes ? <span>· ~{fmtMinutes(t.estimateMinutes)}</span> : null}
+            {t.dueDate ? <span>· due {new Date(t.dueDate).toLocaleDateString()}</span> : null}
+            {hasExtras && (
+              <span className="text-primary font-semibold flex items-center gap-0.5 bg-primary/10 px-1.5 py-0.2 rounded">
+                Notes & Vault
+              </span>
+            )}
+          </div>
+        </div>
+        <div onClick={(e) => e.stopPropagation()}>
+          <DeleteButton onConfirm={() => deleteTask(t)} />
         </div>
       </div>
-      <DeleteButton onConfirm={() => deleteTask(t)} />
-    </div>
-  );
+    );
+  };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
+      {/* Top Breadcrumb & Summary */}
       <div>
         <Link to="/os/goals" className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground hover:text-primary transition-colors mb-3">
           <ArrowLeft size={12} /> All goals
         </Link>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-foreground" style={{ fontFamily: 'Inter, system-ui' }}>{goal.title}</h1>
+            <h1 className="text-2xl lg:text-3xl font-extrabold text-foreground tracking-tight" style={{ fontFamily: 'Inter, system-ui' }}>
+              {goal.title}
+            </h1>
             <div className="flex flex-wrap items-center gap-2 mt-2 text-[11px] text-muted-foreground">
               <Badge>{goal.category?.toUpperCase()}</Badge>
               <Badge color="#F59E0B">{goal.priority?.toUpperCase()}</Badge>
@@ -150,11 +185,25 @@ export default function GoalDetail() {
         </div>
       </div>
 
-      {/* Milestones */}
+      {/* Goal Knowledge & Resource Vault */}
+      <KnowledgeVault
+        data={goal}
+        onSave={async (patch) => {
+          await osApi.goals.update(id, { ...goal, ...patch });
+          await refetch();
+        }}
+        title="Goal Knowledge & Resource Vault"
+      />
+
+      {/* Milestones & Tasks Section */}
       <Panel
-        title="Milestones"
+        title="Milestones & Action Tasks"
         subtitle="Each milestone's progress comes from its tasks; goal progress is the milestone average"
-        right={<button onClick={() => setMsModal(true)} className={btnPrimary}><Plus size={13} /> Milestone</button>}
+        right={
+          <button onClick={() => setMsModal(true)} className={btnPrimary}>
+            <Plus size={13} /> Milestone
+          </button>
+        }
       >
         {goal.milestones.length === 0 && goal.tasksWithoutMilestone.length === 0 ? (
           <div className="text-center py-8">
@@ -170,17 +219,22 @@ export default function GoalDetail() {
                     {m.status === 'done' ? <CheckCircle2 size={16} className="text-emerald-500" /> : <Circle size={16} className="text-muted-foreground hover:text-primary" />}
                   </button>
                   <div className="flex-1 min-w-0">
-                    <div className={`text-sm font-medium ${m.status === 'done' ? 'text-muted-foreground line-through' : 'text-foreground'}`}>{m.title}</div>
-                    {m.dueDate && <div className="text-[9px] text-muted-foreground mono">due {new Date(m.dueDate).toLocaleDateString()}</div>}
+                    <div className={`text-sm font-semibold ${m.status === 'done' ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
+                      {m.title}
+                    </div>
+                    {m.dueDate && <div className="text-[10px] text-muted-foreground mono">due {new Date(m.dueDate).toLocaleDateString()}</div>}
                   </div>
-                  <span className="text-xs mono text-primary">{m.progress}%</span>
+                  <span className="text-xs mono font-bold text-primary">{m.progress}%</span>
                   <DeleteButton onConfirm={() => deleteMilestone(m)} />
                 </div>
-                <ProgressBar value={m.progress} color={m.progress === 100 ? '#10B981' : 'hsl(var(--primary))'} height={4} />
+                <ProgressBar value={m.progress} color={m.progress === 100 ? '#10B981' : 'hsl(var(--primary))'} height={5} />
                 <div className="mt-3 space-y-1.5">
                   {m.tasks.map((t) => <TaskRow key={t._id} t={t} />)}
-                  <button onClick={() => setTaskFor(m._id)} className="text-[11px] text-muted-foreground hover:text-primary transition-colors px-2.5 py-1.5">
-                    + add task
+                  <button
+                    onClick={() => setTaskFor(m._id)}
+                    className="text-xs font-semibold text-muted-foreground hover:text-primary transition-colors px-2.5 py-1.5 rounded-lg hover:bg-muted/50"
+                  >
+                    + Add task to {m.title}
                   </button>
                 </div>
               </div>
@@ -188,11 +242,16 @@ export default function GoalDetail() {
 
             {goal.tasksWithoutMilestone.length > 0 && (
               <div className="rounded-xl border border-border p-4 bg-muted/20">
-                <div className="text-xs mono text-muted-foreground uppercase tracking-widest mb-2">Tasks without a milestone</div>
+                <div className="text-xs mono text-muted-foreground uppercase tracking-widest mb-2 font-semibold">
+                  Tasks without a milestone
+                </div>
                 <div className="space-y-1.5">
                   {goal.tasksWithoutMilestone.map((t) => <TaskRow key={t._id} t={t} />)}
-                  <button onClick={() => setTaskFor('orphan')} className="text-[11px] text-muted-foreground hover:text-primary px-2.5 py-1.5">
-                    + add task
+                  <button
+                    onClick={() => setTaskFor('orphan')}
+                    className="text-xs font-semibold text-muted-foreground hover:text-primary px-2.5 py-1.5 rounded-lg hover:bg-muted/50"
+                  >
+                    + Add standalone task
                   </button>
                 </div>
               </div>
@@ -201,11 +260,12 @@ export default function GoalDetail() {
         )}
       </Panel>
 
+      {/* Create Milestone Modal */}
       {msModal && (
         <Modal title="New milestone" onClose={() => setMsModal(false)}>
           <div className="space-y-4">
             <Field label="Title *" full>
-              <input className={inputCls} value={msForm.title} onChange={(e) => setMsForm({ ...msForm, title: e.target.value })} placeholder="Advanced Node.js" />
+              <input className={inputCls} value={msForm.title} onChange={(e) => setMsForm({ ...msForm, title: e.target.value })} placeholder="e.g. Phase 1: MVP Architecture" />
             </Field>
             <Field label="Description" full>
               <textarea className={`${inputCls} resize-none`} rows={2} value={msForm.description} onChange={(e) => setMsForm({ ...msForm, description: e.target.value })} />
@@ -221,6 +281,7 @@ export default function GoalDetail() {
         </Modal>
       )}
 
+      {/* Create Task Modal */}
       {taskFor && (
         <Modal title="New task" onClose={() => setTaskFor(null)}>
           <div className="grid sm:grid-cols-2 gap-4">
@@ -229,7 +290,7 @@ export default function GoalDetail() {
                 className={inputCls}
                 value={taskForm.title}
                 onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })}
-                placeholder="Complete a 2-hour lesson on streams"
+                placeholder="e.g. Setup database schemas and indexes"
                 onKeyDown={(e) => e.key === 'Enter' && addTask()}
               />
             </Field>
@@ -250,6 +311,15 @@ export default function GoalDetail() {
             <button onClick={addTask} disabled={busy} className={btnPrimary}>Add task</button>
           </div>
         </Modal>
+      )}
+
+      {/* Task Detail & Knowledge Vault Modal */}
+      {selectedTask && (
+        <TaskDetailModal
+          task={selectedTask}
+          onClose={() => setSelectedTask(null)}
+          onUpdated={() => refetch()}
+        />
       )}
     </div>
   );

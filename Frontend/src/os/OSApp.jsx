@@ -135,7 +135,7 @@ function OSShell({ children }) {
             </button>
           </div>
         )}
-        <main className="p-4 sm:p-6 lg:p-8 max-w-6xl">{children}</main>
+        <main className="p-4 sm:p-6 lg:p-8 xl:p-10 w-full min-w-0">{children}</main>
       </div>
     </div>
   );
