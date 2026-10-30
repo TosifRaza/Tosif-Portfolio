@@ -109,7 +109,7 @@ app.use(
 
 // ── Rate limiting (light global + strict on sensitive endpoints) ──
 const apiLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 600, standardHeaders: 'draft-7', legacyHeaders: false });
-const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 30, standardHeaders: 'draft-7', legacyHeaders: false });
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: isProduction ? 30 : 500, standardHeaders: 'draft-7', legacyHeaders: false });
 const contactLimiter = rateLimit({ windowMs: 60 * 60 * 1000, limit: 10, standardHeaders: 'draft-7', legacyHeaders: false });
 
 app.use(apiLimiter);
@@ -206,6 +206,8 @@ async function start() {
   server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`[server] TOSIF OS backend listening on port ${PORT}; uploads: ${uploadDir}`);
   });
+  server.keepAliveTimeout = 65000;
+  server.headersTimeout = 66000;
 }
 
 start().catch(async (err) => {

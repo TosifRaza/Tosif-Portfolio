@@ -14,7 +14,8 @@ export const login = asyncHandler(async (req, res) => {
   if (!email || !password)
     return res.status(400).json({ message: 'Email and password are required' });
 
-  const user = await User.findOne({ email }).select('+password');
+  const normalizedEmail = String(email).trim().toLowerCase();
+  const user = await User.findOne({ email: normalizedEmail }).select('+password');
   if (!user) return res.status(401).json({ message: 'Invalid credentials' });
 
   const ok = await user.matchPassword(password);
