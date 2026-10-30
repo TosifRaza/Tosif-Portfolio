@@ -2,7 +2,7 @@ import { lazy, Suspense, useState } from 'react';
 import { Routes, Route, NavLink, Navigate, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Target, ListChecks, NotebookPen, Clock3, GraduationCap,
-  Cpu, BarChart3, History, Rocket, Trophy, Bot, Settings as SettingsIcon, Zap, LogOut, ArrowLeft,
+  Cpu, BarChart3, History, Rocket, Trophy, Bot, Settings as SettingsIcon, Zap, LogOut, ArrowLeft, Menu,
 } from 'lucide-react';
 import { getToken, getUser, clearSession } from './osAuth.js';
 const OSLogin = lazy(() => import('./pages/OSLogin.jsx'));
@@ -102,17 +102,35 @@ function OSShell({ children }) {
       <div className="flex-1 min-w-0">
         {/* Mobile top bar */}
         <div className="lg:hidden sticky top-0 z-40 h-14 bg-card/95 backdrop-blur-xl border-b border-border flex items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-cyan-400 flex items-center justify-center">
-              <Zap size={13} className="text-white" />
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => {
+                if (window.history.length > 1) {
+                  navigate(-1);
+                } else {
+                  navigate('/os');
+                }
+              }}
+              className="p-1 -ml-1 text-foreground/80 hover:text-foreground transition-colors"
+              aria-label="Back"
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shadow-xs">
+                <Zap size={16} className="text-white fill-white" />
+              </div>
+              <span className="text-base font-bold text-foreground tracking-tight" style={{ fontFamily: 'Inter, system-ui' }}>
+                TOSIF OS
+              </span>
             </div>
-            <span className="text-sm font-bold text-foreground">TOSIF OS</span>
           </div>
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="text-[10px] mono px-3 py-1.5 rounded-lg bg-muted/50 border border-border text-muted-foreground"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-card border border-border text-xs font-semibold text-foreground shadow-2xs hover:bg-muted/50 transition-colors"
           >
-            {menuOpen ? 'CLOSE' : 'MENU'}
+            <Menu size={14} />
+            <span>{menuOpen ? 'Close' : 'Menu'}</span>
           </button>
         </div>
         {menuOpen && (
