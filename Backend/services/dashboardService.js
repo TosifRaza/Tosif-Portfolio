@@ -50,7 +50,7 @@ export async function buildDashboard() {
       .lean(),
     TimeEntry.findOne({ endedAt: null, source: 'timer' })
       .populate('goalId', 'title')
-      .populate('taskId', 'title')
+      .populate('taskId', 'title estimateMinutes')
       .lean(),
     Goal.find({ status: 'active' }).sort({ priority: 1, targetDate: 1 }).lean(),
     planVsActual(weekStart(today), today),

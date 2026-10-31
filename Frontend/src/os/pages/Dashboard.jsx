@@ -11,12 +11,16 @@ import {
 } from 'lucide-react';
 import { PolarAngleAxis, RadialBar, RadialBarChart, ResponsiveContainer } from 'recharts';
 import TaskDetailModal from '../components/TaskDetailModal.jsx';
+import { useOSTimer } from '../context/OSTimerContext.jsx';
+import TaskTimerWidget from '../components/TaskTimerWidget.jsx';
 
 const HEALTH_COLORS = { 'on-track': '#10B981', behind: '#EF4444', complete: 'hsl(var(--primary))' };
 const PRIORITY_COLORS = { low: 'hsl(var(--muted-foreground))', medium: 'hsl(var(--primary))', high: '#F59E0B', critical: '#EF4444' };
 
 export default function Dashboard() {
   const { data, loading, error, refetch } = useApi(() => osApi.dashboard());
+  const { runningTimer: globalRunningTimer, formattedTime, isOverdue, startTimer: ctxStartTimer, stopTimer: ctxStopTimer, activeTaskEstimateMinutes } = useOSTimer();
+  const activeTimer = globalRunningTimer || data?.runningTimer;
   const [timerBusy, setTimerBusy] = useState(false);
   const [taskTab, setTaskTab] = useState('focus'); // 'focus' | 'all' | 'completed'
   const [selectedTask, setSelectedTask] = useState(null);
@@ -148,22 +152,36 @@ export default function Dashboard() {
             <NotebookPen size={13} /> Log Activity
           </Link>
 
-          {/* Timer widget */}
-          {data.runningTimer ? (
+          {/* Real-time Timer widget */}
+          {activeTimer ? (
             <button
-              onClick={() => stopTimer(data.runningTimer._id)}
+              onClick={async () => {
+                await ctxStopTimer(activeTimer._id);
+                await refetch();
+              }}
               disabled={timerBusy}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500/15 border border-red-500/40 text-red-500 text-xs font-semibold hover:bg-red-500/25 transition-colors animate-pulse shadow-sm shadow-red-500/20"
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold font-mono transition-all shadow-sm ${
+                isOverdue
+                  ? 'bg-amber-500/20 border border-amber-500/60 text-amber-400 animate-pulse shadow-amber-500/20'
+                  : 'bg-red-500/15 border border-red-500/40 text-red-500 hover:bg-red-500/25 animate-pulse shadow-red-500/20'
+              }`}
             >
-              <Square size={13} /> Stop timer ({data.runningTimer.notes ? `${data.runningTimer.notes.slice(0, 18)}…` : data.runningTimer.category})
+              <Square size={13} className="fill-current" />
+              <span>Stop timer ({formattedTime}{activeTaskEstimateMinutes ? ` / ${activeTaskEstimateMinutes}m` : ''})</span>
+              <span className="opacity-80 text-[11px] truncate max-w-[140px]">
+                · {activeTimer.notes ? `${activeTimer.notes.slice(0, 18)}…` : activeTimer.category}
+              </span>
             </button>
           ) : (
             <button
-              onClick={startTimer}
+              onClick={async () => {
+                await ctxStartTimer({ category: 'work' });
+                await refetch();
+              }}
               disabled={timerBusy}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors shadow-sm shadow-primary/20"
             >
-              <Play size={13} /> Start Timer
+              <Play size={13} className="fill-current" /> Start Timer
             </button>
           )}
         </div>
@@ -345,27 +363,9 @@ export default function Dashboard() {
                         </Badge>
                       )}
 
-                      {/* Track Time Button */}
+                      {/* Real-time Task Timer Counter */}
                       {!isDone && (
-                        isRunning ? (
-                          <button
-                            onClick={() => stopTimer(data.runningTimer._id)}
-                            disabled={timerBusy}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/15 border border-red-500/40 text-red-500 text-xs font-semibold hover:bg-red-500/25 transition-colors animate-pulse"
-                            title="Timer is running on this task. Click to stop."
-                          >
-                            <Square size={11} /> Stop
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => startTaskTimer(item)}
-                            disabled={timerBusy || (data.runningTimer && !isRunning)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted/80 hover:bg-primary/10 hover:text-primary hover:border-primary/40 border border-border text-muted-foreground text-xs font-medium transition-colors disabled:opacity-40"
-                            title={data.runningTimer ? 'Another timer is running' : 'Track time on this task'}
-                          >
-                            <Play size={11} /> Track
-                          </button>
-                        )
+                        <TaskTimerWidget task={item} onTimerToggled={refetch} />
                       )}
                     </li>
                   );

@@ -5,6 +5,7 @@ import {
   Panel, StatCard, Spinner, ErrorState, Modal, Field, inputCls, btnPrimary, btnGhost, DeleteButton, fmtMinutes, todayStr,
 } from '../components/ui.jsx';
 import { Play, Square, Plus, Clock3 } from 'lucide-react';
+import { useOSTimer } from '../context/OSTimerContext.jsx';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 const CATEGORIES = ['work', 'learning', 'coding', 'exercise', 'reading', 'sleep', 'personal', 'other'];
@@ -16,6 +17,8 @@ export default function TimePage() {
   const { data: entries, loading, error, refetch } = useApi(() => osApi.time.list(`?date=${date}`), [date]);
   const { data: summary, refetch: refetchSummary } = useApi(() => osApi.time.summary('?from=' + weekStartStr()));
   const { data: running, refetch: refetchRunning } = useApi(() => osApi.time.running());
+  const { runningTimer: ctxRunningTimer, formattedTime, isOverdue, stopTimer: ctxStopTimer } = useOSTimer();
+  const currentRunning = ctxRunningTimer || running;
   const [editing, setEditing] = useState(null);
   const [busy, setBusy] = useState(false);
 
@@ -87,9 +90,20 @@ export default function TimePage() {
         </div>
         <div className="flex items-center gap-2">
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={`${inputCls} w-40`} />
-          {running ? (
-            <button onClick={stop} disabled={busy} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/40 text-red-500 text-xs font-semibold">
-              <Square size={13} /> Stop ({running.category})
+          {currentRunning ? (
+            <button
+              onClick={async () => {
+                await stop();
+                await ctxStopTimer(currentRunning._id);
+              }}
+              disabled={busy}
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold font-mono animate-pulse ${
+                isOverdue
+                  ? 'bg-amber-500/20 border border-amber-500/60 text-amber-400'
+                  : 'bg-red-500/10 border border-red-500/40 text-red-500'
+              }`}
+            >
+              <Square size={13} className="fill-current" /> Stop ({formattedTime} · {currentRunning.notes || currentRunning.category})
             </button>
           ) : (
             <button onClick={start} disabled={busy} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/40 text-emerald-500 text-xs font-semibold">

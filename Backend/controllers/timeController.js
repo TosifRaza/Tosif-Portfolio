@@ -45,7 +45,7 @@ export const listTimeEntries = asyncHandler(async (req, res) => {
   const items = await TimeEntry.find(filter)
     .sort({ date: -1, createdAt: -1 })
     .populate('goalId', 'title')
-    .populate('taskId', 'title')
+    .populate('taskId', 'title estimateMinutes')
     .populate('projectId', 'title missionId');
   res.json(items);
 });
@@ -91,7 +91,7 @@ export const stopTimer = asyncHandler(async (req, res) => {
 export const runningTimer = asyncHandler(async (_req, res) => {
   const entry = await TimeEntry.findOne({ endedAt: null, source: 'timer' })
     .populate('goalId', 'title')
-    .populate('taskId', 'title')
+    .populate('taskId', 'title estimateMinutes')
     .lean();
   res.json(entry || null);
 });

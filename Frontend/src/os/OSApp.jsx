@@ -5,6 +5,7 @@ import {
   Cpu, BarChart3, History, Rocket, Trophy, Bot, Settings as SettingsIcon, Zap, LogOut, ArrowLeft, Menu,
 } from 'lucide-react';
 import { getToken, getUser, clearSession } from './osAuth.js';
+import { OSTimerProvider } from './context/OSTimerContext.jsx';
 const OSLogin = lazy(() => import('./pages/OSLogin.jsx'));
 const Dashboard = lazy(() => import('./pages/Dashboard.jsx'));
 const Goals = lazy(() => import('./pages/Goals.jsx'));
@@ -182,9 +183,11 @@ export default function OSApp() {
         path="*"
         element={
           authed ? (
-            <OSShell>
-              <OSRoutes />
-            </OSShell>
+            <OSTimerProvider>
+              <OSShell>
+                <OSRoutes />
+              </OSShell>
+            </OSTimerProvider>
           ) : (
             <Navigate to="login" replace />
           )

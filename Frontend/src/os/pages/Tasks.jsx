@@ -4,6 +4,7 @@ import { osApi } from '../osApi.js';
 import { Panel, Spinner, ErrorState, Badge, fmtMinutes, DeleteButton } from '../components/ui.jsx';
 import { CheckCircle2, Circle, ListChecks, Play, Square, FileText } from 'lucide-react';
 import TaskDetailModal from '../components/TaskDetailModal.jsx';
+import TaskTimerWidget from '../components/TaskTimerWidget.jsx';
 
 const PRIORITY_COLORS = { low: 'hsl(var(--muted-foreground))', medium: 'hsl(var(--primary))', high: '#F59E0B', critical: '#EF4444' };
 const FILTERS = ['all', 'todo', 'in-progress', 'done'];

@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import KnowledgeVault from '../components/KnowledgeVault.jsx';
 import TaskDetailModal from '../components/TaskDetailModal.jsx';
+import TaskTimerWidget from '../components/TaskTimerWidget.jsx';
 
 const PRIORITIES = ['low', 'medium', 'high', 'critical'];
 const CATEGORIES = ['founder', 'career', 'learning', 'financial', 'health', 'personal'];
@@ -367,7 +368,10 @@ export default function GoalDetail() {
             )}
           </div>
         </div>
-        <div onClick={(e) => e.stopPropagation()}>
+        <div onClick={(e) => e.stopPropagation()} className="flex items-center gap-2">
+          {!t.completedAt && t.status !== 'done' && (
+            <TaskTimerWidget task={t} onTimerToggled={refetch} />
+          )}
           <DeleteButton onConfirm={() => deleteTask(t)} />
         </div>
       </div>
