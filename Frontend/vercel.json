@@ -1,4 +1,8 @@
 {
+  "redirects": [
+    { "source": "/admin", "destination": "https://tosif-portfolio-3.onrender.com/login", "permanent": false },
+    { "source": "/admin/:path*", "destination": "https://tosif-portfolio-3.onrender.com/:path*", "permanent": false }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]

@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Zap } from 'lucide-react';
 import { AppProvider } from '@/context/AppContext';
@@ -15,6 +15,20 @@ const SectionPage = lazy(() => import('@/public/pages/SectionPage'));
 
 // Private OS bundle — lazy loaded so public visitors never download it.
 const OSApp = lazy(() => import('@/os/OSApp.jsx'));
+
+function AdminExternalRedirect() {
+  useEffect(() => {
+    window.location.replace('https://tosif-portfolio-3.onrender.com/login');
+  }, []);
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="flex items-center gap-3 text-primary font-mono text-sm">
+        <Zap size={16} className="animate-pulse" />
+        REDIRECTING TO ADMIN PORTAL…
+      </div>
+    </div>
+  );
+}
 
 function BootPlaceholder() {
   return (
@@ -46,6 +60,8 @@ export default function App() {
       <AppProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/admin" element={<AdminExternalRedirect />} />
+            <Route path="/admin/*" element={<AdminExternalRedirect />} />
             <Route
               path="/os/*"
               element={
