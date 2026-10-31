@@ -19,6 +19,8 @@ const fadeUp = {
   animate: { opacity: 1, y: 0 },
 };
 
+const ANDROID_APP_DOWNLOAD_URL = 'https://expo.dev/artifacts/eas/Bubks-D_eboVS0dWvuM4XSBtn0gTrDYTDdGhgsI5aT4.apk';
+
 function LeetCodeIcon({ className = 'h-4 w-4' }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -223,6 +225,15 @@ export default function HomePage() {
               <FileText size={14} />
               {secondaryCta.label}
             </Link>
+            <a
+              href={ANDROID_APP_DOWNLOAD_URL}
+              download="Tosif-Raza-App.apk"
+              className="col-span-2 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-primary/30 bg-primary/5 text-xs font-semibold text-primary shadow-sm hover:bg-primary/10 transition-all"
+              aria-label="Download Tosif Raza Android app"
+            >
+              <Download size={14} />
+              Download Android App
+            </a>
           </div>
 
           {/* GitHub Activity */}
@@ -267,6 +278,15 @@ export default function HomePage() {
               >
                 {secondaryCta.label}
               </Link>
+              <a
+                href={ANDROID_APP_DOWNLOAD_URL}
+                download="Tosif-Raza-App.apk"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-primary/30 bg-primary/5 text-sm font-semibold text-primary hover:bg-primary/10 transition-all"
+                aria-label="Download Tosif Raza Android app"
+              >
+                <Download size={16} />
+                Download App
+              </a>
             </motion.div>
 
             <motion.div {...fadeUp} transition={{ delay: 0.25 }} className="mt-6">
