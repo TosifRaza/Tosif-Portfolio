@@ -96,7 +96,12 @@ app.use(
   cors({
     origin(origin, cb) {
       if (!origin) return cb(null, true); // curl / same-origin via proxy
-      if (allowedOrigins.includes(origin)) {
+      if (
+        allowedOrigins.includes(origin) ||
+        /^https:\/\/([a-z0-9-]+\.)?tosif\.site$/i.test(origin) ||
+        /^https:\/\/tosif-portfolio-[a-z0-9-]+\.onrender\.com$/i.test(origin) ||
+        /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin)
+      ) {
         return cb(null, true);
       }
       const error = new Error('Origin is not allowed by CORS');
