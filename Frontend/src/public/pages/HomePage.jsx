@@ -2,8 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   ArrowRight, ArrowUpRight, FolderKanban, User, Github, Linkedin, Twitter, Mail,
-  MapPin, Download, Rocket, Globe, Folder, FileText, Box, ChevronRight,
-  Server, Code2, Database, Wrench,
+  MapPin, Download, Rocket, Globe, Folder, FileText,
 } from 'lucide-react';
 import { useApi } from '@/hooks/useApi';
 import { api } from '@/utils/api';
@@ -56,42 +55,10 @@ function HeroCodeCard({ profile }) {
   );
 }
 
-const skillsPreview = [
-  {
-    title: 'Backend',
-    subtitle: 'Node.js, Express, Socket.IO, REST APIs',
-    icon: Server,
-    bg: 'bg-blue-500/10 border border-blue-500/20',
-    color: 'text-blue-500',
-  },
-  {
-    title: 'Frontend',
-    subtitle: 'React, JavaScript, Tailwind CSS, Redux',
-    icon: Code2,
-    bg: 'bg-emerald-500/10 border border-emerald-500/20',
-    color: 'text-emerald-500',
-  },
-  {
-    title: 'Database',
-    subtitle: 'MongoDB, Mongoose',
-    icon: Database,
-    bg: 'bg-purple-500/10 border border-purple-500/20',
-    color: 'text-purple-500',
-  },
-  {
-    title: 'Tools',
-    subtitle: 'Git, GitHub, Vite, Postman',
-    icon: Wrench,
-    bg: 'bg-amber-500/10 border border-amber-500/20',
-    color: 'text-amber-500',
-  },
-];
-
 export default function HomePage() {
   const { site, profile } = usePublicSite();
   const { data: statsRes } = useApi(() => api.getStats());
   const { data: projects } = useApi(() => api.getProjects());
-  const { data: skills } = useApi(() => api.getSkills());
   const [selected, setSelected] = useState(null);
 
   const hero = site?.hero || {};
@@ -346,42 +313,6 @@ export default function HomePage() {
               </motion.div>
             </div>
           </motion.div>
-        </div>
-      </section>
-
-      {/* ── My Skills Section (Shown on mobile & desktop) ─────────── */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 w-full border-t border-border/40">
-        <div className="flex items-center justify-between mb-3.5">
-          <h2 className="flex items-center gap-2 text-base sm:text-xl font-bold text-foreground">
-            <Box size={18} className="text-primary" /> My Skills
-          </h2>
-          <Link to="/skills" className="flex items-center gap-1 text-xs font-medium text-primary hover:underline">
-            View All Skills <ArrowRight size={12} />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
-          {skillsPreview.map((skill) => {
-            const Icon = skill.icon;
-            return (
-              <Link
-                key={skill.title}
-                to="/skills"
-                className="group flex items-center justify-between p-3 sm:p-4 rounded-xl border border-border bg-card/70 hover:border-primary/40 hover:bg-card transition-all shadow-xs"
-              >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${skill.bg} ${skill.color}`}>
-                    <Icon size={16} />
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="text-xs font-bold text-foreground truncate">{skill.title}</h3>
-                    <p className="text-[10px] text-muted-foreground truncate">{skill.subtitle}</p>
-                  </div>
-                </div>
-                <ChevronRight size={14} className="text-muted-foreground/60 group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0 ml-1" />
-              </Link>
-            );
-          })}
         </div>
       </section>
 
