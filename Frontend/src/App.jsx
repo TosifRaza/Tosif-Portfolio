@@ -62,6 +62,7 @@ export default function App() {
           <Routes>
             <Route path="/admin" element={<AdminExternalRedirect />} />
             <Route path="/admin/*" element={<AdminExternalRedirect />} />
+            <Route path="/login" element={<AdminExternalRedirect />} />
             <Route
               path="/os/*"
               element={
